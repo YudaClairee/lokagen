@@ -32,7 +32,7 @@ export function Navbar() {
         )}
       >
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/lokagen.png" alt="Logo" width={100} height={100} />
+          <Image src="/lokagen.png" alt="LokaGen" width={100} height={100} />
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
@@ -47,12 +47,6 @@ export function Navbar() {
             className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
           >
             Cara Kerja
-          </Link>
-          <Link
-            href="#testimonials"
-            className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
-          >
-            Testimoni
           </Link>
         </div>
 
