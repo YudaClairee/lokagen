@@ -11,13 +11,9 @@ export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   try {
-    // Debug: Check if API key is loaded
-    console.log("API Key exists:", !!process.env.KOLOSAL_API_KEY);
     
     const { productName, productImage, description, tone, theme, brandColor } = input;
 
-    // Check if image is provided (not empty base64)
-    // TEMPORARY: Disable image input for testing
     const hasImage = productImage && productImage.length > 100;
 
     // Build messages array
@@ -45,7 +41,7 @@ export async function generateContent(
               url: productImage.startsWith("data:")
                 ? productImage
                 : `data:image/jpeg;base64,${productImage}`,
-              detail: "low", // Use low detail to save tokens
+              detail: "low",
             },
           },
         ],
@@ -57,12 +53,9 @@ export async function generateContent(
       });
     }
 
-    // Call OpenAI API
     const completion = await openai.chat.completions.create({
       model: "Claude Sonnet 4.5",
       messages,
-      // response_format: { type: "json_object" },
-      // temperature: 0.7,
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -70,11 +63,11 @@ export async function generateContent(
     if (!content) {
       return {
         success: false,
-        error: "Tidak ada response dari AI. Silakan coba lagi.",
+        error: "Tidak ada response dari AI. Silahkan coba lagi.",
       };
     }
 
-    // Clean up markdown formatting (remove ```json and ``` if present)
+    // Clean up markdown formatting
     let cleanedContent = content.trim();
     if (cleanedContent.startsWith("```json")) {
       cleanedContent = cleanedContent.replace(/^```json\s*/, "");
@@ -85,10 +78,8 @@ export async function generateContent(
       cleanedContent = cleanedContent.replace(/\s*```$/, "");
     }
 
-    // Parse JSON response
     const parsedContent = JSON.parse(cleanedContent.trim()) as GeneratedContent;
 
-    // Validate the structure
     if (
       !parsedContent.caption ||
       !parsedContent.slides ||
@@ -96,7 +87,7 @@ export async function generateContent(
     ) {
       return {
         success: false,
-        error: "Format response AI tidak valid. Silakan coba lagi.",
+        error: "Format response AI tidak valid. Silahkan coba lagi.",
       };
     }
 
@@ -115,7 +106,6 @@ export async function generateContent(
     }
 
     if (error instanceof Error) {
-      // Handle OpenAI specific errors
       if (error.message.includes("API key")) {
         return {
           success: false,
