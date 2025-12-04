@@ -2,7 +2,7 @@
 export type Tone = "playful" | "formal" | "elegan" | "lokal";
 
 // Visual theme options
-export type Theme = "dark" | "light" | "colorful";
+export type Theme = "Minimal Clean Modern" | "Dark Modern/Futuristic" | "Colorful Gen Z" | "Bold Typography";
 
 // Slide types
 export interface SlideIntro {
@@ -57,6 +57,7 @@ export interface GenerateContentResponse {
 
 // Form input for generate content
 export interface GenerateContentInput {
+  productName?: string;
   productImage: string; // base64 string
   description?: string;
   tone: Tone;

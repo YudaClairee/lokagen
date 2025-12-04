@@ -1,8 +1,9 @@
 import OpenAI from "openai";
+import type { Tone, Theme } from "@/lib/types";
 
 // Initialize OpenAI client
 export const openai = new OpenAI({
-  apiKey: process.env.API_KEY_AI,
+  apiKey: process.env.KOLOSAL_API_KEY,
   baseURL: "https://api.kolosal.ai/v1",
 });
 
@@ -29,35 +30,58 @@ Rules:
 
 Output harus dalam format JSON yang valid.`;
 
+// Tone descriptions for prompt
+const toneDescriptions: Record<Tone, string> = {
+  playful: "fun, santai, pakai bahasa gaul yang friendly",
+  formal: "profesional, sopan, dan terpercaya",
+  elegan: "mewah, eksklusif, dan premium",
+  lokal: "akrab, pakai bahasa daerah/slang lokal, seperti ngobrol sama teman",
+};
+
+// Theme descriptions for prompt
+const themeDescriptions: Record<Theme, string> = {
+  "Colorful Gen Z": "warna-warni, vibrant, eye-catching, cocok untuk anak muda",
+  "Minimal Clean Modern": "bersih, simpel, modern, elegan",
+  "Dark Modern/Futuristic": "gelap, futuristik, bold, premium",
+  "Bold Typography": "typography dominan, impactful, statement",
+};
+
 // Generate user prompt based on input
 export function generateUserPrompt(
+  productName: string | undefined,
   description: string | undefined,
-  tone: string,
+  tone: Tone,
+  theme: Theme,
+  brandColor: string | undefined,
   hasImage: boolean
 ): string {
-  const toneDescriptions: Record<string, string> = {
-    playful: "fun, santai, pakai bahasa gaul yang friendly",
-    formal: "profesional, sopan, dan terpercaya",
-    elegan: "mewah, eksklusif, dan premium",
-    lokal: "akrab, pakai bahasa daerah/slang lokal, seperti ngobrol sama teman",
-  };
-
   const toneDesc = toneDescriptions[tone] || toneDescriptions.playful;
+  const themeDesc = themeDescriptions[theme] || themeDescriptions["Colorful Gen Z"];
 
   let prompt = `Buatkan konten Instagram carousel untuk produk UMKM dengan detail berikut:
 
 Tone: ${tone} (${toneDesc})
-`;
+Tema Visual: ${theme} (${themeDesc})`;
+
+  if (brandColor) {
+    prompt += `\nWarna Brand: ${brandColor}`;
+  }
+
+  if (productName) {
+    prompt += `\n\nNama Produk: ${productName}`;
+  }
 
   if (description) {
     prompt += `\nDeskripsi produk: ${description}`;
   }
 
   if (hasImage) {
-    prompt += `\n\nAnalisa juga gambar produk yang diberikan untuk memahami produk lebih baik.`;
+    prompt += `\n\nAnalisa juga gambar produk yang diberikan untuk memahami produk lebih baik dan sesuaikan konten dengan visual produk.`;
   }
 
   prompt += `
+
+Pastikan konten sesuai dengan tone "${tone}" dan cocok untuk tema visual "${theme}".
 
 Berikan output dalam format JSON berikut:
 {

@@ -19,7 +19,7 @@ User bisa:
 2. Isi deskripsi singkat produk (opsional).
 3. Pilih:
    - tone (playful, formal, elegan, lokal)
-   - tema visual (dark, light, colorful)
+   - tema visual (Colorful Gen Z, Minimal Clean Modern, Dark Modern/Futuristic, Bold Typography)
    - warna brand optional (hex) sebagai accent color.
 4. Klik "Generate".
 5. Aplikasi:
@@ -55,7 +55,7 @@ User bisa:
   - dropdown tema visual
   - optional color picker (brand color)
   - tombol "Generate"
-- Call API route:
+- Call Server Actions:
   - input: description + tone + bahasa
   - output: JSON untuk:
     - caption utama

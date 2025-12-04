@@ -11,9 +11,13 @@ export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   try {
-    const { productImage, description, tone } = input;
+    // Debug: Check if API key is loaded
+    console.log("API Key exists:", !!process.env.KOLOSAL_API_KEY);
+    
+    const { productName, productImage, description, tone, theme, brandColor } = input;
 
     // Check if image is provided (not empty base64)
+    // TEMPORARY: Disable image input for testing
     const hasImage = productImage && productImage.length > 100;
 
     // Build messages array
@@ -33,7 +37,7 @@ export async function generateContent(
         content: [
           {
             type: "text",
-            text: generateUserPrompt(description, tone, true),
+            text: generateUserPrompt(productName, description, tone, theme, brandColor, true),
           },
           {
             type: "image_url",
@@ -49,17 +53,16 @@ export async function generateContent(
     } else {
       messages.push({
         role: "user",
-        content: generateUserPrompt(description, tone, false),
+        content: generateUserPrompt(productName, description, tone, theme, brandColor, false),
       });
     }
 
     // Call OpenAI API
     const completion = await openai.chat.completions.create({
-      model: "GLM 4.6",
+      model: "Claude Sonnet 4.5",
       messages,
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-      max_tokens: 1500,
+      // response_format: { type: "json_object" },
+      // temperature: 0.7,
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -71,8 +74,19 @@ export async function generateContent(
       };
     }
 
+    // Clean up markdown formatting (remove ```json and ``` if present)
+    let cleanedContent = content.trim();
+    if (cleanedContent.startsWith("```json")) {
+      cleanedContent = cleanedContent.replace(/^```json\s*/, "");
+    } else if (cleanedContent.startsWith("```")) {
+      cleanedContent = cleanedContent.replace(/^```\s*/, "");
+    }
+    if (cleanedContent.endsWith("```")) {
+      cleanedContent = cleanedContent.replace(/\s*```$/, "");
+    }
+
     // Parse JSON response
-    const parsedContent = JSON.parse(content) as GeneratedContent;
+    const parsedContent = JSON.parse(cleanedContent.trim()) as GeneratedContent;
 
     // Validate the structure
     if (
