@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, PlayCircle } from "lucide-react";
+import Image from "next/image";
 
 export function Hero() {
   return (
@@ -70,10 +71,8 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="relative mx-auto mt-20 w-full max-w-5xl rounded-xl border border-white/10 bg-zinc-900/50 p-2 shadow-2xl backdrop-blur-md"
         >
-          <div className="aspect-video w-full rounded-lg bg-zinc-950/50 flex items-center justify-center border border-white/5">
-            <p className="text-muted-foreground text-sm">
-              Preview Dashboard / Hasil Generator
-            </p>
+          <div className="p-2 aspect-video w-full rounded-lg bg-zinc-950/50 flex items-center justify-center border border-white/5 ">
+            <Image src="/preview.png" alt="Preview" width={1000} height={1000} className="w-full h-full object-cover" />
           </div>
         </motion.div>
       </div>

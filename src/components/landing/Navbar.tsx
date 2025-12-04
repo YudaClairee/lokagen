@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -51,12 +50,6 @@ export function Navbar() {
         </div> */}
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="hidden md:block text-sm font-medium text-slate-300 hover:text-white transition-colors"
-          >
-            Masuk
-          </Link>
           <Link
             href="/generate"
             className="rounded-full bg-white px-4 py-1.5 text-sm font-bold text-black hover:bg-gray-200 transition-colors"
