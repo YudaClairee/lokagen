@@ -6,17 +6,20 @@ import type {
   GenerateContentResponse,
   GeneratedContent,
 } from "@/lib/types";
+import {
+  VALIDATION,
+  ERROR_MESSAGES,
+  TOTAL_SLIDES,
+} from "@/lib/constants";
 
 export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   try {
-    
     const { productName, productImage, description, tone, theme, brandColor } = input;
 
-    const hasImage = productImage && productImage.length > 100;
+    const hasImage = productImage && productImage.length > VALIDATION.MIN_IMAGE_SIZE;
 
-    // Build messages array
     const messages: Parameters<
       typeof openai.chat.completions.create
     >[0]["messages"] = [
@@ -26,7 +29,6 @@ export async function generateContent(
       },
     ];
 
-    // Add user message with or without image
     if (hasImage) {
       messages.push({
         role: "user",
@@ -63,7 +65,7 @@ export async function generateContent(
     if (!content) {
       return {
         success: false,
-        error: "Tidak ada response dari AI. Silahkan coba lagi.",
+        error: ERROR_MESSAGES.NO_RESPONSE,
       };
     }
 
@@ -83,11 +85,11 @@ export async function generateContent(
     if (
       !parsedContent.caption ||
       !parsedContent.slides ||
-      parsedContent.slides.length !== 5
+      parsedContent.slides.length !== TOTAL_SLIDES
     ) {
       return {
         success: false,
-        error: "Format response AI tidak valid. Silahkan coba lagi.",
+        error: ERROR_MESSAGES.INVALID_FORMAT,
       };
     }
 
@@ -101,7 +103,7 @@ export async function generateContent(
     if (error instanceof SyntaxError) {
       return {
         success: false,
-        error: "Gagal parsing response AI. Silakan coba lagi.",
+        error: ERROR_MESSAGES.PARSE_ERROR,
       };
     }
 
@@ -109,21 +111,21 @@ export async function generateContent(
       if (error.message.includes("API key")) {
         return {
           success: false,
-          error: "API key tidak valid. Hubungi admin.",
+          error: ERROR_MESSAGES.INVALID_API_KEY,
         };
       }
 
       if (error.message.includes("rate limit")) {
         return {
           success: false,
-          error: "Terlalu banyak request. Coba lagi dalam beberapa saat.",
+          error: ERROR_MESSAGES.RATE_LIMIT,
         };
       }
     }
 
     return {
       success: false,
-      error: "Terjadi kesalahan. Silakan coba lagi.",
+      error: ERROR_MESSAGES.GENERIC_ERROR,
     };
   }
 }

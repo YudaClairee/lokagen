@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, RefObject } from "react";
 import type { GeneratedContent, Theme } from "@/lib/types";
-import { SlideIntro } from "./SlideIntro";
-import { SlideFeatures } from "./SlideFeatures";
-import { SlideBenefits } from "./SlideBenefits";
-import { SlidePromo } from "./SlidePromo";
-import { SlideCTA } from "./SlideCTA";
+import { TOTAL_SLIDES, PLACEHOLDER_CONTENT } from "@/lib/constants";
+import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +12,7 @@ interface CarouselPreviewProps {
   theme: Theme;
   brandColor: string;
   productImage: string;
-  slideRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  slideRefs: RefObject<(HTMLDivElement | null)[]>;
   isLoading: boolean;
 }
 
@@ -29,27 +26,21 @@ export function CarouselPreview({
 }: CarouselPreviewProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Get theme-specific components
+  const { SlideIntro, SlideFeatures, SlideBenefits, SlidePromo, SlideCTA } = useMemo(
+    () => getThemeComponents(theme),
+    [theme]
+  );
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % 5);
+    setCurrentSlide((prev) => (prev + 1) % TOTAL_SLIDES);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + 5) % 5);
+    setCurrentSlide((prev) => (prev - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
   };
 
-  // Placeholder content for preview
-  const placeholderContent: GeneratedContent = {
-    caption: "",
-    slides: [
-      { type: "intro", title: "Judul Produk", subtitle: "Deskripsi singkat produk kamu di sini" },
-      { type: "features", title: "Keunggulan", bullets: ["Fitur 1", "Fitur 2", "Fitur 3"] },
-      { type: "benefits", title: "Manfaat", bullets: ["Manfaat 1", "Manfaat 2", "Manfaat 3"] },
-      { type: "promo", title: "Promo Spesial", promoText: "Diskon khusus untuk kamu!" },
-      { type: "cta", title: "Yuk Order!", ctaText: "Klik link di bio sekarang" },
-    ],
-  };
-
-  const displayContent = content || placeholderContent;
+  const displayContent = content || PLACEHOLDER_CONTENT;
   const isPlaceholder = !content;
 
   const slideComponents = [
@@ -57,7 +48,6 @@ export function CarouselPreview({
       key="intro"
       ref={(el) => { slideRefs.current[0] = el; }}
       data={displayContent.slides[0]}
-      theme={theme}
       brandColor={brandColor}
       productImage={productImage}
       isPlaceholder={isPlaceholder}
@@ -66,7 +56,6 @@ export function CarouselPreview({
       key="features"
       ref={(el) => { slideRefs.current[1] = el; }}
       data={displayContent.slides[1]}
-      theme={theme}
       brandColor={brandColor}
       isPlaceholder={isPlaceholder}
     />,
@@ -74,7 +63,6 @@ export function CarouselPreview({
       key="benefits"
       ref={(el) => { slideRefs.current[2] = el; }}
       data={displayContent.slides[2]}
-      theme={theme}
       brandColor={brandColor}
       isPlaceholder={isPlaceholder}
     />,
@@ -82,7 +70,6 @@ export function CarouselPreview({
       key="promo"
       ref={(el) => { slideRefs.current[3] = el; }}
       data={displayContent.slides[3]}
-      theme={theme}
       brandColor={brandColor}
       isPlaceholder={isPlaceholder}
     />,
@@ -90,7 +77,6 @@ export function CarouselPreview({
       key="cta"
       ref={(el) => { slideRefs.current[4] = el; }}
       data={displayContent.slides[4]}
-      theme={theme}
       brandColor={brandColor}
       isPlaceholder={isPlaceholder}
     />,
@@ -121,7 +107,7 @@ export function CarouselPreview({
         </Button>
         
         <div className="flex gap-2">
-          {[0, 1, 2, 3, 4].map((index) => (
+          {Array.from({ length: TOTAL_SLIDES }, (_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
@@ -141,9 +127,8 @@ export function CarouselPreview({
 
       {/* Slide Label */}
       <p className="text-center text-sm text-slate-400">
-        Slide {currentSlide + 1} / 5
+        Slide {currentSlide + 1} / {TOTAL_SLIDES}
       </p>
     </div>
   );
 }
-

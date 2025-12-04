@@ -8,6 +8,12 @@ import type {
   GeneratedContent,
   GenerateContentInput,
 } from "@/lib/types";
+import {
+  DEFAULT_BRAND_COLOR,
+  DEFAULT_TONE,
+  DEFAULT_THEME,
+  ERROR_MESSAGES,
+} from "@/lib/constants";
 import { ProductForm } from "@/components/generate/ProductForm";
 import { GenerateOptions } from "@/components/generate/GenerateOptions";
 import { CarouselPreview } from "@/components/carousel/CarouselPreview";
@@ -22,9 +28,9 @@ export default function GeneratePage() {
   const [productName, setProductName] = useState<string>("");
   const [productImage, setProductImage] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [tone, setTone] = useState<Tone>("playful");
-  const [theme, setTheme] = useState<Theme>("Colorful Gen Z");
-  const [brandColor, setBrandColor] = useState<string>("#3b82f6");
+  const [tone, setTone] = useState<Tone>(DEFAULT_TONE);
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
+  const [brandColor, setBrandColor] = useState<string>(DEFAULT_BRAND_COLOR);
 
   // Result state
   const [result, setResult] = useState<GeneratedContent | null>(null);
@@ -40,7 +46,7 @@ export default function GeneratePage() {
     setError("");
 
     if (!productImage && !description) {
-      setError("Minimal upload gambar atau isi deskripsi produk ya!");
+      setError(ERROR_MESSAGES.NO_INPUT);
       return;
     }
 
