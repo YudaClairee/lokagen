@@ -11,7 +11,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-black p-8 text-white"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -23,7 +22,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
             <div className="absolute inset-0 bg-black/80" />
           </div>
         )}
-        {/* Giant Number Background */}
         <div 
           className="absolute right-[-20px] top-[-40px] text-[200px] font-black leading-none opacity-20"
           style={{ color: brandColor }}
@@ -56,7 +54,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
           </div>
         </div>
 
-        {/* Bottom Tag */}
         <div 
           className="absolute bottom-8 right-8 bg-white px-4 py-2 text-sm font-bold text-black"
         >

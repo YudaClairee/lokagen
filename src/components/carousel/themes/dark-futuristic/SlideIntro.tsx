@@ -19,13 +19,10 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           backgroundSize: '100% 100%, 40px 40px, 40px 40px'
         }}
       >
-        {/* Glow Orb in corner */}
         <div 
           className="absolute -left-[20%] -top-[20%] h-[60%] w-[60%] rounded-full blur-[100px] opacity-20"
           style={{ backgroundColor: brandColor }}
         />
-
-        {/* HUD Top Bar */}
         <div className="flex justify-between border-b border-white/10 bg-white/5 p-4 backdrop-blur-sm">
           <div className="flex gap-2">
             <div className="h-2 w-2 rounded-full bg-red-500" />
@@ -34,14 +31,10 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           </div>
           <div className="font-mono text-[10px] text-white/50 tracking-widest">{productName}</div>
         </div>
-
-        {/* Content */}
         <div className="relative z-10 flex flex-1 flex-col p-8">
            <div className="flex h-full gap-6">
-              {/* Left Column: Image */}
               <div className="relative flex w-[45%] flex-col justify-center">
                  <div className="relative aspect-[3/4] w-full overflow-hidden border border-white/20 bg-black/50">
-                    {/* Corner accents */}
                     <div className="absolute left-0 top-0 h-4 w-4 border-l-2 border-t-2 border-white" />
                     <div className="absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2 border-white" />
                     <div className="absolute bottom-0 right-0 h-4 w-4 border-b-2 border-r-2 border-white" />
@@ -59,7 +52,6 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                            fill
                            className="object-cover opacity-80"
                          />
-                         {/* Scanline effect overlay (static) */}
                          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
                       </div>
                     ) : (
@@ -70,7 +62,6 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                  </div>
               </div>
 
-              {/* Right Column: Text */}
               <div className="flex w-[55%] flex-col justify-center">
                  <div 
                    className="mb-4 inline-flex items-center gap-2 border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white"
@@ -92,8 +83,6 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
               </div>
            </div>
         </div>
-
-        {/* Footer HUD */}
         <div className="flex items-center justify-between border-t border-white/10 p-4">
            
            

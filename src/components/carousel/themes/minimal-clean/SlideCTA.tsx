@@ -14,7 +14,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
         style={{ backgroundColor: brandColor }}
       >
-        {/* Window Shadow Overlay */}
+   
         <div 
           className="absolute inset-0 pointer-events-none z-10 opacity-20"
           style={{
@@ -24,7 +24,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         />
          <div className="relative z-20 flex flex-col items-center text-center">
             
-            {/* Logo Placeholder */}
+           
             <div className="mb-8 h-16 w-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
                 <ArrowRight className="h-6 w-6 text-white" />
             </div>
@@ -40,13 +40,13 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
             <div className="rounded-full bg-white px-8 py-4 shadow-lg">
                 <span 
                     className="text-sm font-bold uppercase tracking-widest"
-                    style={{ color: brandColor }} // Use brand color for text to contrast with white button
+                    style={{ color: brandColor }} 
                 >
                     Order Now
                 </span>
             </div>
 
-            {/* Footer Text */}
+            
             <div className="absolute -bottom-24 text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
                Link in Bio
             </div>

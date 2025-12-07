@@ -11,23 +11,20 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-white p-12 text-gray-900"
       >
-        {/* Subtle top decoration */}
+
         <div 
           className="absolute left-12 top-0 h-1 w-24"
           style={{ backgroundColor: brandColor }}
         />
 
-        {/* Title */}
         <div className="relative z-10 mb-12">
-           <span className="block mb-4 text-xs font-medium tracking-[0.2em] text-gray-400 uppercase">
-             Specification
-           </span>
+           
            <h2 className="text-3xl font-light text-gray-900">
              {data.title}
            </h2>
         </div>
 
-        {/* Background Image if present */}
+
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -40,7 +37,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
           </div>
         )}
 
-        {/* Features List - Minimal grid */}
+
         <div className="relative z-10 grid grid-cols-1 gap-8">
            {data.bullets.map((bullet, index) => (
              <div key={index} className="group relative pl-8">
@@ -60,7 +57,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
            ))}
         </div>
 
-        {/* Bottom decoration */}
+
         <div className="absolute right-12 bottom-12">
            <div className="h-16 w-[1px] bg-gray-100" />
         </div>

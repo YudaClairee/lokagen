@@ -11,7 +11,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -22,9 +21,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             />
           </div>
         )}
-        {/* Top Section */}
         <div className="relative z-10 flex flex-col items-center justify-center pt-8 pb-4">
-             {/* Decorative Checkers */}
             <div className="absolute left-6 top-8 grid grid-cols-2 gap-1">
                 <div className="h-4 w-4 bg-black"></div>
                 <div className="h-4 w-4 bg-white border-2 border-black"></div>
@@ -58,8 +55,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 {data.title}
             </h2>
         </div>
-
-        {/* Main Card Section */}
         <div className="flex-1 px-6 pb-6 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-center justify-center rounded-[2rem] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative"
@@ -76,8 +71,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 </div>
             </div>
         </div>
-
-        {/* Footer Section */}
         <div className="flex h-14 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-6">
              <span className="text-xs font-black uppercase leading-tight">MENERIMA<br/>PEMESANAN ONLINE</span>
              <span className="text-xs font-black uppercase text-right leading-tight">TAWANG, KOTA<br/>TASIKMALAYA</span>

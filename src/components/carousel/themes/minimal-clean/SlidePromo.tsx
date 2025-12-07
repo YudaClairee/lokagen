@@ -13,7 +13,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-8 text-white"
         style={{ backgroundColor: brandColor }}
       >
-        {/* Window Shadow Overlay */}
+        
         <div 
           className="absolute inset-0 pointer-events-none z-10 opacity-20"
           style={{
@@ -21,7 +21,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             filter: 'blur(40px)'
           }}
         />
-        {/* Outline Text Background */}
+        
         <div className="absolute top-12 left-0 right-0 z-20 text-center">
             <h2 
                 className="text-5xl font-black uppercase italic leading-none text-transparent z-20"
@@ -34,16 +34,16 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             
         </div>
 
-        {/* Center Card */}
+        
         <div className="relative z-10 mt-16 flex aspect-[3/4] w-[60%] flex-col items-center justify-center rounded-[2rem]  shadow-2xl backdrop-blur-md ">
             {productImage ? (
-                <div className="relative h-full w-full overflow-hidden rounded-[2rem] p-4">
-                     <div className="relative h-full w-full overflow-hidden rounded-[1.5rem] bg-black/5">
+                <div className="relative h-full w-full overflow-hidden rounded-[2rem] p-2">
+                     <div className="relative h-full w-full overflow-hidden rounded-[1.5rem]">
                         <Image
                           src={productImage}
                           alt="Product"
                           fill
-                          className="object-cover"
+                          className="object-cover h-full w-full"
                         />
                      </div>
                 </div>
@@ -53,7 +53,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 </div>
             )}
             
-             {/* Floating Badge */}
+             
              <div className="absolute -left-6 top-1/2 -translate-y-1/2 rounded-xl bg-white p-3 text-center shadow-lg transform -rotate-6">
                  <span className="block text-xs font-black uppercase text-gray-900">DISKON</span>
                  <span className="block text-xl font-black text-red-500">30%</span>
@@ -65,7 +65,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              </div>
         </div>
 
-        {/* Product Name overlay */}
+        
         <div className="relative z-40 mt-6">
              <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
                  {data.promoText}

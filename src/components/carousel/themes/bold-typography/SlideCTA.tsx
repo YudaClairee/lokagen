@@ -12,7 +12,6 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col items-center justify-between overflow-hidden bg-white p-8"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -24,7 +23,6 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
             <div className="absolute inset-0 bg-white/90" />
           </div>
         )}
-        {/* Top Bar */}
         <div className="flex w-full justify-between border-b-4 border-black pb-4">
            <span className="font-mono text-sm font-bold">FINAL SLIDE</span>
            <div className="flex gap-2">
@@ -33,8 +31,6 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
              ))}
            </div>
         </div>
-
-        {/* Center Content */}
         <div className="relative z-10 flex flex-col items-center text-center">
            <h2 className="text-7xl font-black uppercase leading-[0.8] tracking-tighter">
              {data.title.split(" ").map((word, i) => (
@@ -51,8 +47,6 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
            <p className="mt-6 max-w-[200px] font-bold text-gray-600">
              {data.ctaText}
            </p>
-
-           {/* Brutalist Button */}
            <div 
              className="group mt-8 flex cursor-default items-center gap-3 border-4 border-black bg-white px-6 py-3 shadow-[6px_6px_0px_0px_#000]"
            >
@@ -60,8 +54,6 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
               <ArrowRight className="h-6 w-6 stroke-[3px]" />
            </div>
         </div>
-
-        {/* Bottom Bar */}
         <div className="flex w-full items-center justify-center border-t-4 border-black pt-4">
           <span className="font-mono font-bold">LINK IN BIO</span>
         </div>

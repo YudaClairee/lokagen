@@ -12,7 +12,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         className="relative flex aspect-square w-full flex-col overflow-hidden text-gray-900"
         style={{ backgroundColor: brandColor }}
       >
-        {/* Window Shadow Overlay */}
+        
         <div 
           className="absolute inset-0 pointer-events-none z-10 opacity-20"
           style={{
@@ -21,9 +21,9 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           }}
         />
 
-        {/* Top Content */}
+        
         <div className="relative z-20 flex w-full flex-col items-center pt-12 text-center">
-          {/* Outline Text Effect behind or as main */}
+          
           <h1 
             className="text-5xl font-black uppercase tracking-tighter text-white/90"
             style={{ 
@@ -38,7 +38,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           </p>
         </div>
 
-        {/* Central Card / Podium */}
+        
         <div className="relative z-20 mx-auto mt-8 flex h-[65%] w-[70%] items-center justify-center rounded-t-[3rem] bg-white/20 shadow-2xl backdrop-blur-sm">
            <div className="relative h-full w-full p-6">
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-transparent bg-gray-100 shadow-inner">
@@ -57,12 +57,11 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                 )}
               </div>
               
-              {/* Product Label Overlay (Floating) */}
               
            </div>
         </div>
            
-        {/* Footer info */}
+        
         <div className="absolute bottom-6 w-full text-center z-20">
            <div className="text-[10px] font-bold tracking-widest text-black/40">
              WWW.LOKAGEN.COM

@@ -11,7 +11,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
-        {/* Background Image if present */}
+        
         {productImage && (
           <div className="absolute inset-0 z-0">
              <div 
@@ -27,13 +27,13 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
              <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
           </div>
         )}
-        {/* Radar/Circle Graphic */}
+        
         <div className="absolute right-[-100px] top-[20%] h-[400px] w-[400px] rounded-full border border-white/5 opacity-50">
            <div className="absolute inset-[20px] rounded-full border border-dashed border-white/10" />
            <div className="absolute inset-[100px] rounded-full border border-white/5" />
         </div>
 
-        {/* Title Block */}
+        
         <div className="relative z-10 mb-10">
            <div 
              className="mb-2 h-1 w-10"
@@ -45,7 +45,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
            </h2>
         </div>
 
-        {/* Benefits List - Terminal style */}
+        
         <div className="relative z-10 flex flex-col gap-3 font-mono text-sm">
            {data.bullets.map((bullet, index) => (
              <div 
@@ -59,7 +59,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
            ))}
         </div>
 
-        {/* Status Bar */}
+        
         <div className="absolute bottom-8 left-8 right-8">
            <div className="mb-2 flex justify-between text-[10px] text-gray-500 font-mono">
               <span>SCAN COMPLETE</span>

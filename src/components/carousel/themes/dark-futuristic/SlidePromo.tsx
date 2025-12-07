@@ -11,7 +11,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
              <div 
@@ -27,7 +26,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
           </div>
         )}
-        {/* Glow Background */}
         <div 
           className="absolute inset-0 opacity-20"
           style={{
@@ -35,10 +33,8 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
           }}
         />
 
-        {/* Promo Container Frame */}
         <div className="relative z-10 w-full max-w-[320px] border border-white/20 bg-black/40 p-1 backdrop-blur-md">
            <div className="border border-white/10 bg-black/60 p-6 text-center">
-              {/* Corner Markers */}
               <div className="absolute -left-1 -top-1 h-2 w-2 bg-white" />
               <div className="absolute -right-1 -top-1 h-2 w-2 bg-white" />
               <div className="absolute -bottom-1 -left-1 h-2 w-2 bg-white" />
@@ -69,12 +65,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               </p>
            </div>
         </div>
-
-        {/* Bottom text */}
-        <div className="absolute bottom-8 font-mono text-[10px] text-gray-600">
-           ID: {Math.random().toString(36).substring(7).toUpperCase()}
-        </div>
-
         {isPlaceholder && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80">
             <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">PREVIEW_MODE</span>

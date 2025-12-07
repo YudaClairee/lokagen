@@ -11,7 +11,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-white p-8"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -23,19 +22,15 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             <div className="absolute inset-0 bg-white/90" />
           </div>
         )}
-        {/* Background Stripes */}
         <div className="absolute inset-0 flex -rotate-12 translate-y-[-50%] transform flex-col gap-4 opacity-5">
            {Array.from({ length: 10 }).map((_, i) => (
              <div key={i} className="h-12 w-[150%] bg-black" />
            ))}
         </div>
-
-        {/* Starburst Shape Container */}
         <div className="relative z-10 w-full max-w-[300px]">
            <div 
              className="relative border-4 border-black bg-white p-8 shadow-[12px_12px_0px_0px_#000]"
            >
-             {/* Decor elements */}
              <div 
                className="absolute -left-3 -top-3 h-6 w-6 border-4 border-black bg-white" 
                style={{ backgroundColor: brandColor }}
@@ -62,7 +57,6 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              </div>
            </div>
         </div>
-
         {isPlaceholder && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/5">
              <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>

@@ -11,7 +11,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        {/* Background Image if present */}
         {productImage && (
           <div className="absolute inset-0 z-0">
             <Image
@@ -22,9 +21,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
             />
           </div>
         )}
-        {/* Top Section */}
         <div className="relative z-10 flex flex-col items-center justify-center pt-6 pb-2">
-             {/* Decorative Checkers */}
             <div className="absolute left-4 top-6 grid grid-cols-2 gap-1">
                 <div className="h-3 w-3 bg-black"></div>
                 <div className="h-3 w-3 bg-white border border-black"></div>
@@ -58,8 +55,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 {data.title}
             </h2>
         </div>
-
-        {/* Main Card */}
         <div className="flex-1 px-4 pb-4 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
@@ -74,8 +69,6 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 </div>
             </div>
         </div>
-
-        {/* Footer */}
         <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
              <span className="text-[10px] font-black uppercase leading-tight">MENERIMA<br/>PESANAN ONLINE</span>
              <span className="text-[10px] font-black uppercase text-right leading-tight">LOKAGEN<br/>APP</span>

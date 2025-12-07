@@ -11,7 +11,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         ref={ref}
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
-        {/* Background Image if present */}
+        
         {productImage && (
           <div className="absolute inset-0 z-0">
              <div 
@@ -27,7 +27,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
              <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
           </div>
         )}
-        {/* Hex Grid Background */}
+        
         <div 
            className="absolute inset-0 opacity-10"
            style={{
@@ -36,7 +36,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
            }}
         />
 
-        {/* Header */}
+        
         <div className="relative z-10 mb-8 border-b border-white/10 pb-4">
            <div className="mb-2 flex items-center gap-2 font-mono text-[10px] text-gray-400">
               <span>/// FEATURES_LIST</span>
@@ -50,14 +50,13 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
            </h2>
         </div>
 
-        {/* Feature Cards */}
+        
         <div className="relative z-10 flex flex-col gap-4">
            {data.bullets.map((bullet, index) => (
              <div
                key={index}
                className="relative overflow-hidden border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors"
              >
-               {/* Left accent bar */}
                <div
                  className="absolute left-0 top-0 h-full w-[2px]"
                  style={{ backgroundColor: brandColor }}
@@ -71,14 +70,10 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                    {bullet}
                  </p>
                </div>
-
-               {/* Tech decoration corners */}
                <div className="absolute right-0 top-0 border-l border-b border-white/10 p-1" />
              </div>
            ))}
         </div>
-
-        {/* Decorative elements */}
         <div 
            className="absolute bottom-10 right-10 h-24 w-24 rounded-full border border-dashed border-white/10"
            style={{ borderColor: `${brandColor}30` }}
