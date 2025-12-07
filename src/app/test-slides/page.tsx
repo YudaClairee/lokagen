@@ -98,10 +98,10 @@ export default function TestSlidesPage() {
         <div className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold text-gray-500">Intro</h2>
             <div className="aspect-square w-full sm:w-[320px]">
-                {theme === 'bold' && <BoldIntro data={introData} brandColor={colors.bold} productImage={placeholderImage} />}
-                {theme === 'colorful' && <ColorfulIntro data={introData} brandColor={colors.colorful} productImage={placeholderImage} />}
-                {theme === 'dark' && <DarkIntro data={introData} brandColor={colors.dark} productImage={placeholderImage} />}
-                {theme === 'minimal' && <MinimalIntro data={introData} brandColor={colors.minimal} productImage={placeholderImage} />}
+                {theme === 'bold' && <BoldIntro data={introData} productName={"Super Mega Product 3000"} brandColor={colors.bold} productImage={placeholderImage} />}
+                {theme === 'colorful' && <ColorfulIntro data={introData} productName={"Super Mega Product 3000"} brandColor={colors.colorful} productImage={placeholderImage} />}
+                {theme === 'dark' && <DarkIntro data={introData} productName={"Super Mega Product 3000"} brandColor={colors.dark} productImage={placeholderImage} />}
+                {theme === 'minimal' && <MinimalIntro data={introData} productName={"Super Mega Product 3000"} brandColor={colors.minimal} productImage={placeholderImage} />}
             </div>
         </div>
 

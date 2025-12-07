@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LokaGen — AI Content Assistant for Local MSMEs
 
-## Getting Started
+**LokaGen** is an AI-powered inclusivity innovation designed to help local MSMEs (UMKM) create high-quality Instagram content (carousels + captions) quickly and easily, without requiring design skills.
 
-First, run the development server:
+Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Instant Content Generation**: Upload a product photo and get AI-generated captions and slide content.
+- **Visual Themes**: Choose from multiple pre-designed aesthetics:
+  - ✨ **Minimal Clean Modern** (Soft, elegant, beige tones)
+  - 🎨 **Colorful Gen-Z** (Vibrant, playful, gradient-heavy)
+  - 🌑 **Dark Modern/Futuristic** (Sleek, neon accents)
+  - 🅰️ **Bold Typography** (High impact, text-driven)
+- **Brand Customization**: Dynamic accent color support to match your brand identity.
+- **One-Click Export**: Download generated carousel slides as high-quality images ready for Instagram.
+- **User-Friendly Flow**: No login required, streamlined process from upload to download.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Language**: TypeScript
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **AI**: OpenAI API (GPT-4o / GPT-4 Turbo)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Image Generation**: `html-to-image` (Client-side rendering)
 
-## Learn More
+## 📦 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js (v18 or higher)
+- npm, pnpm, or bun
+- An OpenAI API Key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YudaClairee/lokagen.git
+   cd lokagen
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   pnpm install
+   # or
+   bun install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Environment Setup**
+   Create a `.env` file in the root directory (copy from `.env.example` if available) and add your OpenAI API key:
+   ```env
+   OPENAI_API_KEY=sk-your-api-key-here
+   ```
+
+4. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 📖 Usage
+
+1. Go to the **Generate** page.
+2. **Upload** a photo of your product.
+3. (Optional) precise a short description or key selling points.
+4. Select a **Visual Theme** and **Tone** for the caption.
+5. Pick your **Brand Color**.
+6. Click **Generate Magic**!
+7. Preview the results and download your slides.
+
+---
+
+Made with ❤️ by the LokaGen Team for Local MSMEs.
