@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
           <div className="flex items-center gap-2">
-            <Image src="/lokagen.png" alt="Logo" width={32} height={32} className="h-5 w-5" />
+            <Image src="/lokagen.png" alt="Logo" width={100} height={100}/>
           </div>
 
           <p className="text-sm text-muted-foreground">
