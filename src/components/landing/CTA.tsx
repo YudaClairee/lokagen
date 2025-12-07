@@ -22,7 +22,7 @@ export function CTA() {
             <span className="text-primary">Sosial Media Anda?</span>
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-            Bergabunglah dengan ribuan UMKM yang menggunakan LokaGen untuk
+            Bergabunglah menjadi UMKM yang menggunakan LokaGen untuk
             membuat konten profesional dalam hitungan detik.
           </p>
 
