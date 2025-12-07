@@ -31,15 +31,13 @@ export default function GeneratePage() {
   const [tone, setTone] = useState<Tone>(DEFAULT_TONE);
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const [brandColor, setBrandColor] = useState<string>(DEFAULT_BRAND_COLOR);
-
-  // Result state
   const [result, setResult] = useState<GeneratedContent | null>(null);
   const [error, setError] = useState<string>("");
 
-  // Loading state
+ 
   const [isPending, startTransition] = useTransition();
 
-  // Refs for slide elements (for download)
+ 
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleGenerate = () => {
@@ -72,7 +70,6 @@ export default function GeneratePage() {
 
   return (
     <main className="relative min-h-screen text-white">
-      {/* Dark Sphere Grid Background - same as landing page */}
       <div
         className="fixed inset-0 z-0"
         style={{
@@ -86,7 +83,6 @@ export default function GeneratePage() {
         }}
       />
 
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#020617]/80 backdrop-blur-md">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <Link
@@ -97,18 +93,16 @@ export default function GeneratePage() {
             <span>Kembali</span>
           </Link>
           <h1 className="text-lg font-semibold text-white">Generate Konten</h1>
-          <div className="w-20" /> {/* Spacer for centering */}
+          <div className="w-20" /> 
         </div>
       </header>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Left Column - Form */}
           <div className="space-y-6">
             <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
               <h2 className="mb-6 text-xl font-semibold text-white">Detail Produk</h2>
 
-              {/* Product Form */}
               <ProductForm
                 productName={productName}
                 setProductName={setProductName}
@@ -118,7 +112,6 @@ export default function GeneratePage() {
                 setDescription={setDescription}
               />
 
-              {/* Generate Options */}
               <GenerateOptions
                 tone={tone}
                 setTone={setTone}
@@ -128,14 +121,12 @@ export default function GeneratePage() {
                 setBrandColor={setBrandColor}
               />
 
-              {/* Error Message */}
               {error && (
                 <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
                   {error}
                 </div>
               )}
 
-              {/* Generate Button */}
               <Button
                 onClick={handleGenerate}
                 disabled={isPending}
@@ -157,9 +148,7 @@ export default function GeneratePage() {
             </div>
           </div>
 
-          {/* Right Column - Preview */}
           <div className="space-y-6">
-            {/* Carousel Preview */}
             <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-white">Preview Carousel</h2>
@@ -172,13 +161,13 @@ export default function GeneratePage() {
                 content={result}
                 theme={theme}
                 brandColor={brandColor}
+                productName={productName}
                 productImage={productImage}
                 slideRefs={slideRefs}
                 isLoading={isPending}
               />
             </div>
 
-            {/* Caption Display */}
             {result && (
               <CaptionDisplay caption={result.caption} />
             )}

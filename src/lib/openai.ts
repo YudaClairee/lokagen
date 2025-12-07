@@ -1,13 +1,11 @@
 import OpenAI from "openai";
 import type { Tone, Theme } from "@/lib/types";
 
-// Initialize OpenAI client
 export const openai = new OpenAI({
   apiKey: process.env.KOLOSAL_API_KEY,
   baseURL: "https://api.kolosal.ai/v1",
 });
 
-// System prompt for generating Instagram carousel content
 export const SYSTEM_PROMPT = `Kamu adalah AI content creator profesional yang spesialis membuat konten Instagram carousel untuk UMKM lokal Indonesia.
 
 Tugasmu adalah membuat:
@@ -30,7 +28,6 @@ Rules:
 
 Output harus dalam format JSON yang valid.`;
 
-// Tone descriptions for prompt
 const toneDescriptions: Record<Tone, string> = {
   playful: "fun, santai, pakai bahasa gaul yang friendly",
   formal: "profesional, sopan, dan terpercaya",
@@ -38,7 +35,6 @@ const toneDescriptions: Record<Tone, string> = {
   lokal: "akrab, pakai bahasa daerah/slang lokal, seperti ngobrol sama teman",
 };
 
-// Theme descriptions for prompt
 const themeDescriptions: Record<Theme, string> = {
   "Colorful Gen Z": "warna-warni, vibrant, eye-catching, cocok untuk anak muda",
   "Minimal Clean Modern": "bersih, simpel, modern, elegan",
@@ -46,7 +42,6 @@ const themeDescriptions: Record<Theme, string> = {
   "Bold Typography": "typography dominan, impactful, statement",
 };
 
-// Generate user prompt based on input
 export function generateUserPrompt(
   productName: string | undefined,
   description: string | undefined,

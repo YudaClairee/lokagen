@@ -2,51 +2,62 @@
 
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, isPlaceholder }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
+    
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-white p-10"
+        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
+        style={{ backgroundColor: brandColor }}
       >
-        {/* Content */}
-        <div className="relative z-10 max-w-[280px] text-center">
-          <h2 className="mb-4 font-serif text-3xl font-light tracking-tight text-gray-900">
-            {data.title}
-          </h2>
-          
-          <p className="mb-8 text-sm font-light leading-relaxed text-gray-500">
-            {data.ctaText}
-          </p>
+        {/* Window Shadow Overlay */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-10 opacity-20"
+          style={{
+            background: 'linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, transparent 60%)',
+            filter: 'blur(40px)'
+          }}
+        />
+         <div className="relative z-20 flex flex-col items-center text-center">
+            
+            {/* Logo Placeholder */}
+            <div className="mb-8 h-16 w-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
+                <ArrowRight className="h-6 w-6 text-white" />
+            </div>
 
-          {/* CTA Button - minimal style */}
-          <div
-            className="inline-flex items-center gap-2 rounded-none px-6 py-3 text-sm font-medium text-white transition-all hover:gap-3"
-            style={{ background: brandColor }}
-          >
-            Order Sekarang
-            <ArrowUpRight className="h-4 w-4" />
-          </div>
+            <h2 className="mb-6 text-4xl font-black uppercase tracking-tight text-white">
+              {data.title}
+            </h2>
+            
+            <p className="mb-10 text-sm font-medium text-white/80 max-w-[200px] leading-relaxed">
+              {data.ctaText}
+            </p>
 
-          <p className="mt-6 text-[11px] font-light tracking-wide text-gray-400">
-            Klik link di bio
-          </p>
-        </div>
+            <div className="rounded-full bg-white px-8 py-4 shadow-lg">
+                <span 
+                    className="text-sm font-bold uppercase tracking-widest"
+                    style={{ color: brandColor }} // Use brand color for text to contrast with white button
+                >
+                    Order Now
+                </span>
+            </div>
 
-        {/* Slide Number */}
-        <div className="absolute bottom-6 right-6 text-[10px] font-medium uppercase tracking-[0.2em] text-gray-300">
-          05 / 05
-        </div>
+            {/* Footer Text */}
+            <div className="absolute -bottom-24 text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
+               Link in Bio
+            </div>
+         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80">
-            <span className="text-sm text-gray-400">Preview</span>
+         {isPlaceholder && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+            <span className="border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500 shadow-sm rounded-full">Preview Mode</span>
           </div>
         )}
       </div>
     );
   }
 );
-

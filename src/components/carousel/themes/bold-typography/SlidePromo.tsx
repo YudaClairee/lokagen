@@ -2,76 +2,73 @@
 
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
+import Image from "next/image";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-black p-8"
+        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-white p-8"
       >
-        {/* Diagonal stripes background */}
-        <div 
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              45deg,
-              ${brandColor},
-              ${brandColor} 2px,
-              transparent 2px,
-              transparent 20px
-            )`,
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative z-10 max-w-[300px] text-center">
-          <span 
-            className="mb-4 inline-block px-3 py-1 text-xs font-black uppercase tracking-widest text-black"
-            style={{ background: brandColor }}
-          >
-            Limited Offer
-          </span>
-
-          <h2 className="mb-6 text-3xl font-black uppercase leading-none tracking-tighter text-white">
-            {data.title}
-          </h2>
-
-          <div 
-            className="border-4 bg-transparent p-6"
-            style={{ borderColor: brandColor }}
-          >
-            <p 
-              className="text-2xl font-black uppercase tracking-tight"
-              style={{ color: brandColor }}
-            >
-              {data.promoText}
-            </p>
+        {/* Background Image if present */}
+        {productImage && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={productImage}
+              alt="Background"
+              fill
+              className="object-cover opacity-10 filter grayscale"
+            />
+            <div className="absolute inset-0 bg-white/90" />
           </div>
+        )}
+        {/* Background Stripes */}
+        <div className="absolute inset-0 flex -rotate-12 translate-y-[-50%] transform flex-col gap-4 opacity-5">
+           {Array.from({ length: 10 }).map((_, i) => (
+             <div key={i} className="h-12 w-[150%] bg-black" />
+           ))}
         </div>
 
-        {/* Corner accents */}
-        <div 
-          className="absolute left-4 top-4 h-12 w-12 border-l-4 border-t-4"
-          style={{ borderColor: brandColor }}
-        />
-        <div 
-          className="absolute bottom-4 right-4 h-12 w-12 border-b-4 border-r-4"
-          style={{ borderColor: brandColor }}
-        />
+        {/* Starburst Shape Container */}
+        <div className="relative z-10 w-full max-w-[300px]">
+           <div 
+             className="relative border-4 border-black bg-white p-8 shadow-[12px_12px_0px_0px_#000]"
+           >
+             {/* Decor elements */}
+             <div 
+               className="absolute -left-3 -top-3 h-6 w-6 border-4 border-black bg-white" 
+               style={{ backgroundColor: brandColor }}
+             />
+             <div 
+               className="absolute -bottom-3 -right-3 h-6 w-6 border-4 border-black bg-white"
+               style={{ backgroundColor: brandColor }}
+             />
 
-        {/* Slide Number */}
-        <div className="absolute bottom-6 right-6 text-xs font-black uppercase tracking-widest text-neutral-600">
-          04—05
+             <div className="text-center">
+               <span 
+                 className="mb-2 block font-mono text-sm font-bold uppercase tracking-widest"
+                 style={{ color: brandColor }}
+               >
+                 Limited Offer
+               </span>
+               <h2 className="text-4xl font-black uppercase italic leading-[0.9] tracking-tighter text-black">
+                 {data.title}
+               </h2>
+               <div className="my-4 h-1 w-full bg-black/10" />
+               <p className="text-xl font-bold text-gray-800">
+                 {data.promoText}
+               </p>
+             </div>
+           </div>
         </div>
 
         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <span className="text-sm font-bold uppercase tracking-wider text-neutral-500">Preview</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
+             <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
           </div>
         )}
       </div>
     );
   }
 );
-

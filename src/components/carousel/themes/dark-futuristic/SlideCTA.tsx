@@ -3,74 +3,81 @@
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, isPlaceholder }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-10"
-        style={{
-          background: `radial-gradient(ellipse at center, #141420 0%, #0a0a0f 100%)`,
-        }}
+        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8 text-white"
       >
-        {/* Central glow */}
-        <div 
-          className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[80px]"
-          style={{ background: brandColor }}
-        />
-
-        {/* Content */}
-        <div className="relative z-10 max-w-[280px] text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white">
-            {data.title}
-          </h2>
-          
-          <p className="mb-8 text-sm leading-relaxed text-gray-400">
-            {data.ctaText}
-          </p>
-
-          {/* CTA Button - cyber style */}
-          <div
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg px-8 py-4 text-sm font-bold text-white transition-all"
-            style={{ 
-              background: brandColor,
-              boxShadow: `0 0 20px ${brandColor}50`,
-            }}
-          >
-            <span className="relative z-10">Order Sekarang</span>
-            <ArrowRight className="relative z-10 h-4 w-4" />
-            {/* Shine effect */}
-            <div className="absolute -left-full top-0 h-full w-1/2 skew-x-12 bg-white/20" />
+        {/* Background Image if present */}
+        {productImage && (
+          <div className="absolute inset-0 z-0">
+             <div 
+               className="absolute inset-0 z-10 mix-blend-overlay opacity-50"
+               style={{ backgroundColor: brandColor }}
+             />
+             <Image
+               src={productImage}
+               alt="Background"
+               fill
+               className="object-cover opacity-20"
+             />
+             <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
           </div>
-
-          <p className="mt-6 text-xs text-gray-500">
-            Link di bio 👆
-          </p>
+        )}
+        {/* Data Stream Background (Static) */}
+        <div className="absolute inset-0 flex select-none flex-col gap-1 overflow-hidden font-mono text-[10px] text-white/[0.03]">
+           {Array.from({ length: 20 }).map((_, i) => (
+             <div key={i} className="whitespace-nowrap">
+               0101010100101110 0xFF 0x00 SYSTEM_CALL 1234567890 ACCESS_GRANTED
+             </div>
+           ))}
         </div>
 
-        {/* Corner brackets */}
-        <div className="absolute bottom-8 left-8 h-6 w-6 border-b-2 border-l-2" style={{ borderColor: `${brandColor}40` }} />
-        <div className="absolute right-8 top-8 h-6 w-6 border-r-2 border-t-2" style={{ borderColor: `${brandColor}40` }} />
+        {/* Content */}
+        <div className="relative z-10 w-full text-center">
+           <h2 
+             className="mb-2 text-4xl font-bold font-mono tracking-tighter"
+             style={{ textShadow: `0 0 15px ${brandColor}80` }}
+           >
+             {data.title}
+           </h2>
+           <p className="mb-10 font-mono text-sm text-gray-400">
+             &lt; {data.ctaText} /&gt;
+           </p>
 
-        {/* Slide Number */}
-        <div 
-          className="absolute bottom-5 right-5 rounded border px-2 py-1 text-[10px] font-mono tracking-wider"
-          style={{ 
-            borderColor: `${brandColor}50`,
-            color: brandColor,
-          }}
-        >
-          05/05
+           <div className="group relative inline-block">
+             <div 
+               className="absolute -inset-1 rounded opacity-70 blur-md"
+               style={{ backgroundColor: brandColor }}
+             />
+             <div 
+               className="relative flex items-center gap-3 border border-white/20 bg-black px-8 py-3 font-mono font-bold uppercase transition-transform"
+               style={{ borderColor: brandColor, color: brandColor }}
+             >
+               <span>Initialize_Order</span>
+               <ArrowRight className="h-4 w-4" />
+             </div>
+           </div>
+
+           
+        </div>
+
+        {/* Border Frame */}
+        <div className="pointer-events-none absolute inset-4 border border-white/10">
+           <div className="absolute -left-[1px] top-10 h-10 w-[2px] bg-white/50" />
+           <div className="absolute -right-[1px] bottom-10 h-10 w-[2px] bg-white/50" />
         </div>
 
         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-            <span className="text-sm text-gray-500">Preview</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+            <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">PREVIEW_MODE</span>
           </div>
         )}
       </div>
     );
   }
 );
-

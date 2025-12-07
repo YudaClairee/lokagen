@@ -11,6 +11,7 @@ interface CarouselPreviewProps {
   content: GeneratedContent | null;
   theme: Theme;
   brandColor: string;
+  productName: string;
   productImage: string;
   slideRefs: RefObject<(HTMLDivElement | null)[]>;
   isLoading: boolean;
@@ -20,6 +21,7 @@ export function CarouselPreview({
   content,
   theme,
   brandColor,
+  productName,
   productImage,
   slideRefs,
   isLoading,
@@ -48,6 +50,7 @@ export function CarouselPreview({
       key="intro"
       ref={(el) => { slideRefs.current[0] = el; }}
       data={displayContent.slides[0]}
+      productName={productName}
       brandColor={brandColor}
       productImage={productImage}
       isPlaceholder={isPlaceholder}

@@ -3,63 +3,75 @@
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, isPlaceholder }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-[#fafafa] p-8"
+        className="relative flex aspect-square w-full flex-col items-center justify-between overflow-hidden bg-white p-8"
       >
-        {/* Large background text */}
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-          <span className="whitespace-nowrap text-[120px] font-black uppercase tracking-tighter text-black/[0.03]">
-            ORDER NOW
-          </span>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 max-w-[300px] text-center">
-          <h2 className="mb-4 text-4xl font-black uppercase leading-[0.9] tracking-tighter text-black">
-            {data.title}
-          </h2>
-          
-          <p className="mb-8 text-sm font-medium uppercase tracking-widest text-neutral-500">
-            {data.ctaText}
-          </p>
-
-          {/* CTA Button - bold style */}
-          <div
-            className="inline-flex items-center gap-3 px-8 py-4 text-sm font-black uppercase tracking-wider text-white transition-transform hover:scale-105"
-            style={{ background: brandColor }}
-          >
-            <span>Order Sekarang</span>
-            <ArrowRight className="h-5 w-5" strokeWidth={3} />
+        {/* Background Image if present */}
+        {productImage && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={productImage}
+              alt="Background"
+              fill
+              className="object-cover opacity-10 filter grayscale"
+            />
+            <div className="absolute inset-0 bg-white/90" />
           </div>
-
-          <p className="mt-6 text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Link di bio ↑
-          </p>
+        )}
+        {/* Top Bar */}
+        <div className="flex w-full justify-between border-b-4 border-black pb-4">
+           <span className="font-mono text-sm font-bold">FINAL SLIDE</span>
+           <div className="flex gap-2">
+             {[1,2,3].map(i => (
+                <div key={i} className="h-3 w-3 rounded-full border-2 border-black bg-black" />
+             ))}
+           </div>
         </div>
 
-        {/* Bottom accent */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-2"
-          style={{ background: brandColor }}
-        />
+        {/* Center Content */}
+        <div className="relative z-10 flex flex-col items-center text-center">
+           <h2 className="text-7xl font-black uppercase leading-[0.8] tracking-tighter">
+             {data.title.split(" ").map((word, i) => (
+               <span 
+                 key={i} 
+                 className="block"
+                 style={{ color: i % 2 === 0 ? 'black' : brandColor }}
+               >
+                 {word}
+               </span>
+             ))}
+           </h2>
+           
+           <p className="mt-6 max-w-[200px] font-bold text-gray-600">
+             {data.ctaText}
+           </p>
 
-        {/* Slide Number */}
-        <div className="absolute bottom-6 right-6 text-xs font-black uppercase tracking-widest text-neutral-300">
-          05—05
+           {/* Brutalist Button */}
+           <div 
+             className="group mt-8 flex cursor-default items-center gap-3 border-4 border-black bg-white px-6 py-3 shadow-[6px_6px_0px_0px_#000]"
+           >
+              <span className="font-black uppercase">ORDER NOW</span>
+              <ArrowRight className="h-6 w-6 stroke-[3px]" />
+           </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex w-full items-center justify-center border-t-4 border-black pt-4">
+          <span className="font-mono font-bold">LINK IN BIO</span>
         </div>
 
         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-neutral-100/80">
-            <span className="text-sm font-bold uppercase tracking-wider text-neutral-400">Preview</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
+             <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
           </div>
         )}
       </div>
     );
   }
 );
-

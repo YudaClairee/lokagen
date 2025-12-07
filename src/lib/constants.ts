@@ -76,9 +76,5 @@ export const LOADING_MESSAGES = {
 } as const;
 
 // OpenAI/API configuration
-export const AI_CONFIG = {
-  MODEL: "Claude Sonnet 4.5",
-  BASE_URL: "https://api.kolosal.ai/v1",
-  IMAGE_DETAIL: "low" as const,
-} as const;
+
 

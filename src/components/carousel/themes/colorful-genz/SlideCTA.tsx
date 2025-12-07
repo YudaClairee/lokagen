@@ -2,74 +2,92 @@
 
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
-import { ShoppingBag } from "lucide-react";
+import Image from "next/image";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, isPlaceholder }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-8"
-        style={{
-          background: `linear-gradient(180deg, #fce7f3 0%, #f0abfc 50%, #c4b5fd 100%)`,
-        }}
+        className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        {/* Decorations */}
-        <div className="absolute left-6 top-6 text-3xl">🛍️</div>
-        <div className="absolute bottom-1/3 right-6 text-2xl">💸</div>
-        <div className="absolute left-12 top-1/3 h-8 w-8 rounded-full bg-yellow-300 opacity-50" />
-        <div className="absolute bottom-1/4 right-12 h-6 w-6 rounded-full bg-pink-300 opacity-50" />
-
-        {/* Content */}
-        <div className="relative z-10 max-w-[280px] text-center">
-          <h2 className="mb-4 text-3xl font-black text-gray-800">
-            {data.title}
-          </h2>
-          
-          <p className="mb-8 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-gray-600 backdrop-blur-sm">
-            {data.ctaText}
-          </p>
-
-          {/* CTA Button - fun gradient style */}
-          <div
-            className="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-bold text-white shadow-xl transition-transform hover:scale-105"
-            style={{ 
-              background: `linear-gradient(135deg, ${brandColor}, #f472b6)`,
-            }}
-          >
-            <ShoppingBag className="h-5 w-5" />
-            <span>Order Sekarang!</span>
+        {/* Background Image if present */}
+        {productImage && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={productImage}
+              alt="Background"
+              fill
+              className="object-cover opacity-10 mix-blend-multiply"
+            />
           </div>
+        )}
+        {/* Top Section */}
+        <div className="relative z-10 flex flex-col items-center justify-center pt-6 pb-2">
+             {/* Decorative Checkers */}
+            <div className="absolute left-4 top-6 grid grid-cols-2 gap-1">
+                <div className="h-3 w-3 bg-black"></div>
+                <div className="h-3 w-3 bg-white border border-black"></div>
+                <div className="h-3 w-3 bg-white border border-black"></div>
+                <div className="h-3 w-3 bg-black"></div>
+            </div>
+            <div className="absolute right-4 top-6 grid grid-cols-2 gap-1">
+                <div className="h-3 w-3 bg-black"></div>
+                <div className="h-3 w-3 bg-white border border-black"></div>
+                <div className="h-3 w-3 bg-white border border-black"></div>
+                <div className="h-3 w-3 bg-black"></div>
+            </div>
 
-          <p className="mt-6 text-sm font-bold text-gray-600">
-            👆 Klik link di bio ya! 👆
-          </p>
+            <h1 
+                className="text-center text-5xl font-black uppercase leading-none tracking-tighter px-12"
+                style={{ 
+                    color: '#0088FF', 
+                    WebkitTextStroke: '2px black',
+                    textShadow: '4px 4px 0px #000'
+                }}
+            >
+                ORDER
+            </h1>
+             <h2 
+                className="mt-1 text-center text-lg font-black uppercase tracking-widest text-[#FFD700]"
+                style={{ 
+                    WebkitTextStroke: '1px black',
+                    textShadow: '2px 2px 0px #000'
+                }}
+            >
+                {data.title}
+            </h2>
         </div>
 
-        {/* Wavy top border */}
-        <div 
-          className="absolute left-0 right-0 top-0 h-4"
-          style={{ 
-            background: brandColor,
-            clipPath: 'polygon(0% 0%, 0% 50%, 5% 60%, 10% 50%, 15% 60%, 20% 50%, 25% 60%, 30% 50%, 35% 60%, 40% 50%, 45% 60%, 50% 50%, 55% 60%, 60% 50%, 65% 60%, 70% 50%, 75% 60%, 80% 50%, 85% 60%, 90% 50%, 95% 60%, 100% 50%, 100% 0%)',
-          }}
-        />
+        {/* Main Card */}
+        <div className="flex-1 px-4 pb-4 min-h-0">
+            <div 
+                className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                style={{ backgroundColor: brandColor || '#FDE047' }}
+            >
+                <div className="bg-black p-1 rounded-2xl w-full">
+                    <div className="bg-[#00FF94] border-2 border-black p-4 rounded-xl text-center">
+                        <p className="text-2xl font-black uppercase leading-tight text-black">
+                            {data.ctaText}
+                        </p>
+                    </div>
+                </div>
+                <p className="mt-4 text-xs font-black uppercase">KLIK LINK DI BIO!</p>
+            </div>
+        </div>
 
-        {/* Slide Number */}
-        <div 
-          className="absolute bottom-6 right-6 rounded-full px-3 py-1 text-xs font-bold text-white shadow-lg"
-          style={{ background: brandColor }}
-        >
-          5 of 5 🚀
+        {/* Footer */}
+        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
+             <span className="text-[10px] font-black uppercase leading-tight">MENERIMA<br/>PESANAN ONLINE</span>
+             <span className="text-[10px] font-black uppercase text-right leading-tight">LOKAGEN<br/>APP</span>
         </div>
 
         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-            <span className="text-sm font-medium text-gray-500">Preview</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
+            <span className="rounded-full bg-black px-4 py-2 text-sm font-bold text-white">PREVIEW</span>
           </div>
         )}
       </div>
     );
   }
 );
-

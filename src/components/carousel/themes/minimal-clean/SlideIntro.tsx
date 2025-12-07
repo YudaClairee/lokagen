@@ -5,59 +5,75 @@ import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
-  function SlideIntro({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-white p-10"
+        className="relative flex aspect-square w-full flex-col overflow-hidden text-gray-900"
+        style={{ backgroundColor: brandColor }}
       >
-        {/* Subtle grid pattern */}
+        {/* Window Shadow Overlay */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 pointer-events-none z-10 opacity-20"
           style={{
-            backgroundImage: `linear-gradient(${brandColor} 1px, transparent 1px), linear-gradient(90deg, ${brandColor} 1px, transparent 1px)`,
-            backgroundSize: '40px 40px',
+            background: 'linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, transparent 60%)',
+            filter: 'blur(40px)'
           }}
         />
 
-        {/* Product Image */}
-        {productImage && (
-          <div className="relative mb-8 h-28 w-28 overflow-hidden rounded-lg shadow-sm ring-1 ring-gray-100">
-            <Image
-              src={productImage}
-              alt="Product"
-              fill
-              className="object-cover"
-            />
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="relative z-10 max-w-[280px] text-center">
-          <h1 className="mb-3 font-serif text-3xl font-light tracking-tight text-gray-900">
-            {data.title}
+        {/* Top Content */}
+        <div className="relative z-20 flex w-full flex-col items-center pt-12 text-center">
+          {/* Outline Text Effect behind or as main */}
+          <h1 
+            className="text-5xl font-black uppercase tracking-tighter text-white/90"
+            style={{ 
+              WebkitTextStroke: '1px rgba(255,255,255,0.5)',
+              textShadow: '0 2px 10px rgba(0,0,0,0.05)'
+            }}
+          >
+            {productName || "NEW PRODUCT"}
           </h1>
-          <div 
-            className="mx-auto mb-4 h-[2px] w-12"
-            style={{ background: brandColor }}
-          />
-          <p className="text-base font-light leading-relaxed text-gray-500">
+          <p className="mt-2 text-sm font-medium uppercase tracking-[0.3em] text-gray-800/60">
             {data.subtitle}
           </p>
         </div>
 
-        {/* Slide Number - minimal style */}
-        <div className="absolute bottom-6 right-6 text-[10px] font-medium uppercase tracking-[0.2em] text-gray-300">
-          01 / 05
-        </div>
+        {/* Central Card / Podium */}
+        <div className="relative z-20 mx-auto mt-8 flex h-[65%] w-[70%] items-center justify-center rounded-t-[3rem] bg-white/20 shadow-2xl backdrop-blur-sm">
+           <div className="relative h-full w-full p-6">
+              <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-transparent bg-gray-100 shadow-inner">
 
+                {productImage ? (
+                  <Image
+                    src={productImage}
+                    alt="Product"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-gray-400 font-bold">
+                    PRODUCT IMAGE
+                  </div>
+                )}
+              </div>
+              
+              {/* Product Label Overlay (Floating) */}
+              
+           </div>
+        </div>
+           
+        {/* Footer info */}
+        <div className="absolute bottom-6 w-full text-center z-20">
+           <div className="text-[10px] font-bold tracking-widest text-black/40">
+             WWW.LOKAGEN.COM
+           </div>
+        </div>
         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80">
-            <span className="text-sm text-gray-400">Preview</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+            <span className="border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500 shadow-sm rounded-full">Preview Mode</span>
           </div>
         )}
       </div>
     );
   }
 );
-

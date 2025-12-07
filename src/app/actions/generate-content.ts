@@ -6,19 +6,17 @@ import type {
   GenerateContentResponse,
   GeneratedContent,
 } from "@/lib/types";
-import {
-  VALIDATION,
-  ERROR_MESSAGES,
-  TOTAL_SLIDES,
-} from "@/lib/constants";
+import { VALIDATION, ERROR_MESSAGES, TOTAL_SLIDES } from "@/lib/constants";
 
 export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   try {
-    const { productName, productImage, description, tone, theme, brandColor } = input;
+    const { productName, productImage, description, tone, theme, brandColor } =
+      input;
 
-    const hasImage = productImage && productImage.length > VALIDATION.MIN_IMAGE_SIZE;
+    const hasImage =
+      productImage && productImage.length > VALIDATION.MIN_IMAGE_SIZE;
 
     const messages: Parameters<
       typeof openai.chat.completions.create
@@ -35,7 +33,14 @@ export async function generateContent(
         content: [
           {
             type: "text",
-            text: generateUserPrompt(productName, description, tone, theme, brandColor, true),
+            text: generateUserPrompt(
+              productName,
+              description,
+              tone,
+              theme,
+              brandColor,
+              true
+            ),
           },
           {
             type: "image_url",
@@ -51,7 +56,14 @@ export async function generateContent(
     } else {
       messages.push({
         role: "user",
-        content: generateUserPrompt(productName, description, tone, theme, brandColor, false),
+        content: generateUserPrompt(
+          productName,
+          description,
+          tone,
+          theme,
+          brandColor,
+          false
+        ),
       });
     }
 
@@ -69,7 +81,6 @@ export async function generateContent(
       };
     }
 
-    // Clean up markdown formatting
     let cleanedContent = content.trim();
     if (cleanedContent.startsWith("```json")) {
       cleanedContent = cleanedContent.replace(/^```json\s*/, "");
