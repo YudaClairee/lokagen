@@ -18,10 +18,10 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: TypeScript
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **AI**: OpenAI API (GPT-4o / GPT-4 Turbo)
+- **AI**: Kolosal AI (Claude Sonnet 4.5)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Image Generation**: `html-to-image` (Client-side rendering)
@@ -32,7 +32,7 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 
 - Node.js (v18 or higher)
 - npm, pnpm, or bun
-- An OpenAI API Key
+- A Kolosal AI API Key
 
 ### Installation
 
@@ -52,9 +52,9 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
    ```
 
 3. **Environment Setup**
-   Create a `.env` file in the root directory (copy from `.env.example` if available) and add your OpenAI API key:
+   Create a `.env` file in the root directory (copy from `.env.example` if available) and add your Kolosal AI API key:
    ```env
-   OPENAI_API_KEY=sk-your-api-key-here
+   KOLOSAL_API_KEY=sk-your-api-key-here
    ```
 
 4. **Run Development Server**
@@ -76,4 +76,4 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 
 ---
 
-Made with ❤️ by the LokaGen Team for Local MSMEs.
+Made with ❤️ by the Anak Mamah Team for Local MSMEs.
