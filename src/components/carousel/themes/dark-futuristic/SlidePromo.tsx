@@ -55,9 +55,9 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             </h2>
 
             <div className="my-4 flex items-center gap-2 opacity-50">
-              <div className="h-[1px] flex-1 bg-white" />
+              <div className="h-px flex-1 bg-white" />
               <div className="h-2 w-2 rotate-45 border border-white" />
-              <div className="h-[1px] flex-1 bg-white" />
+              <div className="h-px flex-1 bg-white" />
             </div>
 
             <p className="font-mono text-lg text-gray-300">{data.promoText}</p>
