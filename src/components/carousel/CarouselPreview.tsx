@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, RefObject } from "react";
-import type { GeneratedContent, Theme } from "@/lib/types";
+import { useMemo, RefObject } from "react";
+import type { BrandInfo, GeneratedContent, Theme } from "@/lib/types";
 import { TOTAL_SLIDES, PLACEHOLDER_CONTENT } from "@/lib/constants";
 import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -13,9 +13,15 @@ interface CarouselPreviewProps {
   brandColor: string;
   productName: string;
   productImage: string;
+  brandInfo?: BrandInfo;
   slideRefs: RefObject<(HTMLDivElement | null)[]>;
   isLoading: boolean;
+  currentSlide: number;
+  onSlideChange: (index: number) => void;
 }
+
+// Ukuran logis satu slide. Dikali pixelRatio 2 saat export → 1080x1080px.
+const EXPORT_SIZE = 540;
 
 export function CarouselPreview({
   content,
@@ -23,29 +29,76 @@ export function CarouselPreview({
   brandColor,
   productName,
   productImage,
+  brandInfo,
   slideRefs,
   isLoading,
+  currentSlide,
+  onSlideChange,
 }: CarouselPreviewProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   // Get theme-specific components
   const { SlideIntro, SlideFeatures, SlideBenefits, SlidePromo, SlideCTA } = useMemo(
     () => getThemeComponents(theme),
     [theme]
   );
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % TOTAL_SLIDES);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
-  };
-
   const displayContent = content || PLACEHOLDER_CONTENT;
   const isPlaceholder = !content;
 
-  const slideComponents = [
+  const nextSlide = () => onSlideChange((currentSlide + 1) % TOTAL_SLIDES);
+  const prevSlide = () => onSlideChange((currentSlide - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
+
+  // Komponen slide untuk ditampilkan di preview utama (tanpa ref).
+  const previewSlides = [
+    <SlideIntro
+      key="intro"
+      data={displayContent.slides[0]}
+      productName={productName}
+      brandColor={brandColor}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={isPlaceholder}
+    />,
+    <SlideFeatures
+      key="features"
+      data={displayContent.slides[1]}
+      productName={productName}
+      brandColor={brandColor}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={isPlaceholder}
+    />,
+    <SlideBenefits
+      key="benefits"
+      data={displayContent.slides[2]}
+      productName={productName}
+      brandColor={brandColor}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={isPlaceholder}
+    />,
+    <SlidePromo
+      key="promo"
+      data={displayContent.slides[3]}
+      productName={productName}
+      brandColor={brandColor}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={isPlaceholder}
+    />,
+    <SlideCTA
+      key="cta"
+      data={displayContent.slides[4]}
+      productName={productName}
+      brandColor={brandColor}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={isPlaceholder}
+    />,
+  ];
+
+  // Render kelima slide sekaligus di luar layar, selalu terpasang di DOM,
+  // agar html-to-image bisa mengekspor semuanya dengan ukuran konsisten.
+  const exportSlides = [
     <SlideIntro
       key="intro"
       ref={(el) => { slideRefs.current[0] = el; }}
@@ -53,35 +106,48 @@ export function CarouselPreview({
       productName={productName}
       brandColor={brandColor}
       productImage={productImage}
-      isPlaceholder={isPlaceholder}
+      brandInfo={brandInfo}
+      isPlaceholder={false}
     />,
     <SlideFeatures
       key="features"
       ref={(el) => { slideRefs.current[1] = el; }}
       data={displayContent.slides[1]}
+      productName={productName}
       brandColor={brandColor}
-      isPlaceholder={isPlaceholder}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={false}
     />,
     <SlideBenefits
       key="benefits"
       ref={(el) => { slideRefs.current[2] = el; }}
       data={displayContent.slides[2]}
+      productName={productName}
       brandColor={brandColor}
-      isPlaceholder={isPlaceholder}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={false}
     />,
     <SlidePromo
       key="promo"
       ref={(el) => { slideRefs.current[3] = el; }}
       data={displayContent.slides[3]}
+      productName={productName}
       brandColor={brandColor}
-      isPlaceholder={isPlaceholder}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={false}
     />,
     <SlideCTA
       key="cta"
       ref={(el) => { slideRefs.current[4] = el; }}
       data={displayContent.slides[4]}
+      productName={productName}
       brandColor={brandColor}
-      isPlaceholder={isPlaceholder}
+      productImage={productImage}
+      brandInfo={brandInfo}
+      isPlaceholder={false}
     />,
   ];
 
@@ -99,7 +165,7 @@ export function CarouselPreview({
         )}
         
         <div className={`overflow-hidden rounded-lg ${isPlaceholder ? "opacity-50" : ""}`}>
-          {slideComponents[currentSlide]}
+          {previewSlides[currentSlide]}
         </div>
       </div>
 
@@ -113,7 +179,7 @@ export function CarouselPreview({
           {Array.from({ length: TOTAL_SLIDES }, (_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => onSlideChange(index)}
               className={`h-2 w-2 rounded-full transition-colors ${
                 currentSlide === index
                   ? "bg-primary"
@@ -132,6 +198,21 @@ export function CarouselPreview({
       <p className="text-center text-sm text-slate-400">
         Slide {currentSlide + 1} / {TOTAL_SLIDES}
       </p>
+
+      {/* Export container: off-screen, selalu di DOM, ukuran tetap */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-100"
+      >
+        {exportSlides.map((slide, idx) => (
+          <div
+            key={idx}
+            style={{ width: EXPORT_SIZE, height: EXPORT_SIZE }}
+          >
+            {slide}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

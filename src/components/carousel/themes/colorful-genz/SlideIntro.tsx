@@ -3,9 +3,10 @@
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
-  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     return (
       <div
         ref={ref}
@@ -26,7 +27,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
             </div>
 
             <h1 
-                className="text-center text-5xl font-black uppercase leading-none tracking-tighter px-12"
+                className={`text-center font-black uppercase leading-none tracking-tighter px-12 break-words line-clamp-2 ${fitText(data.title, [[12, "text-5xl"], [18, "text-4xl"]], "text-3xl")}`}
                 style={{ 
                     color: '#00FF94', 
                     WebkitTextStroke: '2px black',
@@ -72,25 +73,33 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                 <div className="flex flex-col justify-center items-end h-full w-[45%] gap-2">
                     <div className="text-right">
                         <p className="text-xs font-black leading-tight uppercase">
-                            {productName || 'MAKAN PAGI, SIANG, MALAM HEMATNYA DI SINI'}
+                            {productName || brandInfo?.storeName || data.subtitle}
                         </p>
                     </div>
                     
                     <div className="w-full rounded-xl bg-white border-2 border-black p-2 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <p className="text-[10px] font-black uppercase mb-1">
-                            HARGA MULAI
-                        </p>
-                        <p className="text-xl font-black text-[#00FF94] leading-none" style={{ WebkitTextStroke: '1px black' }}>
-                            12K
-                        </p>
+                        {brandInfo?.priceText ? (
+                          <>
+                            <p className="text-[10px] font-black uppercase mb-1">
+                                HARGA
+                            </p>
+                            <p className="text-xl font-black text-[#00FF94] leading-none break-words" style={{ WebkitTextStroke: '1px black' }}>
+                                {brandInfo.priceText}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm font-black text-[#00FF94] leading-none break-words" style={{ WebkitTextStroke: '1px black' }}>
+                              {brandInfo?.promoBadge || "TERBAIK"}
+                          </p>
+                        )}
                     </div>
                 </div>
             </div>
         </div>
 
         <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
-             <span className="text-[10px] font-black uppercase leading-tight">MENERIMA<br/>PESANAN ONLINE</span>
-             
+             <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "PRODUK LOKAL"}</span>
+             <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
         </div>
 
         {isPlaceholder && (

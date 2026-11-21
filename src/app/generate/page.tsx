@@ -5,6 +5,7 @@ import { generateContent } from "@/app/actions/generate-content";
 import type {
   Tone,
   Theme,
+  BrandInfo,
   GeneratedContent,
   GenerateContentInput,
 } from "@/lib/types";
@@ -20,6 +21,8 @@ import { CarouselPreview } from "@/components/carousel/CarouselPreview";
 import { DownloadButton } from "@/components/generate/DownloadButton";
 import { CaptionDisplay } from "@/components/generate/CaptionDisplay";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Sparkles, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -33,6 +36,14 @@ export default function GeneratePage() {
   const [brandColor, setBrandColor] = useState<string>(DEFAULT_BRAND_COLOR);
   const [result, setResult] = useState<GeneratedContent | null>(null);
   const [error, setError] = useState<string>("");
+  const [priceText, setPriceText] = useState<string>("");
+  const [contactInfo, setContactInfo] = useState<string>("");
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
+  const brandInfo: BrandInfo = {
+    priceText: priceText.trim() || undefined,
+    contactInfo: contactInfo.trim() || undefined,
+  };
 
  
   const [isPending, startTransition] = useTransition();
@@ -55,6 +66,7 @@ export default function GeneratePage() {
       tone,
       theme,
       brandColor,
+      brandInfo,
     };
 
     startTransition(async () => {
@@ -62,6 +74,7 @@ export default function GeneratePage() {
 
       if (response.success && response.data) {
         setResult(response.data);
+        setCurrentSlide(0);
       } else {
         setError(response.error || "Terjadi kesalahan");
       }
@@ -121,6 +134,38 @@ export default function GeneratePage() {
                 setBrandColor={setBrandColor}
               />
 
+              <div className="mt-6 space-y-4 rounded-lg border border-white/10 bg-slate-800/30 p-4">
+                <p className="text-sm font-semibold text-slate-200">
+                  Info Toko <span className="font-normal text-slate-500">(opsional, tampil di slide)</span>
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="priceText" className="mb-2 block text-slate-200">Harga / Label Promo</Label>
+                    <Input
+                      id="priceText"
+                      type="text"
+                      maxLength={30}
+                      placeholder='Contoh: "Rp 25.000"'
+                      value={priceText}
+                      onChange={(e) => setPriceText(e.target.value)}
+                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="contactInfo" className="mb-2 block text-slate-200">Kontak IG & WA</Label>
+                    <Input
+                      id="contactInfo"
+                      type="text"
+                      maxLength={80}
+                      placeholder='Contoh: "@kopisenja • WA 0812xxx"'
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {error && (
                 <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
                   {error}
@@ -153,7 +198,11 @@ export default function GeneratePage() {
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-white">Preview Carousel</h2>
                 {result && (
-                  <DownloadButton slideRefs={slideRefs} />
+                  <DownloadButton
+                    slideRefs={slideRefs}
+                    productName={productName}
+                    currentSlide={currentSlide}
+                  />
                 )}
               </div>
 
@@ -163,8 +212,11 @@ export default function GeneratePage() {
                 brandColor={brandColor}
                 productName={productName}
                 productImage={productImage}
+                brandInfo={brandInfo}
                 slideRefs={slideRefs}
                 isLoading={isPending}
+                currentSlide={currentSlide}
+                onSlideChange={setCurrentSlide}
               />
             </div>
 

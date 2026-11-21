@@ -5,7 +5,7 @@ import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
-  function SlideBenefits({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     
     return (
       <div
@@ -89,8 +89,8 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
 
         
         <div className="absolute bottom-6 left-0 right-0 text-center z-20">
-           <span className="text-[10px] font-bold uppercase tracking-widest text-black/30">
-             WWW.LOKAGEN.COM
+           <span className="text-[10px] font-bold uppercase tracking-widest text-black/30 break-words px-6">
+             {brandInfo?.contactInfo || brandInfo?.storeName || productName || ""}
            </span>
         </div>
 
