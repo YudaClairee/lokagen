@@ -1,6 +1,6 @@
 "use server";
 
-import { openai, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
+import { openai, AI_MODEL, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
 import type {
   GenerateContentInput,
   GenerateContentResponse,
@@ -68,7 +68,7 @@ export async function generateContent(
     }
 
     const completion = await openai.chat.completions.create({
-      model: "Claude Sonnet 4.5",
+      model: AI_MODEL,
       messages,
     });
 

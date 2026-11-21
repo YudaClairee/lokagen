@@ -1,9 +1,12 @@
 import OpenAI from "openai";
 import type { Tone, Theme } from "@/lib/types";
 
+export const AI_MODEL =
+  process.env.AI_MODEL || "deepseek/deepseek-v4.1-flash-1017";
+
 export const openai = new OpenAI({
-  apiKey: process.env.KOLOSAL_API_KEY,
-  baseURL: "https://api.kolosal.ai/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
 });
 
 export const SYSTEM_PROMPT = `Kamu adalah AI content creator profesional yang spesialis membuat konten Instagram carousel untuk UMKM lokal Indonesia.

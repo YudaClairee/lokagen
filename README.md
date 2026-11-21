@@ -21,7 +21,7 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: TypeScript
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **AI**: [Kolosal AI](https://kolosal.ai/) (Claude Sonnet 4.5)
+- **AI**: [OpenRouter](https://openrouter.ai/) (DeepSeek V4.1 Flash)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Image Generation**: `html-to-image` (Client-side rendering)
@@ -54,7 +54,7 @@ Built for the "AI Innovation: Empowering Local Businesses" Hackathon.
 3. **Environment Setup**
    Create a `.env` file in the root directory (copy from `.env.example` if available) and add your Kolosal AI API key:
    ```env
-   KOLOSAL_API_KEY=sk-your-api-key-here
+   OPENROUTER_API_KEY=sk-your-api-key-here
    ```
 
 4. **Run Development Server**
