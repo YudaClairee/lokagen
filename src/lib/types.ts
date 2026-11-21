@@ -6,6 +6,10 @@ export type Theme = "Minimal Clean Modern" | "Dark Modern/Futuristic" | "Colorfu
 
 export type CampaignType = "promo" | "launch" | "education" | "bestseller";
 
+// Mode Slide 4: "promo" = user memang menulis info promo, "value" = alasan wajib coba.
+// Ditentukan oleh server (lib/promo.ts), bukan oleh AI.
+export type PromoMode = "promo" | "value";
+
 // Identitas toko/produk yang ditampilkan di slide (opsional, diisi user)
 export interface BrandInfo {
   storeName?: string;   // Contoh: "Kopi Senja"
@@ -36,6 +40,7 @@ export interface SlideBenefits {
 
 export interface SlidePromo {
   type: "promo";
+  mode: PromoMode;         // Diisi server, bukan AI
   title: string;
   promoText: string;
   highlightBadge?: string; // Label stiker, mis. "FAVORIT" atau inti promo dari user
@@ -56,7 +61,9 @@ export type SlideContent =
 
 // Generated content from AI
 export interface GeneratedContent {
-  caption: string;
+  caption: string;                 // Sudah berisi baris hashtag di akhir
+  hashtags?: string[];             // Daftar hashtag terpisah (tab Hashtag)
+  whatsappTemplate?: string;       // Balasan admin WA saat pembeli memesan
   slides: [SlideIntro, SlideFeatures, SlideBenefits, SlidePromo, SlideCTA];
 }
 

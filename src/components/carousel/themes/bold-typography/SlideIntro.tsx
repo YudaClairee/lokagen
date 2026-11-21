@@ -3,13 +3,15 @@
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
-import { fitText } from "../fit-text";
+import { fitText, shouldSplitWords } from "../fit-text";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+    const splitWords = shouldSplitWords(data.title);
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-white text-black"
       >
         <div className="absolute -left-10 top-0 text-[180px] font-black leading-none opacity-[0.03] select-none">
@@ -24,9 +26,9 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         <div className="relative z-10 flex h-full flex-col p-10">
           
           <div className="mt-12">
-            <h1 className={`max-w-[65%] break-words font-black tracking-tighter mix-blend-multiply ${fitText(data.title, [[14, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
-              {/* Pecah per kata hanya jika judul pendek (<= 3 kata) */}
-              {data.title.trim().split(/\s+/).length <= 3
+            <h1 className={`max-w-[65%] break-words font-black tracking-tighter mix-blend-multiply ${fitText(data.title, [[10, "text-[60px] leading-[0.9]"], [16, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
+              {/* Pecah per kata hanya jika judul pendek dan kata-katanya tidak panjang */}
+              {splitWords
                 ? data.title.trim().split(/\s+/).map((word, i) => (
                     <span key={i} className="block">{word}</span>
                   ))

@@ -11,6 +11,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8 text-white"
       >
         
@@ -59,7 +60,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
                className="relative flex items-center gap-3 border border-white/20 bg-black px-8 py-3 font-mono font-bold uppercase transition-transform"
                style={{ borderColor: brandColor, color: brandColor }}
              >
-               <span>Initialize_Order</span>
+               <span>Order_Now</span>
                <ArrowRight className="h-4 w-4" />
              </div>
            </div>

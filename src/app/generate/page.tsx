@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { generateContent } from "@/app/actions/generate-content";
 import type {
   Tone,
   Theme,
   BrandInfo,
+  CampaignType,
   GeneratedContent,
   GenerateContentInput,
   SampleProduct,
@@ -18,7 +19,15 @@ import {
   ERROR_MESSAGES,
   SAMPLE_PRODUCTS,
 } from "@/lib/constants";
-import { createSampleImage } from "@/lib/utils";
+import { createSampleImage, extractDominantColors } from "@/lib/utils";
+import {
+  HISTORY_LIMIT,
+  loadHistory,
+  loadProfile,
+  saveHistory,
+  saveProfile,
+  type HistoryItem,
+} from "@/lib/storage";
 import { ProductForm } from "@/components/generate/ProductForm";
 import { GenerateOptions } from "@/components/generate/GenerateOptions";
 import { CarouselPreview } from "@/components/carousel/CarouselPreview";
@@ -26,6 +35,7 @@ import { DownloadButton } from "@/components/generate/DownloadButton";
 import { CaptionDisplay } from "@/components/generate/CaptionDisplay";
 import { SampleProductButtons } from "@/components/generate/SampleProductButtons";
 import { SlideTextEditor } from "@/components/generate/SlideTextEditor";
+import { HistoryPanel } from "@/components/generate/HistoryPanel";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -40,11 +50,16 @@ export default function GeneratePage() {
   const [tone, setTone] = useState<Tone>(DEFAULT_TONE);
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const [brandColor, setBrandColor] = useState<string>(DEFAULT_BRAND_COLOR);
+  const [campaignType, setCampaignType] = useState<CampaignType>("launch");
   const [storeName, setStoreName] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [priceText, setPriceText] = useState<string>("");
   const [contactInfo, setContactInfo] = useState<string>("");
+  const [palette, setPalette] = useState<{ source: string; colors: string[] }>({ source: "", colors: [] });
   const [result, setResult] = useState<GeneratedContent | null>(null);
+  const [currentId, setCurrentId] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [hydrated, setHydrated] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isLoadingSample, setIsLoadingSample] = useState<boolean>(false);
@@ -59,6 +74,75 @@ export default function GeneratePage() {
   const [isPending, startTransition] = useTransition();
 
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const registerSlide = (index: number, el: HTMLDivElement | null) => {
+    slideRefs.current[index] = el;
+  };
+
+  // Muat profil toko & riwayat dari localStorage setelah render pertama (aman untuk SSR).
+  // Hidrasi sekali setelah mount: sumbernya di luar React, jadi setState di sini disengaja.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const profile = loadProfile();
+    if (profile) {
+      if (profile.storeName) setStoreName(profile.storeName);
+      if (profile.contactInfo) setContactInfo(profile.contactInfo);
+      if (profile.location) setLocation(profile.location);
+      if (profile.brandColor) setBrandColor(profile.brandColor);
+      if (profile.tone) setTone(profile.tone);
+      if (profile.theme) setTheme(profile.theme);
+    }
+    const items = loadHistory();
+    setHistory(items);
+    if (items[0]) {
+      setResult(items[0].result);
+      setCurrentId(items[0].id);
+    }
+    setHydrated(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Simpan profil toko setiap kali berubah
+  useEffect(() => {
+    if (!hydrated) return;
+    saveProfile({
+      storeName: storeName.trim() || undefined,
+      contactInfo: contactInfo.trim() || undefined,
+      location: location.trim() || undefined,
+      brandColor,
+      tone,
+      theme,
+    });
+  }, [hydrated, storeName, contactInfo, location, brandColor, tone, theme]);
+
+  // Simpan riwayat setiap kali berubah
+  useEffect(() => {
+    if (hydrated) saveHistory(history);
+  }, [hydrated, history]);
+
+  // Palet warna dari foto produk (Tahap 3.2). Hanya berlaku untuk foto yang sedang dipakai.
+  const suggestedColors = productImage && palette.source === productImage ? palette.colors : [];
+  useEffect(() => {
+    if (!productImage) return;
+    let cancelled = false;
+    extractDominantColors(productImage)
+      .then((colors) => {
+        if (!cancelled) setPalette({ source: productImage, colors });
+      })
+      .catch(() => {
+        if (!cancelled) setPalette({ source: productImage, colors: [] });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [productImage]);
+
+  // Setiap hasil yang diedit (slide/caption/WA) ikut tersimpan di riwayat, tanpa foto.
+  const applyResultEdit = (next: GeneratedContent) => {
+    setResult(next);
+    if (currentId) {
+      setHistory((prev) => prev.map((item) => (item.id === currentId ? { ...item, result: next } : item)));
+    }
+  };
 
   const handleGenerate = () => {
     setError("");
@@ -75,6 +159,7 @@ export default function GeneratePage() {
       tone,
       theme,
       brandColor,
+      campaignType,
       brandInfo,
     };
 
@@ -82,12 +167,41 @@ export default function GeneratePage() {
       const response = await generateContent(input);
 
       if (response.success && response.data) {
+        const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+        const item: HistoryItem = {
+          id,
+          timestamp: Date.now(),
+          productName: productName || undefined,
+          tone,
+          theme,
+          brandColor,
+          brandInfo,
+          result: response.data,
+        };
+        setHistory((prev) => [item, ...prev].slice(0, HISTORY_LIMIT));
+        setCurrentId(id);
         setResult(response.data);
         setCurrentSlide(0);
       } else {
         setError(response.error || "Terjadi kesalahan");
       }
     });
+  };
+
+  // Muat hasil lama dari riwayat (foto tidak disimpan, jadi foto yang sekarang dipertahankan)
+  const handleLoadHistory = (item: HistoryItem) => {
+    setError("");
+    setResult(item.result);
+    setCurrentId(item.id);
+    setCurrentSlide(0);
+    setProductName(item.productName ?? "");
+    setTone(item.tone);
+    setTheme(item.theme);
+    setBrandColor(item.brandColor ?? DEFAULT_BRAND_COLOR);
+    setStoreName(item.brandInfo?.storeName ?? "");
+    setPriceText(item.brandInfo?.priceText ?? "");
+    setContactInfo(item.brandInfo?.contactInfo ?? "");
+    setLocation(item.brandInfo?.location ?? "");
   };
 
   // Isi seluruh form dengan contoh produk (Tahap 2.1)
@@ -116,16 +230,18 @@ export default function GeneratePage() {
 
   // Update satu slide hasil AI (Tahap 2.2) — preview ikut berubah real-time
   const updateSlide = (index: number, next: SlideContent) => {
-    setResult((prev) => {
-      if (!prev) return prev;
-      const slides = [...prev.slides] as GeneratedContent["slides"];
-      slides[index] = next as GeneratedContent["slides"][number];
-      return { ...prev, slides };
-    });
+    if (!result) return;
+    const slides = [...result.slides] as GeneratedContent["slides"];
+    slides[index] = next as GeneratedContent["slides"][number];
+    applyResultEdit({ ...result, slides });
   };
 
   const updateCaption = (caption: string) => {
-    setResult((prev) => (prev ? { ...prev, caption } : prev));
+    if (result) applyResultEdit({ ...result, caption });
+  };
+
+  const updateWhatsapp = (whatsappTemplate: string) => {
+    if (result) applyResultEdit({ ...result, whatsappTemplate });
   };
 
   return (
@@ -153,7 +269,7 @@ export default function GeneratePage() {
             <span>Kembali</span>
           </Link>
           <h1 className="text-lg font-semibold text-white">Generate Konten</h1>
-          <div className="w-20" />
+          <HistoryPanel items={history} onLoad={handleLoadHistory} />
         </div>
       </header>
 
@@ -185,6 +301,9 @@ export default function GeneratePage() {
                 setTheme={setTheme}
                 brandColor={brandColor}
                 setBrandColor={setBrandColor}
+                suggestedColors={suggestedColors}
+                campaignType={campaignType}
+                setCampaignType={setCampaignType}
               />
 
               <div className="mt-6 space-y-4 rounded-lg border border-white/10 bg-slate-800/30 p-4">
@@ -222,7 +341,7 @@ export default function GeneratePage() {
                       id="priceText"
                       type="text"
                       maxLength={30}
-                      placeholder='Contoh: "Rp 25.000"'
+                      placeholder='Contoh: "Rp 25.000" atau "Diskon 20%"'
                       value={priceText}
                       onChange={(e) => setPriceText(e.target.value)}
                       className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
@@ -290,7 +409,7 @@ export default function GeneratePage() {
                 productName={productName}
                 productImage={productImage}
                 brandInfo={brandInfo}
-                slideRefs={slideRefs}
+                registerSlide={registerSlide}
                 isLoading={isPending}
                 currentSlide={currentSlide}
                 onSlideChange={setCurrentSlide}
@@ -306,7 +425,13 @@ export default function GeneratePage() {
             )}
 
             {result && (
-              <CaptionDisplay caption={result.caption} onChange={updateCaption} />
+              <CaptionDisplay
+                caption={result.caption}
+                onChange={updateCaption}
+                hashtags={result.hashtags}
+                whatsappTemplate={result.whatsappTemplate}
+                onWhatsappChange={updateWhatsapp}
+              />
             )}
           </div>
         </div>

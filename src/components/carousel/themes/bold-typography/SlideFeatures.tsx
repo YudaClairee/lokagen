@@ -3,12 +3,14 @@
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
-  function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-white p-8 text-black"
       >
         {productImage && (
@@ -23,8 +25,8 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
           </div>
         )}
         <div className="mb-8 border-b-4 border-black pb-4">
-          <h2 className="text-4xl font-black uppercase tracking-tighter">
-            FEATURES
+          <h2 className={`break-words font-black uppercase tracking-tighter ${fitText(data.title, [[14, "text-4xl"]], "text-3xl")}`}>
+            {data.title}
           </h2>
         </div>
         <div className="flex flex-1 flex-col justify-center gap-6">
@@ -37,7 +39,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
               <div className="absolute -top-3 -right-2 bg-black px-2 py-0.5 text-xs font-bold text-white">
                 0{index + 1}
               </div>
-              <p className="font-bold leading-tight text-gray-900">
+              <p className="line-clamp-2 break-words font-bold leading-tight text-gray-900">
                 {bullet}
               </p>
             </div>
@@ -46,8 +48,8 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         <div 
           className="absolute bottom-0 left-0 h-12 w-full overflow-hidden border-t-4 border-black bg-black text-white"
         >
-          <div className="flex h-full items-center whitespace-nowrap px-4 font-mono text-sm font-bold uppercase tracking-widest">
-            {data.title} • {data.title} • {data.title}
+          <div className="flex h-full items-center px-4 font-mono text-sm font-bold uppercase tracking-widest">
+            <span className="truncate">{productName || brandInfo?.storeName || "PRODUK"} • {data.title}</span>
           </div>
         </div>
 

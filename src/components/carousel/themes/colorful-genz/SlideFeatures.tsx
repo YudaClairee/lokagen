@@ -3,12 +3,14 @@
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
@@ -46,7 +48,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                 KEUNGGULAN
             </h1>
              <h2 
-                className="mt-1 text-center text-lg font-black uppercase tracking-widest text-[#FFD700]"
+                className={`mt-1 line-clamp-2 break-words text-center font-black uppercase tracking-widest text-[#FFD700] ${fitText(data.title, [[18, "text-xl"], [30, "text-lg"]], "text-base")}`}
                 style={{ 
                     WebkitTextStroke: '1px black',
                     textShadow: '2px 2px 0px #000'
@@ -66,7 +68,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#00FF94] border-2 border-black font-black text-sm">
                                 {i + 1}
                             </div>
-                            <span className="text-sm font-bold uppercase leading-tight">{bullet}</span>
+                            <span className="break-words text-sm font-bold uppercase leading-tight">{bullet}</span>
                         </li>
                     ))}
                 </ul>

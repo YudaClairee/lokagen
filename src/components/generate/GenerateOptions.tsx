@@ -9,7 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Tone, Theme } from "@/lib/types";
+import type { CampaignType, Tone, Theme } from "@/lib/types";
+import { CAMPAIGN_OPTIONS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
 interface GenerateOptionsProps {
   tone: Tone;
@@ -18,6 +20,9 @@ interface GenerateOptionsProps {
   setTheme: (theme: Theme) => void;
   brandColor: string;
   setBrandColor: (color: string) => void;
+  suggestedColors: string[];
+  campaignType: CampaignType;
+  setCampaignType: (type: CampaignType) => void;
 }
 
 const toneOptions: { value: Tone; label: string; description: string }[] = [
@@ -57,9 +62,37 @@ export function GenerateOptions({
   setTheme,
   brandColor,
   setBrandColor,
+  suggestedColors,
+  campaignType,
+  setCampaignType,
 }: GenerateOptionsProps) {
   return (
     <div className="mt-6 space-y-4">
+      {/* Campaign Type */}
+      <div>
+        <Label className="mb-2 block text-slate-200">Tujuan Konten</Label>
+        <Select value={campaignType} onValueChange={(val) => setCampaignType(val as CampaignType)}>
+          <SelectTrigger className="w-full border-white/10 bg-slate-800/50 text-white">
+            <SelectValue placeholder="Pilih tujuan" />
+          </SelectTrigger>
+          <SelectContent className="border-white/10 bg-slate-900">
+            {CAMPAIGN_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value} className="text-white focus:bg-slate-800 focus:text-white">
+                <div className="flex flex-row items-center gap-4 justify-between">
+                  <span>{option.label}</span>
+                  <span className="text-xs text-slate-400">{option.description}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {campaignType === "promo" && (
+          <p className="mt-2 text-xs text-amber-300/80">
+            Tulis detail promo (mis. &quot;Diskon 20% s/d 30 Nov&quot;) di kolom Harga / Label Promo agar muncul di slide.
+          </p>
+        )}
+      </div>
+
       {/* Tone Selection */}
       <div>
         <Label className="mb-2 block text-slate-200">Tone Konten</Label>
@@ -131,6 +164,30 @@ export function GenerateOptions({
             Warna aksen untuk carousel
           </span>
         </div>
+
+        {suggestedColors.length > 0 && (
+          <div className="mt-3">
+            <p className="mb-2 text-xs text-slate-500">Rekomendasi dari foto produk:</p>
+            <div className="flex flex-wrap gap-2">
+              {suggestedColors.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  title={color}
+                  aria-label={`Pakai warna ${color}`}
+                  onClick={() => setBrandColor(color)}
+                  className={cn(
+                    "h-8 w-8 rounded-full border-2 transition-transform hover:scale-110",
+                    brandColor.toLowerCase() === color.toLowerCase()
+                      ? "border-white"
+                      : "border-white/20"
+                  )}
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

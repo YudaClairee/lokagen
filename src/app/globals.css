@@ -79,3 +79,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Teks slide berbahasa Indonesia: aktifkan pemenggalan kata panjang (Tahap 5.5) */
+[lang="id"] {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}

@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const AUTH_COOKIE = "lokagen_auth";
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || "lokagen2024";
+import { AUTH_COOKIE, isValidAuthToken } from "@/lib/auth";
 
 const PUBLIC_PATHS = ["/login", "/", "/_next", "/favicon.ico"];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths
@@ -19,9 +17,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check auth cookie
-  const authCookie = request.cookies.get(AUTH_COOKIE);
-  if (!authCookie || authCookie.value !== "authenticated") {
+  // Cookie berisi token (hash), bukan string tebakan
+  const isAuthenticated = await isValidAuthToken(request.cookies.get(AUTH_COOKIE)?.value);
+  if (!isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);

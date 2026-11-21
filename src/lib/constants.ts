@@ -1,4 +1,4 @@
-import type { GeneratedContent, SampleProduct } from "./types";
+import type { CampaignType, GeneratedContent, SampleProduct } from "./types";
 
 // Carousel configuration
 export const TOTAL_SLIDES = 5;
@@ -9,6 +9,27 @@ export const CAROUSEL_SLIDE_TYPES = [
   "promo",
   "cta",
 ] as const;
+
+// Batas teks: SATU-SATUNYA sumber untuk prompt AI, normalizeContent, dan fixture uji.
+export const COPY_LIMITS = {
+  title:          { minWords: 2, maxWords: 4,  maxChars: 25 },
+  subtitle:       { minWords: 6, maxWords: 12, maxChars: 75 },
+  bullet:         { minWords: 3, maxWords: 7,  maxChars: 48 },
+  bulletCount:    3,
+  promoText:      { minWords: 5, maxWords: 10, maxChars: 65 },
+  highlightBadge: { minWords: 1, maxWords: 2,  maxChars: 12 },
+  ctaText:        { minWords: 4, maxWords: 8,  maxChars: 50 },
+  whatsapp:       { maxChars: 500 },
+  hashtagCount:   { min: 8, max: 10 },
+} as const;
+
+// Tujuan konten (Tahap 3.1 poin 5)
+export const CAMPAIGN_OPTIONS: { value: CampaignType; label: string; description: string }[] = [
+  { value: "promo", label: "Promo / Diskon", description: "Penawaran spesial (isi detail promo di Harga / Label Promo)" },
+  { value: "launch", label: "Launching Produk", description: "Produk baru hadir di toko" },
+  { value: "education", label: "Edukasi / Tips", description: "Tips & solusi untuk pembeli" },
+  { value: "bestseller", label: "Terlaris / Unggulan", description: "Kualitas unggulan produk" },
+];
 
 // Placeholder content for carousel preview
 export const PLACEHOLDER_CONTENT: GeneratedContent = {
@@ -31,8 +52,10 @@ export const PLACEHOLDER_CONTENT: GeneratedContent = {
     },
     {
       type: "promo",
-      title: "Promo Spesial",
-      promoText: "Diskon khusus untuk kamu!",
+      mode: "value",
+      title: "Wajib Coba!",
+      promoText: "Dibuat fresh setiap hari, rasa konsisten",
+      highlightBadge: "FAVORIT",
     },
     {
       type: "cta",
@@ -67,6 +90,8 @@ export const ERROR_MESSAGES = {
   PRODUCT_NAME_TOO_LONG: "Nama produk terlalu panjang (max 100 karakter)",
   DESCRIPTION_TOO_LONG: "Deskripsi terlalu panjang (max 500 karakter)",
   DESCRIPTION_TOO_SHORT: "Deskripsi terlalu pendek (min 10 karakter)",
+  UNAUTHORIZED: "Sesi login habis. Silakan login ulang.",
+  NOT_CONFIGURED: "Server belum dikonfigurasi (AUTH_PASSWORD kosong). Hubungi admin.",
 } as const;
 
 // Loading messages
@@ -74,10 +99,6 @@ export const LOADING_MESSAGES = {
   GENERATING: "Generating...",
   LOADING_PREVIEW: "Loading preview...",
 } as const;
-
-// OpenAI/API configuration
-
-
 
 // Produk contoh untuk tombol "Coba Contoh" di halaman generate.
 // Deskripsi sengaja tanpa info promo agar mode Slide 4 = value.

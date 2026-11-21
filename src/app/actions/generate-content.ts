@@ -1,22 +1,50 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { openai, AI_MODEL, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
 import type {
   GenerateContentInput,
   GenerateContentResponse,
-  GeneratedContent,
 } from "@/lib/types";
-import { VALIDATION, ERROR_MESSAGES, TOTAL_SLIDES } from "@/lib/constants";
+import { VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
+import { AUTH_COOKIE, getAuthPassword, isValidAuthToken } from "@/lib/auth";
+import { resolvePromoMode, extractPromoFacts } from "@/lib/promo";
+import { normalizeContent } from "@/lib/normalize-content";
 
 export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   try {
-    const { productName, productImage, description, tone, theme, brandColor } =
-      input;
+    // Lapis proteksi kedua (Edge middleware sudah memeriksa halaman /generate).
+    if (!getAuthPassword()) {
+      return { success: false, error: ERROR_MESSAGES.NOT_CONFIGURED };
+    }
+    const cookieStore = await cookies();
+    if (!(await isValidAuthToken(cookieStore.get(AUTH_COOKIE)?.value))) {
+      return { success: false, error: ERROR_MESSAGES.UNAUTHORIZED };
+    }
+
+    const { productName, productImage, description, brandInfo } = input;
 
     const hasImage =
-      productImage && productImage.length > VALIDATION.MIN_IMAGE_SIZE;
+      !!productImage && productImage.length > VALIDATION.MIN_IMAGE_SIZE;
+
+    const promoMode = resolvePromoMode(input);
+    const promoFacts = extractPromoFacts(input);
+    // Semua angka yang sah berasal dari input user (dipakai normalizeContent).
+    const userText = [
+      productName,
+      description,
+      brandInfo?.storeName,
+      brandInfo?.priceText,
+      brandInfo?.promoBadge,
+      brandInfo?.contactInfo,
+      brandInfo?.location,
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const userPrompt = generateUserPrompt({ input, hasImage, promoMode, promoFacts });
 
     const messages: Parameters<
       typeof openai.chat.completions.create
@@ -33,14 +61,7 @@ export async function generateContent(
         content: [
           {
             type: "text",
-            text: generateUserPrompt(
-              productName,
-              description,
-              tone,
-              theme,
-              brandColor,
-              true
-            ),
+            text: userPrompt,
           },
           {
             type: "image_url",
@@ -48,7 +69,8 @@ export async function generateContent(
               url: productImage.startsWith("data:")
                 ? productImage
                 : `data:image/jpeg;base64,${productImage}`,
-              detail: "low",
+              // "auto": gambar sudah dikompresi (maks 1080px), sehingga teks pada kemasan terbaca
+              detail: "auto",
             },
           },
         ],
@@ -56,20 +78,15 @@ export async function generateContent(
     } else {
       messages.push({
         role: "user",
-        content: generateUserPrompt(
-          productName,
-          description,
-          tone,
-          theme,
-          brandColor,
-          false
-        ),
+        content: userPrompt,
       });
     }
 
     const completion = await openai.chat.completions.create({
       model: AI_MODEL,
       messages,
+      temperature: 0.7,
+      response_format: { type: "json_object" },
     });
 
     const content = completion.choices[0]?.message?.content;
@@ -91,22 +108,23 @@ export async function generateContent(
       cleanedContent = cleanedContent.replace(/\s*```$/, "");
     }
 
-    const parsedContent = JSON.parse(cleanedContent.trim()) as GeneratedContent;
+    const parsed: unknown = JSON.parse(cleanedContent.trim());
+    const normalized = normalizeContent(parsed, promoMode, userText);
 
-    if (
-      !parsedContent.caption ||
-      !parsedContent.slides ||
-      parsedContent.slides.length !== TOTAL_SLIDES
-    ) {
+    if (!normalized) {
       return {
         success: false,
         error: ERROR_MESSAGES.INVALID_FORMAT,
       };
     }
 
+    if (normalized.warnings.length) {
+      console.warn("[generate] normalize:", normalized.warnings);
+    }
+
     return {
       success: true,
-      data: parsedContent,
+      data: normalized.content,
     };
   } catch (error) {
     console.error("Error generating content:", error);

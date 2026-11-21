@@ -1,5 +1,6 @@
 import OpenAI from "openai";
-import type { Tone, Theme } from "@/lib/types";
+import type { CampaignType, GenerateContentInput, PromoMode, Theme, Tone } from "@/lib/types";
+import { COPY_LIMITS as L } from "@/lib/constants";
 
 export const AI_MODEL =
   process.env.AI_MODEL || "deepseek/deepseek-v4.1-flash-1017";
@@ -9,27 +10,36 @@ export const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-export const SYSTEM_PROMPT = `Kamu adalah AI content creator profesional yang spesialis membuat konten Instagram carousel untuk UMKM lokal Indonesia.
+export const SYSTEM_PROMPT = `Kamu adalah social media copywriter senior untuk UMKM Indonesia. Tugasmu menulis isi 5 slide carousel Instagram + caption, yang akan dimasukkan ke template desain dengan ruang teks TERBATAS.
 
-Tugasmu adalah membuat:
-1. Caption Instagram yang engaging dan sesuai tone yang diminta
-2. Konten untuk 5 slide carousel dengan struktur:
-   - Slide 1: Hook/Intro (title + subtitle yang menarik perhatian)
-   - Slide 2: Features/Keunggulan produk (title + 3-4 bullet points)
-   - Slide 3: Benefits/Manfaat (title + 3-4 bullet points)
-   - Slide 4: Promo/Penawaran spesial (title + promo text)
-   - Slide 5: CTA/Call to Action (title + CTA text)
+STRUKTUR SLIDE (urutan wajib):
+1. "intro" — Hook. "title" berupa pernyataan/pertanyaan yang bikin berhenti scroll; "subtitle" menjelaskan produknya apa.
+2. "features" — FAKTA PRODUK yang bisa dicek: bahan baku, ukuran/isi, varian, proses pembuatan, asal, kemasan. Tanpa kata sifat kosong ("enak", "berkualitas") kecuali didukung fakta.
+3. "benefits" — DAMPAK KE PEMBELI: perasaan, solusi masalah, momen pemakaian, hemat waktu/biaya. DILARANG mengulang fakta dari slide 2; setiap poin harus menjawab "terus apa untungnya buat saya?".
+4. "promo" — Ikuti instruksi MODE SLIDE 4 di pesan user.
+5. "cta" — Ajakan bertindak yang spesifik (cara order), sesuai tone.
 
-Rules:
-- Gunakan Bahasa Indonesia yang natural dan sesuai tone
-- Buat konten yang relatable untuk target market lokal
-- Caption harus include hashtag yang relevan (5-10 hashtag)
-- Setiap slide harus singkat, padat, dan mudah dibaca
-- Title maksimal 5 kata
-- Subtitle/promo text maksimal 15 kata
-- Bullet points maksimal 8 kata per point
+ATURAN ANTI-KARANG (WAJIB):
+- JANGAN PERNAH menulis angka diskon, persentase, harga, "beli X gratis Y", cashback, batas waktu, atau stok terbatas yang TIDAK ada di input user.
+- JANGAN mengklaim sertifikasi (halal, BPOM, SNI), penghargaan, jumlah terjual, rating, atau testimoni yang tidak disebut user atau tidak terlihat jelas di foto.
+- Jika informasi kurang, tulis hal yang umum tapi jujur, bukan fakta palsu.
 
-Output harus dalam format JSON yang valid.`;
+BATAS PANJANG (teks akan TERPOTONG jika lebih):
+- title (semua slide): ${L.title.minWords}–${L.title.maxWords} kata, maks ${L.title.maxChars} karakter
+- subtitle: ${L.subtitle.minWords}–${L.subtitle.maxWords} kata, maks ${L.subtitle.maxChars} karakter
+- bullets: TEPAT ${L.bulletCount} poin, masing-masing ${L.bullet.minWords}–${L.bullet.maxWords} kata, maks ${L.bullet.maxChars} karakter, tanpa emoji, tanpa titik di akhir
+- promoText: ${L.promoText.minWords}–${L.promoText.maxWords} kata, maks ${L.promoText.maxChars} karakter
+- highlightBadge: ${L.highlightBadge.minWords}–${L.highlightBadge.maxWords} kata, maks ${L.highlightBadge.maxChars} karakter
+- ctaText: ${L.ctaText.minWords}–${L.ctaText.maxWords} kata, maks ${L.ctaText.maxChars} karakter
+
+FORMAT CAPTION (gunakan \\n\\n antar blok):
+1. Hook 1 baris (maks 12 kata) yang memancing tap "more".
+2. 1–2 kalimat cerita/nilai produk.
+3. 3 poin, masing-masing diawali emoji relevan, dipisah \\n.
+4. CTA jelas (cara order) sesuai tone.
+5. Baris terakhir: ${L.hashtagCount.min}–${L.hashtagCount.max} hashtag dipisah spasi (campuran hashtag produk + lokal, mis. #UMKMLokal).
+
+OUTPUT: HANYA JSON valid sesuai skema di pesan user. Tanpa markdown, tanpa penjelasan.`;
 
 const toneDescriptions: Record<Tone, string> = {
   playful: "fun, santai, pakai bahasa gaul yang friendly",
@@ -45,14 +55,23 @@ const themeDescriptions: Record<Theme, string> = {
   "Bold Typography": "typography dominan, impactful, statement",
 };
 
-export function generateUserPrompt(
-  productName: string | undefined,
-  description: string | undefined,
-  tone: Tone,
-  theme: Theme,
-  brandColor: string | undefined,
-  hasImage: boolean
-): string {
+// Sudut pandang konten per tujuan (Tahap 3.1 poin 5)
+const campaignDescriptions: Record<CampaignType, string> = {
+  promo: "fokus pada penawaran; ikuti aturan MODE SLIDE 4",
+  launch: "fokus pada kehadiran produk baru (mis. 'baru hadir', 'kenalan dengan'), bukan pada promo",
+  education: "fokus pada edukasi: tips, cara pakai/pilih, atau solusi masalah pembeli; bukan jualan keras",
+  bestseller: "fokus pada kualitas unggulan produk; jangan klaim jumlah terjual atau rating",
+};
+
+export interface UserPromptParams {
+  input: GenerateContentInput;
+  hasImage: boolean;
+  promoMode: PromoMode;
+  promoFacts: string;
+}
+
+export function generateUserPrompt({ input, hasImage, promoMode, promoFacts }: UserPromptParams): string {
+  const { productName, description, tone, theme, brandColor, campaignType, brandInfo } = input;
   const toneDesc = toneDescriptions[tone] || toneDescriptions.playful;
   const themeDesc = themeDescriptions[theme] || themeDescriptions["Colorful Gen Z"];
 
@@ -60,6 +79,10 @@ export function generateUserPrompt(
 
 Tone: ${tone} (${toneDesc})
 Tema Visual: ${theme} (${themeDesc})`;
+
+  if (campaignType) {
+    prompt += `\nTujuan Konten: ${campaignType} (${campaignDescriptions[campaignType]})`;
+  }
 
   if (brandColor) {
     prompt += `\nWarna Brand: ${brandColor}`;
@@ -73,22 +96,41 @@ Tema Visual: ${theme} (${themeDesc})`;
     prompt += `\nDeskripsi produk: ${description}`;
   }
 
+  const storeLines = [
+    brandInfo?.storeName && `Nama toko: ${brandInfo.storeName}`,
+    brandInfo?.location && `Lokasi: ${brandInfo.location}`,
+    brandInfo?.contactInfo && `Kontak: ${brandInfo.contactInfo}`,
+  ].filter(Boolean);
+  if (storeLines.length) {
+    prompt += `\n\nInfo toko (boleh dipakai di caption/whatsapp):\n${storeLines.join("\n")}`;
+  }
+
   if (hasImage) {
     prompt += `\n\nAnalisa juga gambar produk yang diberikan untuk memahami produk lebih baik dan sesuaikan konten dengan visual produk.`;
   }
 
+  const slide4 =
+    promoMode === "promo"
+      ? `MODE SLIDE 4: PROMO. Gunakan HANYA info promo dari user berikut, tanpa menambah angka/syarat baru: "${promoFacts || description || ""}". "highlightBadge" = inti promonya (mis. "DISKON 20%").`
+      : `MODE SLIDE 4: VALUE (user TIDAK sedang promo). Isi dengan alasan kuat kenapa wajib coba sekarang: jaminan kualitas, keunikan, atau momen yang pas. DILARANG menyebut diskon/harga/gratis/batas waktu. "highlightBadge" berupa label nilai, mis. "FAVORIT", "FRESH", "HANDMADE".`;
+
   prompt += `
 
-Pastikan konten sesuai dengan tone "${tone}" dan cocok untuk tema visual "${theme}".
+${slide4}
+
+Pastikan konten sesuai dengan tone "${tone}", tujuan "${campaignType ?? "umum"}", dan cocok untuk tema visual "${theme}".
+Slide 2 (features) dan slide 3 (benefits) harus berbeda isi: fakta vs dampak.
 
 Berikan output dalam format JSON berikut:
 {
-  "caption": "caption Instagram dengan hashtag",
+  "caption": "caption Instagram dengan hashtag di baris terakhir",
+  "hashtags": ["#...", "#..."],
+  "whatsappTemplate": "balasan admin WA ketika pembeli bertanya/memesan produk ini, ramah sesuai tone, maks ${L.whatsapp.maxChars} karakter",
   "slides": [
     { "type": "intro", "title": "...", "subtitle": "..." },
     { "type": "features", "title": "...", "bullets": ["...", "...", "..."] },
     { "type": "benefits", "title": "...", "bullets": ["...", "...", "..."] },
-    { "type": "promo", "title": "...", "promoText": "..." },
+    { "type": "promo", "title": "...", "promoText": "...", "highlightBadge": "..." },
     { "type": "cta", "title": "...", "ctaText": "..." }
   ]
 }`;

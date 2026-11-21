@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
@@ -11,6 +12,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
         style={{ backgroundColor: brandColor }}
       >
@@ -29,7 +31,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
                 <ArrowRight className="h-6 w-6 text-white" />
             </div>
 
-            <h2 className="mb-6 text-4xl font-black uppercase tracking-tight text-white">
+            <h2 className={`mb-6 break-words font-black uppercase tracking-tight text-white ${fitText(data.title, [[12, "text-4xl"], [20, "text-3xl"]], "text-2xl")}`}>
               {data.title}
             </h2>
             

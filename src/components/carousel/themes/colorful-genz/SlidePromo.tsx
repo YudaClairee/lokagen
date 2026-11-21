@@ -3,13 +3,15 @@
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
-import { fitText } from "../fit-text";
+import { fitText, PROMO_LABELS } from "../fit-text";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const mode = data.mode ?? "value";
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
@@ -37,14 +39,14 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             </div>
 
             <h1 
-                className="text-center text-6xl font-black uppercase leading-none tracking-tighter px-12"
+                className={`text-center font-black uppercase leading-none tracking-tighter px-12 ${mode === "value" ? "text-5xl" : "text-6xl"}`}
                 style={{ 
                     color: '#00FF94', 
                     WebkitTextStroke: '2.5px black',
                     textShadow: '4px 4px 0px #000'
                 }}
             >
-                PROMO
+                {PROMO_LABELS[mode].header}
             </h1>
              <h2 
                 className="mt-2 text-center text-xl font-black uppercase tracking-widest text-[#FFD700]"
@@ -62,7 +64,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 style={{ backgroundColor: brandColor || '#F4F269' }}
             >
                 <div className="absolute -top-5 -right-5 bg-[#FF69B4] border-4 border-black p-3 rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-20 rotate-12">
-                    <span className="text-sm font-black text-white">{data.highlightBadge || brandInfo?.promoBadge || "SPESIAL!"}</span>
+                    <span className="text-sm font-black text-white">{data.highlightBadge || (mode === "promo" ? brandInfo?.promoBadge : undefined) || PROMO_LABELS[mode].badge}</span>
                 </div>
 
                 <div className="w-full bg-white border-4 border-black p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center transform -rotate-2">
@@ -73,7 +75,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             </div>
         </div>
         <div className="flex h-14 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-6">
-             <span className="text-xs font-black uppercase leading-tight">MENERIMA<br/>PEMESANAN ONLINE</span>
+             <span className="max-w-[45%] truncate text-xs font-black uppercase leading-tight">{brandInfo?.storeName || productName || ""}</span>
              <span className="text-xs font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.location || brandInfo?.contactInfo || brandInfo?.storeName || ""}</span>
         </div>
 
