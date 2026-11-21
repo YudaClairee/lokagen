@@ -10,6 +10,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] text-white"
         style={{
           backgroundImage: `
@@ -69,7 +70,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                    style={{ borderColor: brandColor }}
                  >
                    <div className="h-1.5 w-1.5 animate-pulse bg-white" />
-                   Initialising...
+                   {productName || "NEW_DROP"}
                  </div>
                  
                  <h1 className={`mb-6 break-words font-mono font-bold leading-[0.9] text-white ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>

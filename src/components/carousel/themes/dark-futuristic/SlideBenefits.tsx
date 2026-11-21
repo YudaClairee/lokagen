@@ -3,12 +3,14 @@
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
-  function SlideBenefits({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
         
@@ -39,9 +41,8 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
              className="mb-2 h-1 w-10"
              style={{ backgroundColor: brandColor }}
            />
-           <h2 className="font-mono text-3xl font-bold uppercase tracking-wider text-white">
-             Analysis <br />
-             Report
+           <h2 className={`break-words font-mono font-bold uppercase tracking-wider text-white ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}>
+             {data.title}
            </h2>
         </div>
 
@@ -53,7 +54,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                className="flex items-center gap-3 border-b border-white/5 pb-2 last:border-0"
              >
                <span style={{ color: brandColor }}>&gt;</span>
-               <span className="text-gray-300">{bullet}</span>
+               <span className="break-words text-gray-300">{bullet}</span>
                
              </div>
            ))}
@@ -62,7 +63,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         
         <div className="absolute bottom-8 left-8 right-8">
            <div className="mb-2 flex justify-between text-[10px] text-gray-500 font-mono">
-              <span>SCAN COMPLETE</span>
+              <span className="truncate">{productName || brandInfo?.storeName || "LOKAL_PRODUCT"}</span>
               <span>100%</span>
            </div>
            <div className="h-1 w-full bg-white/10">

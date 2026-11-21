@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
-
-const AUTH_COOKIE = "lokagen_auth";
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD || "lokagen2024";
+import { AUTH_COOKIE, computeAuthToken, getAuthPassword, safeEqual } from "@/lib/auth";
 
 export async function POST(request: Request) {
+  const authPassword = getAuthPassword();
+  if (!authPassword) {
+    // Fail-closed: tanpa AUTH_PASSWORD, login tidak pernah berhasil.
+    return NextResponse.json(
+      { success: false, error: "Server belum dikonfigurasi" },
+      { status: 500 }
+    );
+  }
+
   try {
     const { password } = await request.json();
 
-    if (password === AUTH_PASSWORD) {
+    if (typeof password === "string" && safeEqual(password, authPassword)) {
       const response = NextResponse.json({ success: true });
-      response.cookies.set(AUTH_COOKIE, "authenticated", {
+      response.cookies.set(AUTH_COOKIE, await computeAuthToken(authPassword), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

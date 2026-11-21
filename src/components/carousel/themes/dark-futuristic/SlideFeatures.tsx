@@ -3,12 +3,14 @@
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
         
@@ -39,11 +41,11 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         
         <div className="relative z-10 mb-8 border-b border-white/10 pb-4">
            <div className="mb-2 flex items-center gap-2 font-mono text-[10px] text-gray-400">
-              <span>/// FEATURES_LIST</span>
+              <span>{"/// FEATURES_LIST"}</span>
               <span className="flex-1 border-t border-dashed border-gray-700" />
            </div>
            <h2 
-             className="text-3xl font-bold tracking-tight text-white mb-1"
+             className={`break-words font-bold tracking-tight text-white mb-1 ${fitText(data.title, [[16, "text-3xl"]], "text-2xl")}`}
              style={{ textShadow: `0 0 20px ${brandColor}40` }}
            >
              {data.title}
@@ -66,7 +68,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                  <div className="mt-1 font-mono text-xs text-gray-500">
                    0{index + 1}
                  </div>
-                 <p className="font-mono text-sm leading-relaxed text-gray-300 break-words">
+                 <p className="line-clamp-2 font-mono text-sm leading-relaxed text-gray-300 break-words">
                    {bullet}
                  </p>
                </div>

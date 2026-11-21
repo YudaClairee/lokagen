@@ -3,12 +3,15 @@
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
+import { fitText, PROMO_LABELS } from "../fit-text";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+    const mode = data.mode ?? "value";
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-white p-8"
       >
         {productImage && (
@@ -39,19 +42,27 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                className="absolute -bottom-3 -right-3 h-6 w-6 border-4 border-black bg-white"
                style={{ backgroundColor: brandColor }}
              />
+             {data.highlightBadge && (
+               <span
+                 className="absolute -right-4 -top-5 rotate-6 border-2 border-black px-2 py-1 font-mono text-xs font-black uppercase text-white"
+                 style={{ backgroundColor: brandColor }}
+               >
+                 {data.highlightBadge}
+               </span>
+             )}
 
              <div className="text-center">
                <span 
                  className="mb-2 block font-mono text-sm font-bold uppercase tracking-widest"
                  style={{ color: brandColor }}
                >
-                 Limited Offer
+                 {PROMO_LABELS[mode].kicker}
                </span>
-               <h2 className="text-4xl font-black uppercase italic leading-[0.9] tracking-tighter text-black">
+               <h2 className={`break-words font-black uppercase italic leading-[0.9] tracking-tighter text-black ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
                  {data.title}
                </h2>
                <div className="my-4 h-1 w-full bg-black/10" />
-               <p className="text-xl font-bold text-gray-800">
+               <p className={`break-words font-bold text-gray-800 ${fitText(data.promoText, [[30, "text-xl"], [50, "text-lg"]], "text-base")}`}>
                  {data.promoText}
                </p>
              </div>

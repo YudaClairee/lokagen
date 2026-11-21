@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, RefObject, ReactNode } from "react";
+import { useMemo, useState } from "react";
 import type { BrandInfo, GeneratedContent, Theme } from "@/lib/types";
 import { TOTAL_SLIDES, PLACEHOLDER_CONTENT } from "@/lib/constants";
 import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { EXPORT_SIZE, ScaledSlide } from "./ScaledSlide";
 
 interface CarouselPreviewProps {
   content: GeneratedContent | null;
@@ -15,46 +16,13 @@ interface CarouselPreviewProps {
   productName: string;
   productImage: string;
   brandInfo?: BrandInfo;
-  slideRefs: RefObject<(HTMLDivElement | null)[]>;
+  registerSlide: (index: number, el: HTMLDivElement | null) => void;
   isLoading: boolean;
   currentSlide: number;
   onSlideChange: (index: number) => void;
 }
 
-// Ukuran logis satu slide. Dikali pixelRatio 2 saat export → 1080x1080px.
-const EXPORT_SIZE = 540;
-
 type ViewMode = "single" | "grid";
-
-// Membesarkan/mengecilkan slide 540px agar pas dengan lebar kontainernya.
-function ScaledSlide({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.3);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => setScale(el.clientWidth / EXPORT_SIZE));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={ref} className="relative aspect-square w-full overflow-hidden">
-      <div
-        className="pointer-events-none absolute left-0 top-0"
-        style={{
-          width: EXPORT_SIZE,
-          height: EXPORT_SIZE,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export function CarouselPreview({
   content,
@@ -63,7 +31,7 @@ export function CarouselPreview({
   productName,
   productImage,
   brandInfo,
-  slideRefs,
+  registerSlide,
   isLoading,
   currentSlide,
   onSlideChange,
@@ -136,7 +104,7 @@ export function CarouselPreview({
   const exportSlides = [
     <SlideIntro
       key="intro"
-      ref={(el) => { slideRefs.current[0] = el; }}
+      ref={(el) => registerSlide(0, el)}
       data={displayContent.slides[0]}
       productName={productName}
       brandColor={brandColor}
@@ -146,7 +114,7 @@ export function CarouselPreview({
     />,
     <SlideFeatures
       key="features"
-      ref={(el) => { slideRefs.current[1] = el; }}
+      ref={(el) => registerSlide(1, el)}
       data={displayContent.slides[1]}
       productName={productName}
       brandColor={brandColor}
@@ -156,7 +124,7 @@ export function CarouselPreview({
     />,
     <SlideBenefits
       key="benefits"
-      ref={(el) => { slideRefs.current[2] = el; }}
+      ref={(el) => registerSlide(2, el)}
       data={displayContent.slides[2]}
       productName={productName}
       brandColor={brandColor}
@@ -166,7 +134,7 @@ export function CarouselPreview({
     />,
     <SlidePromo
       key="promo"
-      ref={(el) => { slideRefs.current[3] = el; }}
+      ref={(el) => registerSlide(3, el)}
       data={displayContent.slides[3]}
       productName={productName}
       brandColor={brandColor}
@@ -176,7 +144,7 @@ export function CarouselPreview({
     />,
     <SlideCTA
       key="cta"
-      ref={(el) => { slideRefs.current[4] = el; }}
+      ref={(el) => registerSlide(4, el)}
       data={displayContent.slides[4]}
       productName={productName}
       brandColor={brandColor}

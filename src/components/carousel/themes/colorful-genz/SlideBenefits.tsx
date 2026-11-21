@@ -3,12 +3,14 @@
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
@@ -46,7 +48,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 MANFAAT
             </h1>
              <h2 
-                className="mt-1 text-center text-lg font-black uppercase tracking-widest text-[#FFD700]"
+                className={`mt-1 line-clamp-2 break-words text-center font-black uppercase tracking-widest text-[#FFD700] ${fitText(data.title, [[18, "text-xl"], [30, "text-lg"]], "text-base")}`}
                 style={{ 
                     WebkitTextStroke: '1px black',
                     textShadow: '2px 2px 0px #000'
@@ -63,7 +65,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 <div className="grid grid-cols-1 gap-3 w-full">
                     {data.bullets.map((bullet, i) => (
                         <div key={i} className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform rotate-1">
-                            <span className="text-sm font-black uppercase leading-tight">★ {bullet}</span>
+                            <span className="break-words text-sm font-black uppercase leading-tight">★ {bullet}</span>
                         </div>
                     ))}
                 </div>

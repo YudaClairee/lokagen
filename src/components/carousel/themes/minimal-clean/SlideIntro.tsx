@@ -10,6 +10,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden text-gray-900"
         style={{ backgroundColor: brandColor }}
       >

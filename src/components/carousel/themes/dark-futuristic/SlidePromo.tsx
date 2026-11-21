@@ -6,10 +6,12 @@ import Image from "next/image";
 import { fitText } from "../fit-text";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+    const mode = data.mode ?? "value";
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8"
       >
         {productImage && (
@@ -45,7 +47,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               className="mb-4 inline-block border px-2 py-0.5 font-mono text-[10px] uppercase text-white"
               style={{ borderColor: brandColor, color: brandColor }}
             >
-              {data.highlightBadge || brandInfo?.promoBadge || "Highlight"}
+              {mode === "promo" ? data.highlightBadge || "Special_Offer" : "Why_This"}
             </span>
 
             <h2

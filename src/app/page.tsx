@@ -28,7 +28,7 @@ export default function Home() {
         <Hero />
         <Features />
         <HowItWorks />
-        {/* <SocialProof /> */}
+        <SocialProof />
         <CTA />
         <Footer />
       </div>

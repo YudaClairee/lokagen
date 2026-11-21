@@ -3,13 +3,16 @@
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
+import { fitText, PROMO_LABELS } from "../fit-text";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
-   
+    const mode = data.mode ?? "value";
+    const titleSize = fitText(data.title, [[10, "text-5xl"], [16, "text-4xl"]], "text-3xl");
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-8 text-white"
         style={{ backgroundColor: brandColor }}
       >
@@ -24,9 +27,9 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         
         <div className="absolute top-12 left-0 right-0 z-20 text-center">
             <h2 
-                className="text-5xl font-black uppercase italic leading-none text-transparent z-20"
+                className={`break-words font-black uppercase italic leading-none text-transparent z-20 ${titleSize}`}
                 style={{ 
-                    WebkitTextStroke: '1px white',
+                    WebkitTextStroke: titleSize.includes("5xl") ? '1px white' : '1.5px white',
                 }}
             >
                 {data.title}
@@ -55,19 +58,19 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             
              
              <div className="absolute -left-6 top-1/2 -translate-y-1/2 rounded-xl bg-white p-3 text-center shadow-lg transform -rotate-6">
-                 <span className="block text-xs font-black uppercase text-gray-900">PROMO</span>
+                 <span className="block text-xs font-black uppercase text-gray-900">{PROMO_LABELS[mode].header}</span>
                  <span className="block max-w-[140px] break-words text-xl font-black text-red-500">{brandInfo?.priceText || data.highlightBadge || "SPESIAL"}</span>
              </div>
              
              <div className="absolute -right-6 top-1/2 -translate-y-1/2 rounded-xl bg-white p-3 text-center shadow-lg transform rotate-6">
-                 <span className="block text-xs font-black uppercase text-gray-900">ORDER</span>
-                 <span className="block text-xl font-black text-gray-900">NOW</span>
+                 <span className="block text-xs font-black uppercase text-gray-900">{PROMO_LABELS[mode].order}</span>
+                 <span className="block text-xl font-black text-gray-900">{mode === "promo" ? "NOW" : "SEKARANG"}</span>
              </div>
         </div>
 
         
         <div className="relative z-40 mt-6">
-             <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80 break-words">
+             <p className="line-clamp-3 text-sm font-medium uppercase tracking-[0.3em] text-white/80 break-words">
                  {data.promoText}
              </p>
         </div>

@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
@@ -10,6 +11,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
     return (
       <div
         ref={ref}
+        lang="id"
         className="relative flex aspect-square w-full flex-col overflow-hidden p-8 text-white"
         style={{ backgroundColor: brandColor }}
       >
@@ -68,7 +70,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 </div>
             )}
 
-            <h3 className="mb-6 text-xl font-bold leading-tight text-white">
+            <h3 className={`mb-6 break-words font-bold leading-tight text-white ${fitText(data.title, [[16, "text-xl"]], "text-lg")}`}>
                 {data.title}
             </h3>
 
@@ -79,7 +81,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-gray-900">
                     <span className="text-[10px] font-black">✓</span>
                 </div>
-                <p className="text-sm font-medium leading-relaxed text-white/90">
+                <p className="line-clamp-2 break-words text-sm font-medium leading-relaxed text-white/90">
                   {bullet}
                 </p>
              </div>
