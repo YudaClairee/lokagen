@@ -78,3 +78,16 @@ export interface GenerateContentInput {
   campaignType?: CampaignType;
   brandInfo?: BrandInfo;
 }
+
+// Preset produk contoh untuk tombol "Coba Contoh" (Tahap 2.1)
+export interface SampleProduct {
+  id: string;
+  label: string;        // Nama singkat di tombol, mis. "Kopi Senja"
+  productName: string;
+  description: string;
+  tone: Tone;
+  theme: Theme;
+  brandColor: string;
+  brandInfo: BrandInfo;
+  imageColor: string;   // Warna latar gambar contoh yang dibuat di canvas
+}

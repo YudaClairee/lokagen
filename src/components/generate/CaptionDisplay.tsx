@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Copy, Check } from "lucide-react";
 
 interface CaptionDisplayProps {
   caption: string;
+  onChange: (caption: string) => void;
 }
 
-export function CaptionDisplay({ caption }: CaptionDisplayProps) {
+export function CaptionDisplay({ caption, onChange }: CaptionDisplayProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -52,10 +54,14 @@ export function CaptionDisplay({ caption }: CaptionDisplayProps) {
           )}
         </Button>
       </div>
-      <div className="rounded-lg bg-slate-800/50 border border-white/5 p-4">
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-300">{caption}</p>
-      </div>
+      <Textarea
+        value={caption}
+        onChange={(e) => onChange(e.target.value)}
+        rows={10}
+        aria-label="Caption Instagram"
+        className="resize-y border-white/5 bg-slate-800/50 text-sm leading-relaxed text-slate-300"
+      />
+      <p className="mt-2 text-xs text-slate-500">Bisa diedit sebelum disalin.</p>
     </div>
   );
 }
-

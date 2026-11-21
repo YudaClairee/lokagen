@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, RefObject, ReactNode } from "react";
 import type { BrandInfo, GeneratedContent, Theme } from "@/lib/types";
 import { TOTAL_SLIDES, PLACEHOLDER_CONTENT } from "@/lib/constants";
 import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface CarouselPreviewProps {
   content: GeneratedContent | null;
@@ -23,6 +24,38 @@ interface CarouselPreviewProps {
 // Ukuran logis satu slide. Dikali pixelRatio 2 saat export → 1080x1080px.
 const EXPORT_SIZE = 540;
 
+type ViewMode = "single" | "grid";
+
+// Membesarkan/mengecilkan slide 540px agar pas dengan lebar kontainernya.
+function ScaledSlide({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.3);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => setScale(el.clientWidth / EXPORT_SIZE));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="relative aspect-square w-full overflow-hidden">
+      <div
+        className="pointer-events-none absolute left-0 top-0"
+        style={{
+          width: EXPORT_SIZE,
+          height: EXPORT_SIZE,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function CarouselPreview({
   content,
   theme,
@@ -35,6 +68,8 @@ export function CarouselPreview({
   currentSlide,
   onSlideChange,
 }: CarouselPreviewProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>("single");
+
   // Get theme-specific components
   const { SlideIntro, SlideFeatures, SlideBenefits, SlidePromo, SlideCTA } = useMemo(
     () => getThemeComponents(theme),
@@ -47,7 +82,7 @@ export function CarouselPreview({
   const nextSlide = () => onSlideChange((currentSlide + 1) % TOTAL_SLIDES);
   const prevSlide = () => onSlideChange((currentSlide - 1 + TOTAL_SLIDES) % TOTAL_SLIDES);
 
-  // Komponen slide untuk ditampilkan di preview utama (tanpa ref).
+  // Slide untuk preview & grid (tanpa ref).
   const previewSlides = [
     <SlideIntro
       key="intro"
@@ -151,8 +186,26 @@ export function CarouselPreview({
     />,
   ];
 
+  const tabClass = (active: boolean) =>
+    cn(
+      "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+      active ? "bg-primary text-white" : "text-slate-400 hover:text-white"
+    );
+
   return (
     <div className="space-y-4">
+      {/* Mode tampilan */}
+      <div className="flex justify-end">
+        <div className="inline-flex gap-1 rounded-lg border border-white/10 bg-slate-800/50 p-1">
+          <button type="button" className={tabClass(viewMode === "single")} onClick={() => setViewMode("single")}>
+            📱 Tampilan Slide
+          </button>
+          <button type="button" className={tabClass(viewMode === "grid")} onClick={() => setViewMode("grid")}>
+            ⊞ Lihat Semua ({TOTAL_SLIDES})
+          </button>
+        </div>
+      </div>
+
       {/* Main Preview */}
       <div className="relative">
         {isLoading && (
@@ -163,41 +216,71 @@ export function CarouselPreview({
             </div>
           </div>
         )}
-        
-        <div className={`overflow-hidden rounded-lg ${isPlaceholder ? "opacity-50" : ""}`}>
-          {previewSlides[currentSlide]}
-        </div>
+
+        {viewMode === "single" ? (
+          <div className={`overflow-hidden rounded-lg ${isPlaceholder ? "opacity-50" : ""}`}>
+            {previewSlides[currentSlide]}
+          </div>
+        ) : (
+          <div className={`grid grid-cols-2 gap-3 sm:grid-cols-3 ${isPlaceholder ? "opacity-50" : ""}`}>
+            {previewSlides.map((slide, idx) => (
+              <div
+                key={idx}
+                role="button"
+                tabIndex={0}
+                aria-label={`Pilih slide ${idx + 1}`}
+                onClick={() => onSlideChange(idx)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSlideChange(idx);
+                  }
+                }}
+                className={cn(
+                  "relative cursor-pointer overflow-hidden rounded-lg ring-2 transition-shadow",
+                  currentSlide === idx ? "ring-primary" : "ring-transparent hover:ring-white/30"
+                )}
+              >
+                <ScaledSlide>{slide}</ScaledSlide>
+                <span className="absolute bottom-1 left-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                  {idx + 1}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Navigation */}
-      <div className="flex items-center justify-between">
-        <Button variant="outline" size="icon" onClick={prevSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        
-        <div className="flex gap-2">
-          {Array.from({ length: TOTAL_SLIDES }, (_, index) => (
-            <button
-              key={index}
-              onClick={() => onSlideChange(index)}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                currentSlide === index
-                  ? "bg-primary"
-                  : "bg-slate-600"
-              }`}
-            />
-          ))}
-        </div>
-        
-        <Button variant="outline" size="icon" onClick={nextSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+      {/* Navigation (mode tunggal) */}
+      {viewMode === "single" && (
+        <>
+          <div className="flex items-center justify-between">
+            <Button variant="outline" size="icon" onClick={prevSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
 
-      {/* Slide Label */}
-      <p className="text-center text-sm text-slate-400">
-        Slide {currentSlide + 1} / {TOTAL_SLIDES}
-      </p>
+            <div className="flex gap-2">
+              {Array.from({ length: TOTAL_SLIDES }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => onSlideChange(index)}
+                  className={`h-2 w-2 rounded-full transition-colors ${
+                    currentSlide === index ? "bg-primary" : "bg-slate-600"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <Button variant="outline" size="icon" onClick={nextSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <p className="text-center text-sm text-slate-400">
+            Slide {currentSlide + 1} / {TOTAL_SLIDES}
+          </p>
+        </>
+      )}
 
       {/* Export container: off-screen, selalu di DOM, ukuran tetap */}
       <div
@@ -205,10 +288,7 @@ export function CarouselPreview({
         className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-100"
       >
         {exportSlides.map((slide, idx) => (
-          <div
-            key={idx}
-            style={{ width: EXPORT_SIZE, height: EXPORT_SIZE }}
-          >
+          <div key={idx} style={{ width: EXPORT_SIZE, height: EXPORT_SIZE }}>
             {slide}
           </div>
         ))}
