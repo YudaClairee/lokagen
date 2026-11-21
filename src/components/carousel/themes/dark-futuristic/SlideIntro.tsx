@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
@@ -71,13 +72,13 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                    Initialising...
                  </div>
                  
-                 <h1 className="mb-6 font-mono text-4xl font-bold leading-[0.9] text-white">
+                 <h1 className={`mb-6 break-words font-mono font-bold leading-[0.9] text-white ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
                      {data.title}
                    </span>
                  </h1>
                  
-                 <p className="border-l-2 border-white/20 pl-4 text-xs leading-relaxed text-gray-400 font-mono">
+                 <p className="border-l-2 border-white/20 pl-4 text-xs leading-relaxed text-gray-400 font-mono break-words">
                    &gt; {data.subtitle}
                  </p>
               </div>

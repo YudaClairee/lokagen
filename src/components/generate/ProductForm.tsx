@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
+import { compressImageFile } from "@/lib/utils";
+import { VALIDATION } from "@/lib/constants";
 
 interface ProductFormProps {
   productName: string;
@@ -25,7 +27,7 @@ export function ProductForm({
   setDescription,
 }: ProductFormProps) {
   const handleImageUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
@@ -41,11 +43,14 @@ export function ProductForm({
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProductImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      // Kompres di klien (maks 1080px, JPEG) agar payload Server Action kecil
+      try {
+        const compressed = await compressImageFile(file);
+        setProductImage(compressed);
+      } catch (error) {
+        console.error("Gagal memproses gambar:", error);
+        alert("Gambar tidak bisa diproses. Coba gambar lain ya!");
+      }
     },
     [setProductImage]
   );
@@ -67,6 +72,7 @@ export function ProductForm({
           type="text"
           placeholder="Contoh: Kopi Arabika Toraja Premium"
           value={productName}
+          maxLength={VALIDATION.MAX_PRODUCT_NAME_LENGTH}
           onChange={(e) => setProductName(e.target.value)}
           className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
         />
@@ -98,7 +104,7 @@ export function ProductForm({
               <span className="text-sm text-slate-400">
                 Upload gambar
               </span>
-              <span className="text-xs text-slate-500">Max 5MB</span>
+              <span className="text-xs text-slate-500">Max 5MB (otomatis dikompres)</span>
               <input
                 type="file"
                 accept="image/*"
@@ -122,11 +128,13 @@ export function ProductForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
+          maxLength={VALIDATION.MAX_DESCRIPTION_LENGTH}
           className="resize-none border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
         />
-        <p className="mt-1 text-xs text-slate-500">
-          Jelaskan produkmu: nama, jenis, keunggulan, harga, atau info lainnya
-        </p>
+        <div className="mt-1 flex justify-between text-xs text-slate-500">
+          <span>Jelaskan produkmu: nama, jenis, keunggulan, atau info lainnya</span>
+          <span>{description.length}/{VALIDATION.MAX_DESCRIPTION_LENGTH}</span>
+        </div>
       </div>
     </div>
   );

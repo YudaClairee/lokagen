@@ -5,7 +5,7 @@ import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
-  function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     return (
       <div
         ref={ref}
@@ -73,8 +73,8 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
             </div>
         </div>
         <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
-             <span className="text-[10px] font-black uppercase leading-tight">MENERIMA<br/>PESANAN ONLINE</span>
-             <span className="text-[10px] font-black uppercase text-right leading-tight">LOKAGEN<br/>APP</span>
+             <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "INFO PRODUK"}</span>
+             <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
         </div>
 
         {isPlaceholder && (

@@ -4,41 +4,33 @@ import type {
   SlideBenefits,
   SlidePromo,
   SlideCTA,
+  BrandInfo,
 } from "@/lib/types";
 
-export interface SlideIntroProps {
+export interface BaseSlideProps {
+  productName?: string;
+  brandColor: string;
+  productImage?: string;
+  brandInfo?: BrandInfo;
+  isPlaceholder?: boolean;
+}
+
+export interface SlideIntroProps extends BaseSlideProps {
   data: SlideIntro;
-  productName: string;
-  brandColor: string;
-  productImage?: string;
-  isPlaceholder?: boolean;
 }
 
-export interface SlideFeaturesProps {
+export interface SlideFeaturesProps extends BaseSlideProps {
   data: SlideFeatures;
-  brandColor: string;
-  productImage?: string;
-  isPlaceholder?: boolean;
 }
 
-export interface SlideBenefitsProps {
+export interface SlideBenefitsProps extends BaseSlideProps {
   data: SlideBenefits;
-  brandColor: string;
-  productImage?: string;
-  isPlaceholder?: boolean;
 }
 
-export interface SlidePromoProps {
+export interface SlidePromoProps extends BaseSlideProps {
   data: SlidePromo;
-  brandColor: string;
-  productImage?: string;
-  isPlaceholder?: boolean;
 }
 
-export interface SlideCTAProps {
+export interface SlideCTAProps extends BaseSlideProps {
   data: SlideCTA;
-  brandColor: string;
-  productImage?: string;
-  isPlaceholder?: boolean;
 }
-

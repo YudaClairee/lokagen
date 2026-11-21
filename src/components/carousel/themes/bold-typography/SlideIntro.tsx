@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
@@ -23,15 +24,18 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         <div className="relative z-10 flex h-full flex-col p-10">
           
           <div className="mt-12">
-            <h1 className="text-[60px] font-black leading-[0.9] tracking-tighter mix-blend-multiply">
-              {data.title.split(" ").map((word, i) => (
-                <span key={i} className="block">{word}</span>
-              ))}
+            <h1 className={`max-w-[65%] break-words font-black tracking-tighter mix-blend-multiply ${fitText(data.title, [[14, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
+              {/* Pecah per kata hanya jika judul pendek (<= 3 kata) */}
+              {data.title.trim().split(/\s+/).length <= 3
+                ? data.title.trim().split(/\s+/).map((word, i) => (
+                    <span key={i} className="block">{word}</span>
+                  ))
+                : data.title}
             </h1>
           </div>
           <div className="mt-8 flex items-start gap-4">
             <div className="mt-2 h-[2px] w-12 bg-black" />
-            <p className="max-w-[250px] text-lg font-bold leading-tight text-gray-800">
+            <p className="max-w-[250px] break-words text-lg font-bold leading-tight text-gray-800">
               {data.subtitle}
             </p>
           </div>

@@ -3,9 +3,10 @@
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
-  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     return (
       <div
         ref={ref}
@@ -24,14 +25,19 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         
         <div className="relative z-20 flex w-full flex-col items-center pt-12 text-center">
           
+          {(productName || brandInfo?.storeName) && (
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-800/70">
+              {productName || brandInfo?.storeName}
+            </p>
+          )}
           <h1 
-            className="text-5xl font-black uppercase tracking-tighter text-white/90"
+            className={`px-8 break-words font-black uppercase leading-tight tracking-tighter text-white/90 ${fitText(data.title, [[12, "text-5xl"], [18, "text-4xl"]], "text-3xl")}`}
             style={{ 
               WebkitTextStroke: '1px rgba(255,255,255,0.5)',
               textShadow: '0 2px 10px rgba(0,0,0,0.05)'
             }}
           >
-            {productName || "NEW PRODUCT"}
+            {data.title}
           </h1>
           <p className="mt-2 text-sm font-medium uppercase tracking-[0.3em] text-gray-800/60">
             {data.subtitle}
@@ -63,8 +69,8 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
            
         
         <div className="absolute bottom-6 w-full text-center z-20">
-           <div className="text-[10px] font-bold tracking-widest text-black/40">
-             WWW.LOKAGEN.COM
+           <div className="text-[10px] font-bold tracking-widest text-black/40 break-words px-6">
+             {brandInfo?.contactInfo || brandInfo?.storeName || productName || ""}
            </div>
         </div>
         {isPlaceholder && (

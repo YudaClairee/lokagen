@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
@@ -32,19 +33,21 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
            </div>
         </div>
         <div className="relative z-10 flex flex-col items-center text-center">
-           <h2 className="text-7xl font-black uppercase leading-[0.8] tracking-tighter">
-             {data.title.split(" ").map((word, i) => (
-               <span 
-                 key={i} 
-                 className="block"
-                 style={{ color: i % 2 === 0 ? 'black' : brandColor }}
-               >
-                 {word}
-               </span>
-             ))}
+           <h2 className={`max-w-[85%] break-words font-black uppercase leading-[0.9] tracking-tighter ${fitText(data.title, [[8, "text-7xl"], [14, "text-6xl"], [20, "text-5xl"]], "text-4xl")}`}>
+             {data.title.trim().split(/\s+/).length <= 2
+               ? data.title.trim().split(/\s+/).map((word, i) => (
+                   <span 
+                     key={i} 
+                     className="block"
+                     style={{ color: i % 2 === 0 ? 'black' : brandColor }}
+                   >
+                     {word}
+                   </span>
+                 ))
+               : <span className="block">{data.title}</span>}
            </h2>
            
-           <p className="mt-6 max-w-[200px] font-bold text-gray-600">
+           <p className="mt-6 max-w-[280px] break-words font-bold text-gray-600">
              {data.ctaText}
            </p>
            <div 

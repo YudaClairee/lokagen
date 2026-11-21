@@ -3,9 +3,10 @@
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     return (
       <div
         ref={ref}
@@ -44,11 +45,11 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               className="mb-4 inline-block border px-2 py-0.5 font-mono text-[10px] uppercase text-white"
               style={{ borderColor: brandColor, color: brandColor }}
             >
-              Time_Limited_Event
+              {data.highlightBadge || brandInfo?.promoBadge || "Highlight"}
             </span>
 
             <h2
-              className="mb-4 text-3xl font-bold uppercase tracking-tight text-white font-mono"
+              className={`mb-4 break-words font-bold uppercase tracking-tight text-white font-mono ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}
               style={{ textShadow: `0 0 10px ${brandColor}` }}
             >
               {data.title}
@@ -60,7 +61,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               <div className="h-px flex-1 bg-white" />
             </div>
 
-            <p className="font-mono text-lg text-gray-300">{data.promoText}</p>
+            <p className={`break-words font-mono text-gray-300 ${fitText(data.promoText, [[35, "text-lg"]], "text-base")}`}>{data.promoText}</p>
           </div>
         </div>
         {isPlaceholder && (

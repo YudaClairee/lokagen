@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { fitText } from "../fit-text";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
@@ -40,7 +41,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         
         <div className="relative z-10 w-full text-center">
            <h2 
-             className="mb-2 text-4xl font-bold font-mono tracking-tighter"
+             className={`mb-2 break-words font-bold font-mono tracking-tighter ${fitText(data.title, [[14, "text-4xl"], [20, "text-3xl"]], "text-2xl")}`}
              style={{ textShadow: `0 0 15px ${brandColor}80` }}
            >
              {data.title}

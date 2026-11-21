@@ -5,7 +5,7 @@ import type { SlidePromoProps } from "../types";
 import Image from "next/image";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
    
     return (
       <div
@@ -55,8 +55,8 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             
              
              <div className="absolute -left-6 top-1/2 -translate-y-1/2 rounded-xl bg-white p-3 text-center shadow-lg transform -rotate-6">
-                 <span className="block text-xs font-black uppercase text-gray-900">DISKON</span>
-                 <span className="block text-xl font-black text-red-500">30%</span>
+                 <span className="block text-xs font-black uppercase text-gray-900">PROMO</span>
+                 <span className="block max-w-[140px] break-words text-xl font-black text-red-500">{brandInfo?.priceText || data.highlightBadge || "SPESIAL"}</span>
              </div>
              
              <div className="absolute -right-6 top-1/2 -translate-y-1/2 rounded-xl bg-white p-3 text-center shadow-lg transform rotate-6">
@@ -67,7 +67,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
 
         
         <div className="relative z-40 mt-6">
-             <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
+             <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80 break-words">
                  {data.promoText}
              </p>
         </div>

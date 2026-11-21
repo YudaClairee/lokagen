@@ -66,7 +66,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                  <div className="mt-1 font-mono text-xs text-gray-500">
                    0{index + 1}
                  </div>
-                 <p className="font-mono text-sm leading-relaxed text-gray-300">
+                 <p className="font-mono text-sm leading-relaxed text-gray-300 break-words">
                    {bullet}
                  </p>
                </div>

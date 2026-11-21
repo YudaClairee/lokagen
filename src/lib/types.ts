@@ -4,6 +4,17 @@ export type Tone = "playful" | "formal" | "elegan" | "lokal";
 // Visual theme options
 export type Theme = "Minimal Clean Modern" | "Dark Modern/Futuristic" | "Colorful Gen Z" | "Bold Typography";
 
+export type CampaignType = "promo" | "launch" | "education" | "bestseller";
+
+// Identitas toko/produk yang ditampilkan di slide (opsional, diisi user)
+export interface BrandInfo {
+  storeName?: string;   // Contoh: "Kopi Senja"
+  priceText?: string;   // Contoh: "Mulai 18K" atau "Rp 25.000"
+  promoBadge?: string;  // Contoh: "DISKON 20%" atau "PROMO"
+  contactInfo?: string; // Contoh: "@kopisenja.id • WA 0812-3456-7890"
+  location?: string;    // Contoh: "Bandung, Jawa Barat"
+}
+
 // Slide types
 export interface SlideIntro {
   type: "intro";
@@ -27,6 +38,7 @@ export interface SlidePromo {
   type: "promo";
   title: string;
   promoText: string;
+  highlightBadge?: string; // Label stiker, mis. "FAVORIT" atau inti promo dari user
 }
 
 export interface SlideCTA {
@@ -63,4 +75,6 @@ export interface GenerateContentInput {
   tone: Tone;
   theme: Theme;
   brandColor?: string; // hex color
+  campaignType?: CampaignType;
+  brandInfo?: BrandInfo;
 }
