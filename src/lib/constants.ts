@@ -1,4 +1,14 @@
-import type { CampaignType, GeneratedContent, SampleProduct } from "./types";
+import type { CampaignType, GeneratedContent, ProductCategory, SampleProduct, SlideFormat, Theme } from "./types";
+
+// Ukuran logis slide per format. Dikali pixelRatio 2 saat export:
+// square → 1080x1080px, story → 1080x1920px.
+export const SLIDE_FORMATS: Record<
+  SlideFormat,
+  { label: string; description: string; width: number; height: number }
+> = {
+  square: { label: "Feed 1:1", description: "Instagram feed", width: 540, height: 540 },
+  story: { label: "Status & Story 9:16", description: "WA Status, Instagram Story", width: 540, height: 960 },
+};
 
 // Carousel configuration
 export const TOTAL_SLIDES = 5;
@@ -27,9 +37,57 @@ export const COPY_LIMITS = {
 export const CAMPAIGN_OPTIONS: { value: CampaignType; label: string; description: string }[] = [
   { value: "promo", label: "Promo / Diskon", description: "Penawaran spesial (isi detail promo di Harga / Label Promo)" },
   { value: "launch", label: "Launching Produk", description: "Produk baru hadir di toko" },
-  { value: "education", label: "Edukasi / Tips", description: "Tips & solusi untuk pembeli" },
+  { value: "education", label: "Edukasi / Tips", description: "Masalah → tips → produk sebagai solusi" },
   { value: "bestseller", label: "Terlaris / Unggulan", description: "Kualitas unggulan produk" },
 ];
+
+// Jenis usaha (Tahap 6): memilih tema default otomatis. Pengguna tetap bisa mengganti tema.
+// promptHint dipakai untuk menyesuaikan gaya teks AI.
+export const CATEGORY_OPTIONS: {
+  value: ProductCategory;
+  label: string;
+  description: string;
+  defaultTheme: Theme;
+  promptHint: string;
+}[] = [
+  {
+    value: "kuliner",
+    label: "Kuliner",
+    description: "Makanan & minuman",
+    defaultTheme: "Colorful Gen Z",
+    promptHint: "makanan/minuman: tonjolkan rasa, aroma, tekstur, dan momen menikmatinya",
+  },
+  {
+    value: "fashion",
+    label: "Fashion & Kerajinan",
+    description: "Pakaian, batik, tas, kerajinan tangan",
+    defaultTheme: "Bold Typography",
+    promptHint: "fashion/kerajinan: tonjolkan bahan, motif, detail pengerjaan, dan gaya pemakaian",
+  },
+  {
+    value: "kecantikan",
+    label: "Kecantikan & Perawatan",
+    description: "Skincare, herbal, perawatan diri",
+    defaultTheme: "Minimal Clean Modern",
+    promptHint: "kecantikan/perawatan: tonjolkan kandungan, manfaat untuk kulit/tubuh, dan cara pakai",
+  },
+  {
+    value: "gadget",
+    label: "Gadget & Streetwear",
+    description: "Aksesoris, gadget, produk bergaya",
+    defaultTheme: "Dark Modern/Futuristic",
+    promptHint: "gadget/streetwear: tonjolkan spesifikasi, gaya, dan kesan premium",
+  },
+  {
+    value: "umum",
+    label: "Umum / Lainnya",
+    description: "Jasa atau produk lain",
+    defaultTheme: "Colorful Gen Z",
+    promptHint: "umum: fokus pada manfaat praktis bagi pembeli",
+  },
+];
+
+export const DEFAULT_CATEGORY: ProductCategory = "umum";
 
 // Placeholder content for carousel preview
 export const PLACEHOLDER_CONTENT: GeneratedContent = {
@@ -110,6 +168,7 @@ export const SAMPLE_PRODUCTS: SampleProduct[] = [
     description:
       "Kopi gula aren khas Bandung, dibuat dari gula aren asli dan biji arabika pilihan. Rasanya manis legit dengan aroma karamel, cocok untuk teman ngopi santai. Tersedia dalam botol 250ml.",
     tone: "playful",
+    category: "kuliner",
     theme: "Colorful Gen Z",
     brandColor: "#F59E0B",
     brandInfo: {
@@ -127,7 +186,8 @@ export const SAMPLE_PRODUCTS: SampleProduct[] = [
     description:
       "Dimsum ayam isi keju dengan saus mentai creamy yang gurih. Dikukus fresh setiap pesanan, cocok untuk camilan atau lauk makan siang. Isi 4 pcs per porsi.",
     tone: "lokal",
-    theme: "Bold Typography",
+    category: "kuliner",
+    theme: "Colorful Gen Z",
     brandColor: "#EF4444",
     brandInfo: {
       storeName: "Dimsum Kak Lia",
@@ -144,7 +204,8 @@ export const SAMPLE_PRODUCTS: SampleProduct[] = [
     description:
       "Kaos katun combed 30s dengan sablon plastisol yang tahan lama. Desain motif batik modern, nyaman dipakai harian. Tersedia ukuran S sampai XXL.",
     tone: "lokal",
-    theme: "Dark Modern/Futuristic",
+    category: "fashion",
+    theme: "Bold Typography",
     brandColor: "#22C55E",
     brandInfo: {
       storeName: "Kaos Nusantara",
@@ -161,6 +222,7 @@ export const SAMPLE_PRODUCTS: SampleProduct[] = [
     description:
       "Serum wajah dengan ekstrak lidah buaya dan niacinamide, ringan untuk kulit berminyak. Tanpa paraben dan tanpa pewangi sintetis. Ukuran 30ml.",
     tone: "elegan",
+    category: "kecantikan",
     theme: "Minimal Clean Modern",
     brandColor: "#8FB8A0",
     brandInfo: {

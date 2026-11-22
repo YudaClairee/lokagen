@@ -1,30 +1,41 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { SlideFormat } from "@/lib/types";
+import { SLIDE_FORMATS } from "@/lib/constants";
 
-// Ukuran logis satu slide. Dikali pixelRatio 2 saat export → 1080x1080px.
-export const EXPORT_SIZE = 540;
-
-// Membesarkan/mengecilkan slide 540px agar pas dengan lebar kontainernya.
-export function ScaledSlide({ children }: { children: ReactNode }) {
+// Membesarkan/mengecilkan slide (ukuran logis sesuai format) agar pas dengan lebar kontainernya.
+// Slide di dalam sudah mengisi kotaknya (h-full), jadi tinggi ditentukan oleh format.
+export function ScaledSlide({
+  children,
+  format = "square",
+}: {
+  children: ReactNode;
+  format?: SlideFormat;
+}) {
+  const { width, height } = SLIDE_FORMATS[format];
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.3);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new ResizeObserver(() => setScale(el.clientWidth / EXPORT_SIZE));
+    const observer = new ResizeObserver(() => setScale(el.clientWidth / width));
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [width]);
 
   return (
-    <div ref={ref} className="relative aspect-square w-full overflow-hidden">
+    <div
+      ref={ref}
+      className="relative w-full overflow-hidden"
+      style={{ aspectRatio: `${width} / ${height}` }}
+    >
       <div
         className="pointer-events-none absolute left-0 top-0"
         style={{
-          width: EXPORT_SIZE,
-          height: EXPORT_SIZE,
+          width,
+          height,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
         }}

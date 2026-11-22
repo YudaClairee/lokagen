@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { BrandInfo, GeneratedContent, Theme } from "@/lib/types";
-import { TOTAL_SLIDES, PLACEHOLDER_CONTENT } from "@/lib/constants";
+import { useMemo, useState, type ReactNode } from "react";
+import type { BrandInfo, GeneratedContent, SlideFormat, Theme } from "@/lib/types";
+import { TOTAL_SLIDES, PLACEHOLDER_CONTENT, SLIDE_FORMATS } from "@/lib/constants";
 import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { EXPORT_SIZE, ScaledSlide } from "./ScaledSlide";
+import { ScaledSlide } from "./ScaledSlide";
+import { SlideCanvas } from "./SlideCanvas";
 
 interface CarouselPreviewProps {
   content: GeneratedContent | null;
@@ -37,6 +38,19 @@ export function CarouselPreview({
   onSlideChange,
 }: CarouselPreviewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("single");
+  const [format, setFormat] = useState<SlideFormat>("square");
+  // Bungkus slide dengan kanvas sesuai format (termasuk pita info toko untuk story)
+  const framed = (slide: ReactNode, ref?: (el: HTMLDivElement | null) => void) => (
+    <SlideCanvas
+      ref={ref}
+      format={format}
+      brandColor={brandColor}
+      productName={productName}
+      brandInfo={brandInfo}
+    >
+      {slide}
+    </SlideCanvas>
+  );
 
   // Get theme-specific components
   const { SlideIntro, SlideFeatures, SlideBenefits, SlidePromo, SlideCTA } = useMemo(
@@ -104,7 +118,6 @@ export function CarouselPreview({
   const exportSlides = [
     <SlideIntro
       key="intro"
-      ref={(el) => registerSlide(0, el)}
       data={displayContent.slides[0]}
       productName={productName}
       brandColor={brandColor}
@@ -114,7 +127,6 @@ export function CarouselPreview({
     />,
     <SlideFeatures
       key="features"
-      ref={(el) => registerSlide(1, el)}
       data={displayContent.slides[1]}
       productName={productName}
       brandColor={brandColor}
@@ -124,7 +136,6 @@ export function CarouselPreview({
     />,
     <SlideBenefits
       key="benefits"
-      ref={(el) => registerSlide(2, el)}
       data={displayContent.slides[2]}
       productName={productName}
       brandColor={brandColor}
@@ -134,7 +145,6 @@ export function CarouselPreview({
     />,
     <SlidePromo
       key="promo"
-      ref={(el) => registerSlide(3, el)}
       data={displayContent.slides[3]}
       productName={productName}
       brandColor={brandColor}
@@ -144,7 +154,6 @@ export function CarouselPreview({
     />,
     <SlideCTA
       key="cta"
-      ref={(el) => registerSlide(4, el)}
       data={displayContent.slides[4]}
       productName={productName}
       brandColor={brandColor}
@@ -157,14 +166,21 @@ export function CarouselPreview({
   const tabClass = (active: boolean) =>
     cn(
       "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-      active ? "bg-primary text-white" : "text-slate-400 hover:text-white"
+      active ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
     );
 
   return (
     <div className="space-y-4">
-      {/* Mode tampilan */}
-      <div className="flex justify-end">
-        <div className="inline-flex gap-1 rounded-lg border border-white/10 bg-slate-800/50 p-1">
+      {/* Format & mode tampilan */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
+          {(Object.keys(SLIDE_FORMATS) as SlideFormat[]).map((key) => (
+            <button key={key} type="button" className={tabClass(format === key)} onClick={() => setFormat(key)}>
+              {SLIDE_FORMATS[key].label}
+            </button>
+          ))}
+        </div>
+        <div className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
           <button type="button" className={tabClass(viewMode === "single")} onClick={() => setViewMode("single")}>
             📱 Tampilan Slide
           </button>
@@ -177,17 +193,23 @@ export function CarouselPreview({
       {/* Main Preview */}
       <div className="relative">
         {isLoading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-slate-900/80 backdrop-blur-sm">
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-card backdrop-blur-sm">
             <div className="flex flex-col items-center gap-2">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              <span className="text-sm text-slate-400">Generating...</span>
+              <span className="text-sm text-muted-foreground">Generating...</span>
             </div>
           </div>
         )}
 
         {viewMode === "single" ? (
-          <div className={`overflow-hidden rounded-lg ${isPlaceholder ? "opacity-50" : ""}`}>
-            {previewSlides[currentSlide]}
+          <div
+            className={cn(
+              "mx-auto overflow-hidden rounded-lg",
+              format === "story" && "max-w-[360px]",
+              isPlaceholder && "opacity-50"
+            )}
+          >
+            <ScaledSlide format={format}>{framed(previewSlides[currentSlide])}</ScaledSlide>
           </div>
         ) : (
           <div className={`grid grid-cols-2 gap-3 sm:grid-cols-3 ${isPlaceholder ? "opacity-50" : ""}`}>
@@ -209,7 +231,7 @@ export function CarouselPreview({
                   currentSlide === idx ? "ring-primary" : "ring-transparent hover:ring-white/30"
                 )}
               >
-                <ScaledSlide>{slide}</ScaledSlide>
+                <ScaledSlide format={format}>{framed(slide)}</ScaledSlide>
                 <span className="absolute bottom-1 left-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                   {idx + 1}
                 </span>
@@ -223,7 +245,7 @@ export function CarouselPreview({
       {viewMode === "single" && (
         <>
           <div className="flex items-center justify-between">
-            <Button variant="outline" size="icon" onClick={prevSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+            <Button variant="outline" size="icon" onClick={prevSlide} className="border-border bg-card text-foreground hover:bg-muted">
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
@@ -233,18 +255,18 @@ export function CarouselPreview({
                   key={index}
                   onClick={() => onSlideChange(index)}
                   className={`h-2 w-2 rounded-full transition-colors ${
-                    currentSlide === index ? "bg-primary" : "bg-slate-600"
+                    currentSlide === index ? "bg-primary" : "bg-muted-foreground/40"
                   }`}
                 />
               ))}
             </div>
 
-            <Button variant="outline" size="icon" onClick={nextSlide} className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+            <Button variant="outline" size="icon" onClick={nextSlide} className="border-border bg-card text-foreground hover:bg-muted">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <p className="text-center text-sm text-slate-400">
+          <p className="text-center text-sm text-muted-foreground">
             Slide {currentSlide + 1} / {TOTAL_SLIDES}
           </p>
         </>
@@ -256,9 +278,7 @@ export function CarouselPreview({
         className="pointer-events-none fixed -left-[9999px] top-0 z-[-1] opacity-100"
       >
         {exportSlides.map((slide, idx) => (
-          <div key={idx} style={{ width: EXPORT_SIZE, height: EXPORT_SIZE }}>
-            {slide}
-          </div>
+          <div key={idx}>{framed(slide, (el) => registerSlide(idx, el))}</div>
         ))}
       </div>
     </div>

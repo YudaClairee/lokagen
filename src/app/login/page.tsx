@@ -52,15 +52,15 @@ function LoginForm() {
   };
 
   return (
-    <main className="min-h-screen bg-[#020617] flex items-center justify-center px-4">
+    <main className="min-h-screen bg-background flex items-center justify-center px-4">
       <div
         className="fixed inset-0 z-0"
         style={{
-          background: "#020617",
+          background: "#FFF8F0",
           backgroundImage: `
-            linear-gradient(to right, rgba(71,85,105,0.3) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(71,85,105,0.3) 1px, transparent 1px),
-            radial-gradient(circle at 50% 50%, rgba(139,92,246,0.15) 0%, transparent 70%)
+            linear-gradient(to right, rgba(28,25,23,0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(28,25,23,0.08) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(194,65,12,0.08) 0%, transparent 70%)
           `,
           backgroundSize: "32px 32px, 32px 32px, 100% 100%",
         }}
@@ -69,26 +69,26 @@ function LoginForm() {
       <div className="relative z-10 w-full max-w-md">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Kembali ke Beranda
         </Link>
 
-        <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-8 backdrop-blur-sm">
+        <div className="rounded-2xl border border-border bg-card p-8 backdrop-blur-sm">
           <div className="mb-6 text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <Lock className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-white">Akses Terbatas</h1>
-            <p className="mt-2 text-sm text-slate-400">
+            <h1 className="text-2xl font-bold text-foreground">Akses Terbatas</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
               Masukkan password untuk melanjutkan ke halaman generate.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-300">
+              <Label htmlFor="password" className="text-foreground/80">
                 Password
               </Label>
               <Input
@@ -97,13 +97,13 @@ function LoginForm() {
                 placeholder="Masukkan password..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-slate-800/50 border-white/10 text-white placeholder:text-slate-500"
+                className="bg-card border-border text-foreground placeholder:text-muted-foreground"
                 autoFocus
               />
             </div>
 
             {error && (
-              <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+              <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-700">
                 {error}
               </div>
             )}

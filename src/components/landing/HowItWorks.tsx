@@ -29,7 +29,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="relative py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
             Cara <span className="text-primary">Kerja</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -50,10 +50,10 @@ export function HowItWorks() {
               viewport={{ once: true }}
               className="relative flex flex-col items-center text-center"
             >
-              <div className="relative z-10 mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-secondary text-primary shadow-xl">
+              <div className="relative z-10 mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-background bg-secondary text-primary shadow-xl">
                 <step.icon className="h-10 w-10" />
               </div>
-              <h3 className="mb-2 text-xl font-bold text-white">
+              <h3 className="mb-2 text-xl font-bold text-foreground">
                 {step.title}
               </h3>
               <p className="text-muted-foreground">{step.description}</p>

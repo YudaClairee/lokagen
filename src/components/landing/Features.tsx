@@ -54,7 +54,7 @@ export function Features() {
     <section id="features" className="relative py-40">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
             Semua yang Anda Butuhkan untuk <br />
             <span className="text-primary">Viral</span>
           </h2>
@@ -72,12 +72,12 @@ export function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50 p-8 backdrop-blur-sm transition-colors hover:bg-slate-800/50"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 backdrop-blur-sm transition-colors hover:bg-muted/50"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                 <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="mb-2 text-xl font-bold text-white">
+              <h3 className="mb-2 text-xl font-bold text-foreground">
                 {feature.title}
               </h3>
               <p className="text-muted-foreground">{feature.description}</p>

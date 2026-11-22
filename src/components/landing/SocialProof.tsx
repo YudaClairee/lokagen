@@ -44,7 +44,7 @@ export function SocialProof() {
     <section id="showcase" className="relative py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
             Dari <span className="text-primary">1 foto</span>, jadi 4 gaya
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -54,22 +54,22 @@ export function SocialProof() {
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
           <figure className="space-y-2">
-            <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
               {photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={photo} alt="Foto produk contoh" className="aspect-square w-full object-cover" />
               ) : (
-                <div className="aspect-square w-full bg-slate-800" />
+                <div className="aspect-square w-full bg-muted" />
               )}
             </div>
-            <figcaption className="text-center text-sm font-semibold text-slate-300">Foto asli</figcaption>
+            <figcaption className="text-center text-sm font-semibold text-foreground/80">Foto asli</figcaption>
           </figure>
 
           {THEMES.map((theme) => {
             const { SlideIntro: Intro } = getThemeComponents(theme);
             return (
               <figure key={theme} className="space-y-2">
-                <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/50">
+                <div className="overflow-hidden rounded-2xl border border-border bg-card">
                   <ScaledSlide>
                     <Intro
                       data={demoIntro}
@@ -81,7 +81,7 @@ export function SocialProof() {
                     />
                   </ScaledSlide>
                 </div>
-                <figcaption className="text-center text-sm font-semibold text-slate-300">{theme}</figcaption>
+                <figcaption className="text-center text-sm font-semibold text-foreground/80">{theme}</figcaption>
               </figure>
             );
           })}

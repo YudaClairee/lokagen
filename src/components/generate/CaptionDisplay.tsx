@@ -55,7 +55,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       size="sm"
       onClick={handleCopy}
       disabled={!text.trim()}
-      className="gap-2 border-white/10 bg-white/5 text-white hover:bg-white/10"
+      className="gap-2 border-border bg-card text-foreground hover:bg-muted"
     >
       {copied ? (
         <>
@@ -82,10 +82,10 @@ export function CaptionDisplay({
   const [tab, setTab] = useState<CaptionTab>("caption");
 
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
+    <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-white">Copywriting</h2>
-        <div role="tablist" aria-label="Jenis copywriting" className="inline-flex gap-1 rounded-lg border border-white/10 bg-slate-800/50 p-1">
+        <h2 className="text-xl font-semibold text-foreground">Copywriting</h2>
+        <div role="tablist" aria-label="Jenis copywriting" className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
           {TABS.map((t) => (
             <button
               key={t.value}
@@ -95,7 +95,7 @@ export function CaptionDisplay({
               onClick={() => setTab(t.value)}
               className={cn(
                 "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
-                tab === t.value ? "bg-primary text-white" : "text-slate-400 hover:text-white"
+                tab === t.value ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
               )}
             >
               {t.label}
@@ -114,9 +114,9 @@ export function CaptionDisplay({
             onChange={(e) => onChange(e.target.value)}
             rows={10}
             aria-label="Caption Instagram"
-            className="resize-y border-white/5 bg-slate-800/50 text-sm leading-relaxed text-slate-300"
+            className="resize-y border-border bg-card text-sm leading-relaxed text-foreground/80"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Bisa diedit sebelum disalin. Hashtag sudah ada di baris terakhir caption.
           </p>
         </div>
@@ -130,7 +130,7 @@ export function CaptionDisplay({
                 {hashtags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/10 bg-slate-800/60 px-3 py-1 text-sm text-slate-200"
+                    className="rounded-full border border-border bg-card px-3 py-1 text-sm text-foreground/80"
                   >
                     {tag}
                   </span>
@@ -141,7 +141,7 @@ export function CaptionDisplay({
               </div>
             </>
           ) : (
-            <p className="text-sm text-slate-500">Belum ada hashtag. Generate ulang untuk mendapatkannya.</p>
+            <p className="text-sm text-muted-foreground">Belum ada hashtag. Generate ulang untuk mendapatkannya.</p>
           )}
         </div>
       )}
@@ -157,9 +157,9 @@ export function CaptionDisplay({
             rows={6}
             placeholder="Template balasan admin WA akan muncul di sini setelah generate."
             aria-label="Template balasan WhatsApp"
-            className="resize-y border-white/5 bg-slate-800/50 text-sm leading-relaxed text-slate-300"
+            className="resize-y border-border bg-card text-sm leading-relaxed text-foreground/80"
           />
-          <p className="text-xs text-slate-500">Teks siap pakai untuk admin toko saat pembeli chat via WhatsApp.</p>
+          <p className="text-xs text-muted-foreground">Teks siap pakai untuk admin toko saat pembeli chat via WhatsApp.</p>
         </div>
       )}
     </div>

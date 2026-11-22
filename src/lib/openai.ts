@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import type { CampaignType, GenerateContentInput, PromoMode, Theme, Tone } from "@/lib/types";
-import { COPY_LIMITS as L } from "@/lib/constants";
+import { COPY_LIMITS as L, CATEGORY_OPTIONS } from "@/lib/constants";
 
 export const AI_MODEL =
   process.env.AI_MODEL || "deepseek/deepseek-v4.1-flash-1017";
@@ -71,14 +71,19 @@ export interface UserPromptParams {
 }
 
 export function generateUserPrompt({ input, hasImage, promoMode, promoFacts }: UserPromptParams): string {
-  const { productName, description, tone, theme, brandColor, campaignType, brandInfo } = input;
+  const { productName, description, tone, theme, brandColor, category, campaignType, brandInfo } = input;
   const toneDesc = toneDescriptions[tone] || toneDescriptions.playful;
   const themeDesc = themeDescriptions[theme] || themeDescriptions["Colorful Gen Z"];
+  const categoryOption = CATEGORY_OPTIONS.find((c) => c.value === category);
 
   let prompt = `Buatkan konten Instagram carousel untuk produk UMKM dengan detail berikut:
 
 Tone: ${tone} (${toneDesc})
 Tema Visual: ${theme} (${themeDesc})`;
+
+  if (categoryOption) {
+    prompt += `\nJenis Usaha: ${categoryOption.label} (${categoryOption.promptHint})`;
+  }
 
   if (campaignType) {
     prompt += `\nTujuan Konten: ${campaignType} (${campaignDescriptions[campaignType]})`;
@@ -114,12 +119,26 @@ Tema Visual: ${theme} (${themeDesc})`;
       ? `MODE SLIDE 4: PROMO. Gunakan HANYA info promo dari user berikut, tanpa menambah angka/syarat baru: "${promoFacts || description || ""}". "highlightBadge" = inti promonya (mis. "DISKON 20%").`
       : `MODE SLIDE 4: VALUE (user TIDAK sedang promo). Isi dengan alasan kuat kenapa wajib coba sekarang: jaminan kualitas, keunikan, atau momen yang pas. DILARANG menyebut diskon/harga/gratis/batas waktu. "highlightBadge" berupa label nilai, mis. "FAVORIT", "FRESH", "HANDMADE".`;
 
+  // Tujuan Edukasi memakai susunan sendiri: masalah → tips → tips lanjutan → produk sebagai solusi → CTA.
+  // Tipe slide tetap sama (features/benefits) agar semua tema tetap bisa menampilkannya.
+  const slideStructure =
+    campaignType === "education"
+      ? `STRUKTUR EDUKASI (menggantikan definisi slide 2 dan 3 di instruksi sistem; slide 1, 4, dan 5 tetap sesuai peran masing-masing):
+1. "intro": masalah atau pertanyaan yang sering dialami pembeli; "subtitle" menjanjikan tips yang akan dibagikan.
+2. "features": judul seperti "Tips Dasar"; 3 bullet berisi langkah/tips praktis yang bisa langsung dicoba.
+3. "benefits": 3 bullet berisi tips lanjutan ATAU kesalahan umum yang perlu dihindari; isinya HARUS berbeda dari slide 2.
+4. "promo": produk sebagai solusi dari masalah di slide 1, jelaskan singkat kenapa produk ini membantu. Tetap ikuti MODE SLIDE 4 di atas.
+5. "cta": ajakan spesifik untuk mencoba/memesan produk.
+Tips harus umum, aman, dan masuk akal. DILARANG klaim medis, janji hasil pasti, statistik, atau angka yang tidak ada di input user.
+Caption: hook berupa masalah, 3 tips ringkas berawalan emoji, lalu 1 kalimat yang menyebut produk sebagai bantuan.`
+      : `Slide 2 (features) dan slide 3 (benefits) harus berbeda isi: fakta vs dampak.`;
+
   prompt += `
 
 ${slide4}
 
 Pastikan konten sesuai dengan tone "${tone}", tujuan "${campaignType ?? "umum"}", dan cocok untuk tema visual "${theme}".
-Slide 2 (features) dan slide 3 (benefits) harus berbeda isi: fakta vs dampak.
+${slideStructure}
 
 Berikan output dalam format JSON berikut:
 {

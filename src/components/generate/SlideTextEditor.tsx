@@ -11,7 +11,7 @@ interface SlideTextEditorProps {
   onChange: (next: SlideContent) => void;
 }
 
-const inputClass = "border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500";
+const inputClass = "border-border bg-card text-foreground placeholder:text-muted-foreground";
 
 export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps) {
   const textField = (
@@ -22,7 +22,7 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
     multiline = false
   ) => (
     <div key={id}>
-      <Label htmlFor={id} className="mb-1 block text-xs text-slate-300">
+      <Label htmlFor={id} className="mb-1 block text-xs text-foreground/80">
         {label}
       </Label>
       {multiline ? (
@@ -101,10 +101,10 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
-      <h3 className="mb-4 text-base font-semibold text-white">Edit Teks Slide #{index + 1}</h3>
+    <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
+      <h3 className="mb-4 text-base font-semibold text-foreground">Edit Teks Slide #{index + 1}</h3>
       <div className="space-y-3">{fields}</div>
-      <p className="mt-3 text-xs text-slate-500">Perubahan langsung tampil di preview dan ikut terunduh.</p>
+      <p className="mt-3 text-xs text-muted-foreground">Perubahan langsung tampil di preview dan ikut terunduh.</p>
     </div>
   );
 }

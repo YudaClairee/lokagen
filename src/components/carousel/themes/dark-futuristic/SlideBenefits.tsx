@@ -11,7 +11,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
+        className="relative flex h-full w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
         
         {productImage && (

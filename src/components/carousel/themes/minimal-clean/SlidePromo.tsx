@@ -13,7 +13,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-8 text-white"
+        className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden p-8 text-white"
         style={{ backgroundColor: brandColor }}
       >
         

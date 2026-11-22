@@ -31,16 +31,16 @@ export function HistoryPanel({ items, onLoad }: HistoryPanelProps) {
         size="sm"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="gap-2 border-white/10 bg-white/5 text-white hover:bg-white/10"
+        className="gap-2 border-border bg-card text-foreground hover:bg-muted"
       >
         <History className="h-4 w-4" />
         Riwayat ({items.length})
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-white/10 bg-slate-900 p-2 shadow-xl">
+        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-border bg-card p-2 shadow-xl">
           {items.length === 0 ? (
-            <p className="p-3 text-sm text-slate-400">Belum ada riwayat. Generate konten dulu ya.</p>
+            <p className="p-3 text-sm text-muted-foreground">Belum ada riwayat. Generate konten dulu ya.</p>
           ) : (
             <ul className="max-h-80 space-y-1 overflow-y-auto">
               {items.map((item) => (
@@ -51,12 +51,12 @@ export function HistoryPanel({ items, onLoad }: HistoryPanelProps) {
                       onLoad(item);
                       setOpen(false);
                     }}
-                    className="w-full rounded-lg p-3 text-left transition-colors hover:bg-slate-800"
+                    className="w-full rounded-lg p-3 text-left transition-colors hover:bg-muted"
                   >
-                    <span className="block truncate text-sm font-medium text-white">
+                    <span className="block truncate text-sm font-medium text-foreground">
                       {item.productName || item.result.slides[0].title || "Tanpa nama"}
                     </span>
-                    <span className="block text-xs text-slate-400">
+                    <span className="block text-xs text-muted-foreground">
                       {new Date(item.timestamp).toLocaleString("id-ID", {
                         day: "numeric",
                         month: "short",
@@ -70,7 +70,7 @@ export function HistoryPanel({ items, onLoad }: HistoryPanelProps) {
               ))}
             </ul>
           )}
-          <p className="px-3 pb-1 pt-2 text-[11px] text-slate-500">
+          <p className="px-3 pb-1 pt-2 text-[11px] text-muted-foreground">
             Foto produk tidak disimpan. Unggah ulang jika ingin mengganti foto.
           </p>
         </div>

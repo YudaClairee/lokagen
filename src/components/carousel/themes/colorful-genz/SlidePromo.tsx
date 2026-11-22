@@ -12,7 +12,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
           <div className="absolute inset-0 z-0">

@@ -7,13 +7,13 @@ import Image from "next/image";
 import { fitText } from "../fit-text";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
+        className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
         style={{ backgroundColor: brandColor }}
       >
    
@@ -44,13 +44,13 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
                     className="text-sm font-bold uppercase tracking-widest"
                     style={{ color: brandColor }} 
                 >
-                    Order Now
+                    Pesan Sekarang
                 </span>
             </div>
 
             
-            <div className="absolute -bottom-24 text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">
-               Link in Bio
+            <div className="absolute -bottom-24 max-w-[260px] truncate text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">
+               {brandInfo?.contactInfo || "Link di Bio"}
             </div>
          </div>
 

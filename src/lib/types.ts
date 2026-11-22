@@ -4,6 +4,12 @@ export type Tone = "playful" | "formal" | "elegan" | "lokal";
 // Visual theme options
 export type Theme = "Minimal Clean Modern" | "Dark Modern/Futuristic" | "Colorful Gen Z" | "Bold Typography";
 
+// Format output: "square" = feed Instagram 1:1, "story" = Status WA & Story 9:16
+export type SlideFormat = "square" | "story";
+
+// Jenis usaha: menentukan tema default (lihat CATEGORY_OPTIONS di constants.ts)
+export type ProductCategory = "kuliner" | "fashion" | "kecantikan" | "gadget" | "umum";
+
 export type CampaignType = "promo" | "launch" | "education" | "bestseller";
 
 // Mode Slide 4: "promo" = user memang menulis info promo, "value" = alasan wajib coba.
@@ -82,6 +88,7 @@ export interface GenerateContentInput {
   tone: Tone;
   theme: Theme;
   brandColor?: string; // hex color
+  category?: ProductCategory;
   campaignType?: CampaignType;
   brandInfo?: BrandInfo;
 }
@@ -93,6 +100,7 @@ export interface SampleProduct {
   productName: string;
   description: string;
   tone: Tone;
+  category: ProductCategory;
   theme: Theme;
   brandColor: string;
   brandInfo: BrandInfo;

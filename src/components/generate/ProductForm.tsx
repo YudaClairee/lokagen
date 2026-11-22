@@ -63,9 +63,9 @@ export function ProductForm({
     <div className="space-y-4">
       {/* Product Name */}
       <div>
-        <Label htmlFor="productName" className="mb-2 block text-slate-200">
+        <Label htmlFor="productName" className="mb-2 block text-foreground/80">
           Nama Produk{" "}
-          <span className="text-slate-500">(opsional)</span>
+          <span className="text-muted-foreground">(opsional)</span>
         </Label>
         <Input
           id="productName"
@@ -74,16 +74,16 @@ export function ProductForm({
           value={productName}
           maxLength={VALIDATION.MAX_PRODUCT_NAME_LENGTH}
           onChange={(e) => setProductName(e.target.value)}
-          className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+          className="border-border bg-card text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
       {/* Image Upload */}
       <div>
-        <Label className="mb-2 block text-slate-200">Foto Produk</Label>
+        <Label className="mb-2 block text-foreground/80">Foto Produk</Label>
         <div className="relative">
           {productImage ? (
-            <div className="group relative aspect-square w-full max-w-[200px] overflow-hidden rounded-lg border border-white/10">
+            <div className="group relative aspect-square w-full max-w-[200px] overflow-hidden rounded-lg border border-border">
               <Image
                 src={productImage}
                 alt="Product preview"
@@ -99,12 +99,12 @@ export function ProductForm({
               </button>
             </div>
           ) : (
-            <label className="flex aspect-square w-full max-w-[200px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-white/20 bg-slate-800/50 transition-colors hover:border-primary hover:bg-slate-800">
-              <ImagePlus className="h-8 w-8 text-slate-400" />
-              <span className="text-sm text-slate-400">
+            <label className="flex aspect-square w-full max-w-[200px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card transition-colors hover:border-primary hover:bg-muted">
+              <ImagePlus className="h-8 w-8 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
                 Upload gambar
               </span>
-              <span className="text-xs text-slate-500">Max 5MB (otomatis dikompres)</span>
+              <span className="text-xs text-muted-foreground">Max 5MB (otomatis dikompres)</span>
               <input
                 type="file"
                 accept="image/*"
@@ -118,9 +118,9 @@ export function ProductForm({
 
       {/* Description */}
       <div>
-        <Label htmlFor="description" className="mb-2 block text-slate-200">
+        <Label htmlFor="description" className="mb-2 block text-foreground/80">
           Deskripsi Produk{" "}
-          <span className="text-slate-500">(opsional)</span>
+          <span className="text-muted-foreground">(opsional)</span>
         </Label>
         <Textarea
           id="description"
@@ -129,9 +129,9 @@ export function ProductForm({
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
           maxLength={VALIDATION.MAX_DESCRIPTION_LENGTH}
-          className="resize-none border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+          className="resize-none border-border bg-card text-foreground placeholder:text-muted-foreground"
         />
-        <div className="mt-1 flex justify-between text-xs text-slate-500">
+        <div className="mt-1 flex justify-between text-xs text-muted-foreground">
           <span>Jelaskan produkmu: nama, jenis, keunggulan, atau info lainnya</span>
           <span>{description.length}/{VALIDATION.MAX_DESCRIPTION_LENGTH}</span>
         </div>

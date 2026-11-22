@@ -8,17 +8,17 @@ import { Footer } from "@/components/landing/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen text-white selection:bg-primary selection:text-white">
-      <div className="min-h-screen w-full bg-[#020617] relative">
+    <main className="min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground">
+      <div className="min-h-screen w-full bg-background relative">
         {/* Dark Sphere Grid Background */}
         <div
           className="fixed inset-0 z-0"
           style={{
-            background: "#020617",
+            background: "#FFF8F0",
             backgroundImage: `
-        linear-gradient(to right, rgba(71,85,105,0.3) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(71,85,105,0.3) 1px, transparent 1px),
-        radial-gradient(circle at 50% 50%, rgba(139,92,246,0.15) 0%, transparent 70%)
+        linear-gradient(to right, rgba(28,25,23,0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(28,25,23,0.08) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(194,65,12,0.08) 0%, transparent 70%)
       `,
             backgroundSize: "32px 32px, 32px 32px, 100% 100%",
           }}

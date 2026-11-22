@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getThemeComponents } from "@/components/carousel/themes";
+import { ScaledSlide } from "@/components/carousel/ScaledSlide";
 import { createSampleImage } from "@/lib/utils";
 import { SAMPLE_PRODUCTS } from "@/lib/constants";
 import type { Theme } from "@/lib/types";
@@ -78,7 +79,9 @@ export default function TestSlidesPage() {
         {renderers.map((slide, i) => (
           <div key={SLIDE_LABELS[i]} className="flex flex-col gap-2">
             <h2 className="text-sm font-semibold text-gray-500">{SLIDE_LABELS[i]}</h2>
-            <div className="aspect-square w-full sm:w-[320px]">{slide}</div>
+            <div className="w-full sm:w-[320px]">
+              <ScaledSlide>{slide}</ScaledSlide>
+            </div>
           </div>
         ))}
       </div>

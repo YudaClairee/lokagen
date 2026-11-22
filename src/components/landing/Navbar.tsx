@@ -26,24 +26,24 @@ export function Navbar() {
         className={cn(
           "flex h-14 w-full max-w-4xl items-center justify-between rounded-full px-6 transition-all duration-300",
           isScrolled
-            ? "bg-slate-900/80 backdrop-blur-md border border-slate-800 shadow-lg"
+            ? "bg-card backdrop-blur-md border border-border shadow-lg"
             : "bg-transparent border border-transparent"
         )}
       >
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/lokagen.png" alt="LokaGen" width={100} height={100} />
+          <Image src="/lokagen-logo.png" alt="LokaGen" width={2084} height={756} priority className="h-9 w-auto" />
         </Link>
 
         {/* <div className="hidden md:flex items-center gap-6">
           <Link
             href="#features"
-            className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
           >
             Fitur
           </Link>
           <Link
             href="#how-it-works"
-            className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
           >
             Cara Kerja
           </Link>
@@ -52,7 +52,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <Link
             href="/generate"
-            className="rounded-full bg-white px-4 py-1.5 text-sm font-bold text-black hover:bg-gray-200 transition-colors"
+            className="rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             Mulai
           </Link>

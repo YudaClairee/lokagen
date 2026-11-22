@@ -32,7 +32,7 @@ export function DownloadButton({ slideRefs, productName, currentSlide }: Downloa
     if (!node) throw new Error(`Slide ${index + 1} belum siap`);
     return toPng(node, {
       quality: 1,
-      pixelRatio: 2, // 540px x 2 = 1080px
+      pixelRatio: 2, // ukuran logis x 2: 1080x1080 (feed) atau 1080x1920 (story)
       cacheBust: true,
       backgroundColor: "#000",
     });
@@ -77,7 +77,7 @@ export function DownloadButton({ slideRefs, productName, currentSlide }: Downloa
         size="sm"
         onClick={handleDownloadOne}
         disabled={busy}
-        className="gap-2 border-white/10 bg-white/5 text-white hover:bg-white/10"
+        className="gap-2 border-border bg-card text-foreground hover:bg-muted"
       >
         {downloading === "one" ? (
           <>
@@ -96,7 +96,7 @@ export function DownloadButton({ slideRefs, productName, currentSlide }: Downloa
         size="sm"
         onClick={handleDownloadAll}
         disabled={busy}
-        className="gap-2 border-white/10 bg-white/5 text-white hover:bg-white/10"
+        className="gap-2 border-border bg-card text-foreground hover:bg-muted"
       >
         {downloading === "all" ? (
           <>

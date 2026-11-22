@@ -7,13 +7,16 @@ import type {
   Theme,
   BrandInfo,
   CampaignType,
+  ProductCategory,
   GeneratedContent,
   GenerateContentInput,
   SampleProduct,
   SlideContent,
 } from "@/lib/types";
 import {
+  CATEGORY_OPTIONS,
   DEFAULT_BRAND_COLOR,
+  DEFAULT_CATEGORY,
   DEFAULT_TONE,
   DEFAULT_THEME,
   ERROR_MESSAGES,
@@ -47,6 +50,7 @@ export default function GeneratePage() {
   const [productName, setProductName] = useState<string>("");
   const [productImage, setProductImage] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [category, setCategory] = useState<ProductCategory>(DEFAULT_CATEGORY);
   const [tone, setTone] = useState<Tone>(DEFAULT_TONE);
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
   const [brandColor, setBrandColor] = useState<string>(DEFAULT_BRAND_COLOR);
@@ -93,9 +97,21 @@ export default function GeneratePage() {
     }
     const items = loadHistory();
     setHistory(items);
-    if (items[0]) {
-      setResult(items[0].result);
-      setCurrentId(items[0].id);
+    const latest = items[0];
+    if (latest) {
+      setResult(latest.result);
+      setCurrentId(latest.id);
+      // Isi form sesuai hasil terakhir agar slide, pita story, dan kontak konsisten.
+      // Hanya menimpa nilai profil bila riwayat punya nilainya.
+      if (latest.productName) setProductName(latest.productName);
+      setTone(latest.tone);
+      setCategory(latest.category ?? DEFAULT_CATEGORY);
+      setTheme(latest.theme);
+      if (latest.brandColor) setBrandColor(latest.brandColor);
+      if (latest.brandInfo?.storeName) setStoreName(latest.brandInfo.storeName);
+      if (latest.brandInfo?.priceText) setPriceText(latest.brandInfo.priceText);
+      if (latest.brandInfo?.contactInfo) setContactInfo(latest.brandInfo.contactInfo);
+      if (latest.brandInfo?.location) setLocation(latest.brandInfo.location);
     }
     setHydrated(true);
   }, []);
@@ -144,6 +160,13 @@ export default function GeneratePage() {
     }
   };
 
+  // Ganti jenis usaha sekaligus mengisi tema default-nya (bisa diubah lagi manual)
+  const handleCategoryChange = (next: ProductCategory) => {
+    setCategory(next);
+    const option = CATEGORY_OPTIONS.find((c) => c.value === next);
+    if (option) setTheme(option.defaultTheme);
+  };
+
   const handleGenerate = () => {
     setError("");
 
@@ -159,6 +182,7 @@ export default function GeneratePage() {
       tone,
       theme,
       brandColor,
+      category,
       campaignType,
       brandInfo,
     };
@@ -173,6 +197,7 @@ export default function GeneratePage() {
           timestamp: Date.now(),
           productName: productName || undefined,
           tone,
+          category,
           theme,
           brandColor,
           brandInfo,
@@ -196,6 +221,7 @@ export default function GeneratePage() {
     setCurrentSlide(0);
     setProductName(item.productName ?? "");
     setTone(item.tone);
+    setCategory(item.category ?? DEFAULT_CATEGORY);
     setTheme(item.theme);
     setBrandColor(item.brandColor ?? DEFAULT_BRAND_COLOR);
     setStoreName(item.brandInfo?.storeName ?? "");
@@ -213,6 +239,7 @@ export default function GeneratePage() {
       setProductName(sample.productName);
       setDescription(sample.description);
       setTone(sample.tone);
+      setCategory(sample.category);
       setTheme(sample.theme);
       setBrandColor(sample.brandColor);
       setStoreName(sample.brandInfo.storeName ?? "");
@@ -245,30 +272,30 @@ export default function GeneratePage() {
   };
 
   return (
-    <main className="relative min-h-screen text-white">
+    <main className="relative min-h-screen text-foreground">
       <div
         className="fixed inset-0 z-0"
         style={{
-          background: "#020617",
+          background: "#FFF8F0",
           backgroundImage: `
-            linear-gradient(to right, rgba(71,85,105,0.3) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(71,85,105,0.3) 1px, transparent 1px),
-            radial-gradient(circle at 50% 50%, rgba(59,130,246,0.1) 0%, transparent 70%)
+            linear-gradient(to right, rgba(28,25,23,0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(28,25,23,0.08) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(194,65,12,0.06) 0%, transparent 70%)
           `,
           backgroundSize: "32px 32px, 32px 32px, 100% 100%",
         }}
       />
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#020617]/80 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <Link
             href="/"
-            className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+            className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Kembali</span>
           </Link>
-          <h1 className="text-lg font-semibold text-white">Generate Konten</h1>
+          <h1 className="text-lg font-semibold text-foreground">Generate Konten</h1>
           <HistoryPanel items={history} onLoad={handleLoadHistory} />
         </div>
       </header>
@@ -276,8 +303,8 @@ export default function GeneratePage() {
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-6">
-            <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
-              <h2 className="mb-6 text-xl font-semibold text-white">Detail Produk</h2>
+            <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
+              <h2 className="mb-6 text-xl font-semibold text-foreground">Detail Produk</h2>
 
               <SampleProductButtons
                 samples={SAMPLE_PRODUCTS}
@@ -295,6 +322,8 @@ export default function GeneratePage() {
               />
 
               <GenerateOptions
+                category={category}
+                setCategory={handleCategoryChange}
                 tone={tone}
                 setTone={setTone}
                 theme={theme}
@@ -306,13 +335,13 @@ export default function GeneratePage() {
                 setCampaignType={setCampaignType}
               />
 
-              <div className="mt-6 space-y-4 rounded-lg border border-white/10 bg-slate-800/30 p-4">
-                <p className="text-sm font-semibold text-slate-200">
-                  Info Toko <span className="font-normal text-slate-500">(opsional, tampil di slide)</span>
+              <div className="mt-6 space-y-4 rounded-lg border border-border bg-card p-4">
+                <p className="text-sm font-semibold text-foreground/80">
+                  Info Toko <span className="font-normal text-muted-foreground">(opsional, tampil di slide)</span>
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="storeName" className="mb-2 block text-slate-200">Nama Toko</Label>
+                    <Label htmlFor="storeName" className="mb-2 block text-foreground/80">Nama Toko</Label>
                     <Input
                       id="storeName"
                       type="text"
@@ -320,11 +349,11 @@ export default function GeneratePage() {
                       placeholder='Contoh: "Kopi Senja"'
                       value={storeName}
                       onChange={(e) => setStoreName(e.target.value)}
-                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                      className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="location" className="mb-2 block text-slate-200">Lokasi</Label>
+                    <Label htmlFor="location" className="mb-2 block text-foreground/80">Lokasi</Label>
                     <Input
                       id="location"
                       type="text"
@@ -332,11 +361,11 @@ export default function GeneratePage() {
                       placeholder='Contoh: "Bandung, Jawa Barat"'
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                      className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="priceText" className="mb-2 block text-slate-200">Harga / Label Promo</Label>
+                    <Label htmlFor="priceText" className="mb-2 block text-foreground/80">Harga / Label Promo</Label>
                     <Input
                       id="priceText"
                       type="text"
@@ -344,11 +373,11 @@ export default function GeneratePage() {
                       placeholder='Contoh: "Rp 25.000" atau "Diskon 20%"'
                       value={priceText}
                       onChange={(e) => setPriceText(e.target.value)}
-                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                      className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="contactInfo" className="mb-2 block text-slate-200">Kontak IG & WA</Label>
+                    <Label htmlFor="contactInfo" className="mb-2 block text-foreground/80">Kontak IG & WA</Label>
                     <Input
                       id="contactInfo"
                       type="text"
@@ -356,14 +385,14 @@ export default function GeneratePage() {
                       placeholder='Contoh: "@kopisenja • WA 0812xxx"'
                       value={contactInfo}
                       onChange={(e) => setContactInfo(e.target.value)}
-                      className="border-white/10 bg-slate-800/50 text-white placeholder:text-slate-500"
+                      className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     />
                   </div>
                 </div>
               </div>
 
               {error && (
-                <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+                <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-700">
                   {error}
                 </div>
               )}
@@ -390,9 +419,9 @@ export default function GeneratePage() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-xl border border-white/10 bg-slate-900/50 p-6 backdrop-blur-sm">
+            <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
               <div className="mb-4 flex items-center justify-between gap-2">
-                <h2 className="text-xl font-semibold text-white">Preview Carousel</h2>
+                <h2 className="text-xl font-semibold text-foreground">Preview Carousel</h2>
                 {result && (
                   <DownloadButton
                     slideRefs={slideRefs}

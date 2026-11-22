@@ -12,7 +12,7 @@ interface SampleProductButtonsProps {
 export function SampleProductButtons({ samples, onSelect, disabled }: SampleProductButtonsProps) {
   return (
     <div className="mb-6 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4">
-      <p className="mb-3 text-sm font-semibold text-slate-200">
+      <p className="mb-3 text-sm font-semibold text-foreground/80">
         ✨ Belum punya produk? Coba contoh dalam 1 klik:
       </p>
       <div className="flex flex-wrap gap-2">
@@ -24,7 +24,7 @@ export function SampleProductButtons({ samples, onSelect, disabled }: SampleProd
             size="sm"
             disabled={disabled}
             onClick={() => onSelect(sample)}
-            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+            className="border-border bg-card text-foreground hover:bg-muted"
           >
             Coba Contoh: {sample.label}
           </Button>

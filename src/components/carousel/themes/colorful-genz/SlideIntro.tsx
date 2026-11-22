@@ -11,7 +11,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         <div className="relative z-10 flex flex-col items-center justify-center pt-6 pb-2">
             <div className="absolute left-4 top-6 grid grid-cols-2 gap-1">

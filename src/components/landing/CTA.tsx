@@ -15,9 +15,9 @@ export function CTA() {
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="mx-auto max-w-4xl rounded-3xl border border-slate-800 bg-slate-900/50 p-12 backdrop-blur-md"
+          className="mx-auto max-w-4xl rounded-3xl border border-border bg-card p-12 backdrop-blur-md"
         >
-          <h2 className="mb-6 text-3xl font-bold tracking-tight text-white md:text-5xl">
+          <h2 className="mb-6 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
             Siap Mengubah Tampilan <br />
             <span className="text-primary">Sosial Media Anda?</span>
           </h2>

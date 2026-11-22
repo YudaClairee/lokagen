@@ -11,7 +11,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col overflow-hidden bg-[#0a0a0f] text-white"
+        className="relative flex h-full w-full flex-col overflow-hidden bg-[#0a0a0f] text-white"
         style={{
           backgroundImage: `
             linear-gradient(rgba(10,10,15,0.9), rgba(10,10,15,0.9)),
@@ -58,7 +58,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                       </div>
                     ) : (
                       <div className="flex h-full w-full items-center justify-center">
-                        <span className="font-mono text-xs text-white/30">NO SIGNAL</span>
+                        <span className="font-mono text-xs text-white/30">TANPA SINYAL</span>
                       </div>
                     )}
                  </div>

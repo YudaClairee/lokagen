@@ -15,7 +15,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm"
+          className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm"
         >
           <Sparkles className="h-4 w-4" />
           <span>Asisten Konten AI untuk UMKM</span>
@@ -25,7 +25,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mx-auto mb-6 max-w-4xl text-5xl font-bold tracking-tight text-white md:text-7xl lg:text-8xl"
+          className="mx-auto mb-6 max-w-4xl text-5xl font-bold tracking-tight text-foreground md:text-7xl lg:text-8xl"
         >
           Buat Konten IG <br />
           <span className="text-primary">Profesional</span> Instan
@@ -57,7 +57,7 @@ export function Hero() {
           </Link>
           <Link
             href="#how-it-works"
-            className="flex h-12 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 text-base font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/10"
+            className="flex h-12 items-center gap-2 rounded-full border border-border bg-card px-8 text-base font-medium text-foreground backdrop-blur-sm transition-colors hover:bg-muted"
           >
             <PlayCircle className="h-4 w-4" />
             Lihat Cara Kerja
@@ -69,9 +69,9 @@ export function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="relative mx-auto mt-20 w-full max-w-5xl rounded-xl border border-white/10 bg-zinc-900/50 p-2 shadow-2xl backdrop-blur-md"
+          className="relative mx-auto mt-20 w-full max-w-5xl rounded-xl border border-border bg-card p-2 shadow-2xl backdrop-blur-md"
         >
-          <div className="p-2 aspect-video w-full rounded-lg bg-zinc-950/50 flex items-center justify-center border border-white/5 ">
+          <div className="p-2 aspect-video w-full rounded-lg bg-muted flex items-center justify-center border border-border ">
             <Image src="/preview.png" alt="Preview" width={1000} height={1000} className="w-full h-full object-cover" />
           </div>
         </motion.div>

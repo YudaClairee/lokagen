@@ -11,7 +11,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col overflow-hidden bg-white p-12 text-gray-900"
+        className="relative flex h-full w-full flex-col overflow-hidden bg-white p-12 text-gray-900"
       >
 
         <div 

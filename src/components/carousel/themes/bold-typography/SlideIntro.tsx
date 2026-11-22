@@ -12,7 +12,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative flex aspect-square w-full flex-col overflow-hidden bg-white text-black"
+        className="relative flex h-full w-full flex-col overflow-hidden bg-white text-black"
       >
         <div className="absolute -left-10 top-0 text-[180px] font-black leading-none opacity-[0.03] select-none">
           {productName ? productName.toUpperCase() : 'INTRO'}
