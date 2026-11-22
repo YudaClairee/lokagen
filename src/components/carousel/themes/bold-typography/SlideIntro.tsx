@@ -2,10 +2,9 @@
 
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
-import Image from "next/image";
 import { fitText, shouldSplitWords } from "../fit-text";
 import { getBoldAccents } from "./parts";
-import { PreviewOverlay, getBrandLine } from "../shared";
+import { PreviewOverlay, ProductPhoto, getBrandLine } from "../shared";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
@@ -19,7 +18,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         className="relative flex h-full w-full flex-col overflow-hidden bg-white text-black"
       >
         <div className="absolute -left-10 top-0 text-[180px] font-black leading-none opacity-[0.03] select-none">
-          {productName ? productName.toUpperCase() : 'INTRO'}
+          {productName ? productName.trim().slice(0, 8).toUpperCase() : "BARU"}
         </div>
 
         <div 
@@ -37,7 +36,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           </div>
 
           <div className="mt-8">
-            <h1 className={`max-w-[65%] break-words font-black tracking-tighter mix-blend-multiply ${fitText(data.title, [[10, "text-[60px] leading-[0.9]"], [16, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
+            <h1 className={`max-w-[65%] break-words font-black tracking-tighter ${fitText(data.title, [[10, "text-[60px] leading-[0.9]"], [16, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
               {/* Pecah per kata hanya jika judul pendek dan kata-katanya tidak panjang */}
               {splitWords
                 ? data.title.trim().split(/\s+/).map((word, i) => (
@@ -48,26 +47,16 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           </div>
           <div className="mt-8 flex items-start gap-4">
             <div className="mt-2 h-[2px] w-12 bg-black" />
-            <p className="max-w-[250px] break-words text-lg font-bold leading-tight text-gray-800">
+            <p className="line-clamp-3 max-w-[250px] break-words text-lg font-bold leading-tight text-gray-800">
               {data.subtitle}
             </p>
           </div>
-          {productImage ? (
-            <div className="absolute bottom-10 right-10 h-48 w-48 border-4 border-black bg-gray-100 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-              <div className="relative h-full w-full overflow-hidden">
-                <Image
-                  src={productImage}
-                  alt="Product"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          ) : (
-             <div className="absolute bottom-10 right-10 flex h-48 w-48 items-center justify-center border-4 border-black bg-gray-100 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                <span className="font-black text-gray-300">IMG</span>
-             </div>
-          )}
+          <ProductPhoto
+            src={productImage}
+            brandColor={accent.onLight.shape}
+            name={identity}
+            className="absolute bottom-10 right-10 h-48 w-48 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+          />
         </div>
 
         <PreviewOverlay active={isPlaceholder} variant="bold" />

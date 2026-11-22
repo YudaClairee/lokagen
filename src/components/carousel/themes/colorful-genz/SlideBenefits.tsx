@@ -2,89 +2,48 @@
 
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { pickContrastingPop } from "./parts";
-import { readableTextColor } from "@/lib/color";
+import { SECTION_LABELS } from "../copy";
+import { BackgroundImage, PreviewOverlay } from "../shared";
+import { GenZFooter, GenZHeader, pickContrastingPop } from "./parts";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const pop = pickContrastingPop(brandColor);
-    const popText = readableTextColor(pop);
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative isolate flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        {productImage && (
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10 mix-blend-multiply"
-            />
-          </div>
-        )}
-        <div className="relative z-10 flex flex-col items-center justify-center pt-6 pb-2">
-            <div className="absolute left-4 top-6 grid grid-cols-2 gap-1">
-                <div className="h-3 w-3 bg-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-black"></div>
-            </div>
-            <div className="absolute right-4 top-6 grid grid-cols-2 gap-1">
-                <div className="h-3 w-3 bg-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-black"></div>
-            </div>
-
-            <h1 
-                className="text-center text-4xl font-black uppercase leading-none tracking-tighter px-12"
-                style={{ 
-                    color: '#FF69B4', 
-                    WebkitTextStroke: '2px black',
-                    textShadow: '4px 4px 0px #000'
-                }}
-            >
-                MANFAAT
-            </h1>
-             <h2 
-                className={`mt-1 line-clamp-2 break-words text-center font-black uppercase tracking-widest text-[#FFD700] ${fitText(data.title, [[18, "text-xl"], [30, "text-lg"]], "text-base")}`}
-                style={{ 
-                    WebkitTextStroke: '1px black',
-                    textShadow: '2px 2px 0px #000'
-                }}
-            >
-                {data.title}
-            </h2>
-        </div>
-        <div className="flex-1 px-4 pb-4 min-h-0">
+        <BackgroundImage src={productImage} opacity={0.1} multiply />
+        <GenZHeader
+          title={SECTION_LABELS.benefits.toUpperCase()}
+          subtitle={data.title}
+          color="#FF69B4"
+          subtitleClassName={fitText(data.title, [[18, "text-xl"], [30, "text-lg"]], "text-base")}
+        />
+        <div className="relative z-10 flex-1 px-4 pb-4 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-center justify-center rounded-3xl border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
                 style={{ backgroundColor: brandColor }}
             >
                 <div className="grid grid-cols-1 gap-3 w-full">
                     {data.bullets.map((bullet, i) => (
-                        <div key={i} className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform rotate-1">
+                        <div key={i} className={`bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center transform ${i % 2 === 0 ? "-rotate-1" : "rotate-1"}`}>
                             <span className="break-words text-sm font-black uppercase leading-tight">★ {bullet}</span>
                         </div>
                     ))}
                 </div>
             </div>
         </div>
-        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black px-4" style={{ backgroundColor: pop, color: popText }}>
-             <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "INFO PRODUK"}</span>
-             <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
-        </div>
+        <GenZFooter
+          left={brandInfo?.storeName || productName || "INFO PRODUK"}
+          right={brandInfo?.contactInfo || brandInfo?.location || ""}
+          bg={pop}
+        />
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
-            <span className="rounded-full bg-black px-4 py-2 text-sm font-bold text-white">PREVIEW</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="genz" />
       </div>
     );
   }

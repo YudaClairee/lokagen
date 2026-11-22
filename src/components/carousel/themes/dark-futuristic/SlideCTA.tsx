@@ -3,11 +3,10 @@
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { fitText } from "../fit-text";
 import { CTA_LABEL } from "../copy";
-import { getBrandLine } from "../shared";
-import { getDarkAccents } from "./parts";
+import { BackgroundImage, PreviewOverlay, getBrandLine } from "../shared";
+import { SCANLINE_CLASS, getDarkAccents } from "./parts";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
@@ -21,21 +20,9 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8 text-white"
       >
         
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-             <div 
-               className="absolute inset-0 z-10 mix-blend-overlay opacity-50"
-               style={{ backgroundColor: brandColor }}
-             />
-             <Image
-               src={productImage}
-               alt="Background"
-               fill
-               className="object-cover opacity-20"
-             />
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.2} tint={brandColor}>
+          <div className={SCANLINE_CLASS} />
+        </BackgroundImage>
         
         <div className="absolute inset-0 flex select-none flex-col gap-1 overflow-hidden font-mono text-[10px] text-white/[0.03]">
            {Array.from({ length: 20 }).map((_, i) => (
@@ -83,11 +70,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
            <div className="absolute -right-[1px] bottom-10 h-10 w-[2px] bg-white/50" />
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">PREVIEW_MODE</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="dark" />
       </div>
     );
   }

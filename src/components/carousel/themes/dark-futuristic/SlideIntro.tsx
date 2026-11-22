@@ -2,15 +2,15 @@
 
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { getBrandLine } from "../shared";
-import { getDarkAccents } from "./parts";
+import { PreviewOverlay, ProductPhoto, getBrandLine } from "../shared";
+import { SCANLINE_CLASS, getDarkAccents } from "./parts";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
     const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = getBrandLine(brandInfo, productName, "contact");
     return (
       <div
         ref={ref}
@@ -50,24 +50,21 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                     <div className="absolute bottom-0 right-0 h-4 w-4 border-b-2 border-r-2 border-white" />
                     <div className="absolute bottom-0 left-0 h-4 w-4 border-b-2 border-l-2 border-white" />
                     
-                    {productImage ? (
-                      <div className="relative h-full w-full">
-                         <div 
-                           className="absolute inset-0 z-10 mix-blend-overlay opacity-50"
-                           style={{ backgroundColor: brandColor }}
-                         />
-                         <Image
-                           src={productImage}
-                           alt="Product"
-                           fill
-                           className="object-cover opacity-80"
-                         />
-                         <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
-                      </div>
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center">
-                        <span className="font-mono text-xs text-white/30">TANPA SINYAL</span>
-                      </div>
+                    <ProductPhoto
+                      src={productImage}
+                      brandColor={accent.shape}
+                      name={identity}
+                      className="h-full w-full"
+                      imageClassName="opacity-80"
+                    />
+                    {productImage && (
+                      <>
+                        <div
+                          className="pointer-events-none absolute inset-0 z-10 mix-blend-overlay opacity-50"
+                          style={{ backgroundColor: brandColor }}
+                        />
+                        <div className={SCANLINE_CLASS} />
+                      </>
                     )}
                  </div>
               </div>
@@ -77,7 +74,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                    className="mb-4 inline-flex items-center gap-2 border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white"
                    style={{ borderColor: accent.shape }}
                  >
-                   <div className="h-1.5 w-1.5 animate-pulse bg-white" />
+                   <div className="h-1.5 w-1.5" style={{ backgroundColor: accent.shape }} />
                    {productName || "NEW_DROP"}
                  </div>
                  
@@ -93,16 +90,11 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
               </div>
            </div>
         </div>
-        <div className="flex items-center justify-between border-t border-white/10 p-4">
-           
-           
+        <div className="flex items-center justify-between border-t border-white/10 px-4 py-3 font-mono text-[10px] text-white/50">
+          <span className="truncate">{contact}</span>
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">PREVIEW_MODE</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="dark" />
       </div>
     );
   }
