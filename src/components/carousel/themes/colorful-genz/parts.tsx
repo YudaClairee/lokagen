@@ -41,15 +41,15 @@ interface GenZHeaderProps {
 /** Header khas Colorful Gen Z: kotak catur kiri-kanan + judul stroke + subjudul kuning. */
 export function GenZHeader({ title, subtitle, color, titleClassName, subtitleClassName }: GenZHeaderProps) {
   return (
-    <div className="relative z-10 flex flex-col items-center justify-center px-12 pb-2 pt-6">
+    <div className="relative z-10 flex flex-col items-center justify-center px-14 pb-2 pt-6">
       <CheckerCorner side="left" />
       <CheckerCorner side="right" />
 
       <h1
-        className={cn("text-center font-black uppercase leading-none tracking-tighter break-words", titleClassName ?? "text-4xl")}
+        className={cn("w-full text-center font-genz-display font-normal uppercase leading-none tracking-normal break-words", titleClassName ?? "text-4xl")}
         style={{
           color,
-          WebkitTextStroke: "2px black",
+          WebkitTextStroke: "1.5px black",
           textShadow: "4px 4px 0px #000",
         }}
       >
@@ -58,7 +58,7 @@ export function GenZHeader({ title, subtitle, color, titleClassName, subtitleCla
 
       <h2
         className={cn(
-          "mt-1 line-clamp-2 break-words text-center font-black uppercase tracking-widest text-[#FFD700]",
+          "mt-1 line-clamp-2 w-full break-words text-center font-black uppercase tracking-widest text-[#FFD700]",
           subtitleClassName ?? "text-lg"
         )}
         style={{

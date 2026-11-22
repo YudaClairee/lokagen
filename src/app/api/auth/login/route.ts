@@ -15,10 +15,12 @@ export async function POST(request: Request) {
     const { password } = await request.json();
 
     if (typeof password === "string" && safeEqual(password, authPassword)) {
+      const forwardedProto = request.headers.get("x-forwarded-proto")?.split(",")[0].trim();
+      const proto = forwardedProto || new URL(request.url).protocol.replace(":", "");
       const response = NextResponse.json({ success: true });
       response.cookies.set(AUTH_COOKIE, await computeAuthToken(authPassword), {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: proto === "https",
         sameSite: "lax",
         path: "/",
         maxAge: 60 * 60 * 24 * 7, // 7 days

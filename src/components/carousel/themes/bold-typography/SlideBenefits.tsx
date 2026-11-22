@@ -17,14 +17,14 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
       >
         <BackgroundImage src={productImage} opacity={0.2} grayscale overlayClassName="bg-black/80" />
         <div 
-          className="absolute right-[-20px] top-[-40px] text-[200px] font-black leading-none opacity-20"
+          className="absolute right-[-20px] top-[-40px] font-bold-display text-[200px] leading-none opacity-20"
           style={{ color: brandColor }}
         >
           03
         </div>
 
-        <div className="relative z-10 mt-20">
-          <h2 className={`mb-8 break-words border-l-4 border-white pl-6 font-black uppercase italic leading-[0.9] tracking-tighter ${fitText(data.title, [[12, "text-5xl"], [18, "text-4xl"]], "text-3xl")}`}>
+        <div className="relative z-10 mt-16">
+          <h2 className={`mb-6 break-words border-l-4 border-white pl-6 font-bold-display font-normal uppercase leading-[0.95] tracking-normal ${fitText(data.title, [[14, "text-5xl"], [22, "text-4xl"]], "text-3xl")}`}>
             {data.title}
           </h2>
 
@@ -35,10 +35,10 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                 className="group flex items-center gap-4 border-b border-white/20 pb-2"
               >
                 <div 
-                  className="h-3 w-3 rotate-45" 
+                  className="h-3 w-3 shrink-0 rotate-45" 
                   style={{ backgroundColor: accent.onDark }}
                 />
-                <p className="break-words text-xl font-bold uppercase tracking-wide">
+                <p className="line-clamp-2 break-words text-xl font-bold uppercase tracking-wide">
                   {bullet}
                 </p>
               </div>

@@ -43,7 +43,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             </span>
 
             <h2
-              className={`mb-4 break-words font-bold uppercase tracking-tight text-white font-mono ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}
+              className={`mb-4 break-words font-dark-display font-bold uppercase tracking-tight text-white ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}
               style={{ textShadow: `0 0 10px ${brandColor}` }}
             >
               {data.title}

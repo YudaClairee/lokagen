@@ -17,6 +17,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Biarkan Server Action POST lewat agar ditangani auth di dalam action (return UNAUTHORIZED),
+  // karena redirect 307 pada request Next-Action membuat browser gagal memuat halaman.
+  if (request.method === "POST" && request.headers.has("next-action")) {
+    return NextResponse.next();
+  }
+
   // Cookie berisi token (hash), bukan string tebakan
   const isAuthenticated = await isValidAuthToken(request.cookies.get(AUTH_COOKIE)?.value);
   if (!isAuthenticated) {

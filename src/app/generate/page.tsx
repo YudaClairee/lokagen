@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { generateContent } from "@/app/actions/generate-content";
 import type {
   Tone,
@@ -46,6 +47,7 @@ import { Sparkles, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function GeneratePage() {
+  const router = useRouter();
   // Form state
   const [productName, setProductName] = useState<string>("");
   const [productImage, setProductImage] = useState<string>("");
@@ -208,6 +210,11 @@ export default function GeneratePage() {
         setResult(response.data);
         setCurrentSlide(0);
       } else {
+        if (response.error === ERROR_MESSAGES.UNAUTHORIZED) {
+          setError(response.error);
+          router.replace("/login?redirect=/generate&reason=expired");
+          return;
+        }
         setError(response.error || "Terjadi kesalahan");
       }
     });
@@ -392,8 +399,16 @@ export default function GeneratePage() {
               </div>
 
               {error && (
-                <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-700">
-                  {error}
+                <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-700">
+                  <span>{error}</span>
+                  {error === ERROR_MESSAGES.UNAUTHORIZED && (
+                    <Link
+                      href="/login?redirect=/generate&reason=expired"
+                      className="shrink-0 font-semibold underline underline-offset-2 hover:text-red-900"
+                    >
+                      Login ulang
+                    </Link>
+                  )}
                 </div>
               )}
 

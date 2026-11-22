@@ -20,7 +20,9 @@ export default function LoginPage() {
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/generate";
+  const rawRedirect = searchParams.get("redirect") || "/generate";
+  const redirect = rawRedirect.startsWith("/") && !rawRedirect.startsWith("//") ? rawRedirect : "/generate";
+  const isExpired = searchParams.get("reason") === "expired";
 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -85,6 +87,12 @@ function LoginForm() {
               Masukkan password untuk melanjutkan ke halaman generate.
             </p>
           </div>
+
+          {isExpired && !error && (
+            <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-800">
+              Sesi login Anda habis. Silakan login ulang untuk melanjutkan.
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">

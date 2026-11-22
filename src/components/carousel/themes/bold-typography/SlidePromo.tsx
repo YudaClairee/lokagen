@@ -54,7 +54,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                >
                  {PROMO_LABELS[mode].kicker}
                </span>
-               <h2 className={`break-words font-black uppercase italic leading-[0.9] tracking-tighter text-black ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
+               <h2 className={`break-words font-bold-display font-normal uppercase leading-[0.95] tracking-normal text-black ${fitText(data.title, [[14, "text-5xl"], [22, "text-4xl"]], "text-3xl")}`}>
                  {data.title}
                </h2>
                <div className="my-4 h-1 w-full bg-black/10" />

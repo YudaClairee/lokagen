@@ -27,8 +27,8 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
              ))}
            </div>
         </div>
-        <div className="relative z-10 flex flex-col items-center text-center">
-           <h2 className={`max-w-[85%] break-words font-black uppercase leading-[0.9] tracking-tighter ${fitText(data.title, [[8, "text-7xl"], [14, "text-6xl"], [20, "text-5xl"]], "text-4xl")}`}>
+        <div className="relative z-10 flex w-full flex-col items-center text-center">
+           <h2 className={`max-w-[90%] break-words font-bold-display font-normal uppercase leading-[0.95] tracking-normal ${fitText(data.title, [[10, "text-7xl"], [16, "text-6xl"], [24, "text-5xl"]], "text-4xl")}`}>
              {splitWords
                ? data.title.trim().split(/\s+/).map((word, i) => (
                    <span 
