@@ -1,106 +1,71 @@
 "use client";
 
 import { forwardRef } from "react";
+import { Check } from "lucide-react";
 import type { SlideBenefitsProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
+import { PreviewOverlay, ProductPhoto } from "../shared";
+import { SECTION_LABELS } from "../copy";
+import { readableTextColor } from "@/lib/color";
+import { MINIMAL, MinimalFooter, MinimalLabel, getAccents, getBrandLines } from "./parts";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
-  function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
-    
+  function SlideBenefits({ data, brandColor, productImage, productName, brandInfo, isPlaceholder }, ref) {
+    const { identity, contact } = getBrandLines(brandInfo, productName);
+    const accent = getAccents(brandColor);
+    const checkColor = readableTextColor(accent.shape);
+
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative flex h-full w-full flex-col overflow-hidden p-8 text-white"
-        style={{ backgroundColor: brandColor }}
+        className="relative flex h-full w-full flex-col overflow-hidden p-10"
+        style={{ backgroundColor: MINIMAL.cream, color: MINIMAL.ink }}
       >
-        
-        <div 
-          className="absolute inset-0 pointer-events-none z-10 opacity-20"
-          style={{
-            background: 'linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, transparent 60%)',
-            filter: 'blur(40px)'
-          }}
-        />
-        
-        <div 
-          className="absolute -right-10 top-20 text-[200px] font-medium leading-none opacity-[0.03] select-none text-gray-900"
+        <MinimalLabel accent={accent.shape}>{SECTION_LABELS.benefits}</MinimalLabel>
+
+        <div
+          className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border p-8"
+          style={{ backgroundColor: MINIMAL.surface, borderColor: MINIMAL.border }}
         >
-          03
-        </div>
-
-        
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10"
-            />
-            <div className="absolute inset-0 bg-white/90" />
-          </div>
-        )}
-
-        
-        <div className="relative z-20 mb-8 mt-4 text-center">
-            <h2 className="text-3xl font-black uppercase tracking-tight text-white/90"
-                 style={{ 
-                  textShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                 }}
+          <div className="flex items-start justify-between gap-4">
+            <h2
+              className={`line-clamp-3 min-w-0 break-words font-minimal-display font-medium leading-[1.1] tracking-tight ${fitText(
+                data.title,
+                [[16, "text-3xl"]],
+                "text-2xl"
+              )}`}
             >
-              Benefits
+              {data.title}
             </h2>
-            <div className="mx-auto mt-2 h-1 w-12 rounded-full bg-white/40" />
-        </div>
-
-        
-        <div className="relative z-20 flex flex-1 flex-col overflow-hidden rounded-[2.5rem] bg-white/20 p-8 shadow-xl backdrop-blur-md">
-            
-            
             {productImage && (
-                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full border-4 border-white/20 bg-white shadow-lg overflow-hidden">
-                    <Image
-                      src={productImage}
-                      alt="Product"
-                      fill
-                      className="object-cover"
-                    />
-                </div>
+              <ProductPhoto
+                src={productImage}
+                brandColor={accent.shape}
+                name={identity}
+                className="h-[72px] w-[72px] shrink-0 rounded-2xl"
+              />
             )}
-
-            <h3 className={`mb-6 break-words font-bold leading-tight text-white ${fitText(data.title, [[16, "text-xl"]], "text-lg")}`}>
-                {data.title}
-            </h3>
-
-        
-        <div className="flex flex-col gap-5">
-           {data.bullets.map((bullet, index) => (
-             <div key={index} className="flex items-start gap-4">
-                <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-gray-900">
-                    <span className="text-[10px] font-black">✓</span>
-                </div>
-                <p className="line-clamp-2 break-words text-sm font-medium leading-relaxed text-white/90">
-                  {bullet}
-                </p>
-             </div>
-           ))}
-        </div>
-        </div>
-
-        
-        <div className="absolute bottom-6 left-0 right-0 text-center z-20">
-           <span className="text-[10px] font-bold uppercase tracking-widest text-black/30 break-words px-6">
-             {brandInfo?.contactInfo || brandInfo?.storeName || productName || ""}
-           </span>
-        </div>
-
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <span className="border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500 shadow-sm rounded-full">Preview Mode</span>
           </div>
-        )}
+
+          <ul className="mt-6 flex min-h-0 flex-1 flex-col justify-center gap-5">
+            {data.bullets.map((bullet, index) => (
+              <li key={index} className="flex items-start gap-3">
+                <span
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+                  style={{ backgroundColor: accent.shape }}
+                >
+                  <Check className="h-3.5 w-3.5" strokeWidth={3} style={{ color: checkColor }} />
+                </span>
+                <p className="line-clamp-2 min-w-0 break-words text-base leading-snug">{bullet}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <MinimalFooter left={identity} right={contact} />
+
+        <PreviewOverlay active={isPlaceholder} variant="minimal" />
       </div>
     );
   }

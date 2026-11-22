@@ -2,28 +2,20 @@
 
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getBoldAccents } from "./parts";
+import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getBoldAccents(brandColor);
     return (
       <div
         ref={ref}
         lang="id"
         className="relative flex h-full w-full flex-col overflow-hidden bg-black p-8 text-white"
       >
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-20 filter grayscale"
-            />
-            <div className="absolute inset-0 bg-black/80" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.2} grayscale overlayClassName="bg-black/80" />
         <div 
           className="absolute right-[-20px] top-[-40px] text-[200px] font-black leading-none opacity-20"
           style={{ color: brandColor }}
@@ -44,7 +36,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
               >
                 <div 
                   className="h-3 w-3 rotate-45" 
-                  style={{ backgroundColor: brandColor }}
+                  style={{ backgroundColor: accent.onDark }}
                 />
                 <p className="break-words text-xl font-bold uppercase tracking-wide">
                   {bullet}
@@ -62,11 +54,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
           </div>
         )}
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/10">
-             <span className="bg-white px-2 py-1 font-mono text-xs text-black">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="boldDark" />
       </div>
     );
   }

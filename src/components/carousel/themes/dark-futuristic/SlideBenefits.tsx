@@ -4,9 +4,11 @@ import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getDarkAccents } from "./parts";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getDarkAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -39,7 +41,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         <div className="relative z-10 mb-10">
            <div 
              className="mb-2 h-1 w-10"
-             style={{ backgroundColor: brandColor }}
+             style={{ backgroundColor: accent.shape }}
            />
            <h2 className={`break-words font-mono font-bold uppercase tracking-wider text-white ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}>
              {data.title}
@@ -53,7 +55,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
                key={index} 
                className="flex items-center gap-3 border-b border-white/5 pb-2 last:border-0"
              >
-               <span style={{ color: brandColor }}>&gt;</span>
+               <span style={{ color: accent.text }}>&gt;</span>
                <span className="break-words text-gray-300">{bullet}</span>
                
              </div>
@@ -62,14 +64,14 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
 
         
         <div className="absolute bottom-8 left-8 right-8">
-           <div className="mb-2 flex justify-between text-[10px] text-gray-500 font-mono">
+           <div className="mb-2 flex justify-between text-[10px] text-gray-400 font-mono">
               <span className="truncate">{productName || brandInfo?.storeName || "LOKAL_PRODUCT"}</span>
               <span>100%</span>
            </div>
            <div className="h-1 w-full bg-white/10">
               <div 
                 className="h-full w-full" 
-                style={{ backgroundColor: brandColor }}
+                style={{ backgroundColor: accent.shape }}
               />
            </div>
         </div>

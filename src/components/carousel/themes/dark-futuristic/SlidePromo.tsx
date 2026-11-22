@@ -4,9 +4,11 @@ import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getDarkAccents } from "./parts";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+    const accent = getDarkAccents(brandColor);
     const mode = data.mode ?? "value";
     return (
       <div
@@ -45,7 +47,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
 
             <span
               className="mb-4 inline-block border px-2 py-0.5 font-mono text-[10px] uppercase text-white"
-              style={{ borderColor: brandColor, color: brandColor }}
+              style={{ borderColor: accent.shape, color: accent.text }}
             >
               {mode === "promo" ? data.highlightBadge || "Special_Offer" : "Why_This"}
             </span>

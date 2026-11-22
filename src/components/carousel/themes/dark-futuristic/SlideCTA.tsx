@@ -5,9 +5,11 @@ import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getDarkAccents } from "./parts";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
+    const accent = getDarkAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -58,7 +60,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
              />
              <div 
                className="relative flex items-center gap-3 border border-white/20 bg-black px-8 py-3 font-mono font-bold uppercase transition-transform"
-               style={{ borderColor: brandColor, color: brandColor }}
+               style={{ borderColor: accent.shape, color: accent.text }}
              >
                <span>Pesan_Sekarang</span>
                <ArrowRight className="h-4 w-4" />

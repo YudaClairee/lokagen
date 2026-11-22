@@ -4,9 +4,12 @@ import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText, shouldSplitWords } from "../fit-text";
+import { getBoldAccents } from "./parts";
+import { PreviewOverlay } from "../shared";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+    const accent = getBoldAccents(brandColor);
     const splitWords = shouldSplitWords(data.title);
     return (
       <div
@@ -20,7 +23,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
 
         <div 
           className="absolute left-0 top-10 h-4 w-32"
-          style={{ backgroundColor: brandColor }}
+          style={{ backgroundColor: accent.onLight.shape }}
         />
 
         <div className="relative z-10 flex h-full flex-col p-10">
@@ -59,11 +62,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           )}
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-            <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );
   }

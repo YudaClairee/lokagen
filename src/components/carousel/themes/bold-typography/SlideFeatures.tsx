@@ -2,29 +2,21 @@
 
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getBoldAccents } from "./parts";
+import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getBoldAccents(brandColor);
     return (
       <div
         ref={ref}
         lang="id"
         className="relative flex h-full w-full flex-col overflow-hidden bg-white p-8 text-black"
       >
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10 filter grayscale"
-            />
-            <div className="absolute inset-0 bg-white/90" />
-          </div>
-        )}
-        <div className="mb-8 border-b-4 border-black pb-4">
+        <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
+        <div className="relative z-10 mb-8 border-b-4 border-black pb-4">
           <h2 className={`break-words font-black uppercase tracking-tighter ${fitText(data.title, [[14, "text-4xl"]], "text-3xl")}`}>
             {data.title}
           </h2>
@@ -34,7 +26,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
             <div 
               key={index} 
               className="relative border-l-8 bg-gray-50 p-4"
-              style={{ borderLeftColor: brandColor }}
+              style={{ borderLeftColor: accent.onLight.shape }}
             >
               <div className="absolute -top-3 -right-2 bg-black px-2 py-0.5 text-xs font-bold text-white">
                 0{index + 1}
@@ -53,11 +45,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
           </div>
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-             <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );
   }

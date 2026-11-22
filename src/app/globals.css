@@ -52,7 +52,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --font-sans: var(--font-outfit);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* Font judul per tema carousel (variabelnya didefinisikan di src/lib/fonts.ts) */
+  --font-minimal-display: var(--font-fraunces), Georgia, serif;
+  --font-dark-display: var(--font-space-grotesk), var(--font-outfit), sans-serif;
+  --font-genz-display: var(--font-lilita-one), var(--font-outfit), sans-serif;
+  --font-bold-display: var(--font-anton), Impact, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

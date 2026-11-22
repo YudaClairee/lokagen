@@ -4,17 +4,21 @@ import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { pickContrastingPop } from "./parts";
+import { readableTextColor } from "@/lib/color";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const pop = pickContrastingPop(brandColor);
+    const popText = readableTextColor(pop);
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative isolate flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 -z-10">
             <Image
               src={productImage}
               alt="Background"
@@ -60,7 +64,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         <div className="flex-1 px-4 pb-4 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-start justify-center rounded-3xl border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
-                style={{ backgroundColor: brandColor || '#FDE047' }}
+                style={{ backgroundColor: brandColor }}
             >
                 <ul className="w-full space-y-3">
                     {data.bullets.map((bullet, i) => (
@@ -74,7 +78,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
                 </ul>
             </div>
         </div>
-        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
+        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black px-4" style={{ backgroundColor: pop, color: popText }}>
              <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "INFO PRODUK"}</span>
              <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
         </div>

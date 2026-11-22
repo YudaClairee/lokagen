@@ -12,6 +12,7 @@ import {
 import type { CampaignType, ProductCategory, Tone, Theme } from "@/lib/types";
 import { CAMPAIGN_OPTIONS, CATEGORY_OPTIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { normalizeHex } from "@/lib/color";
 
 interface GenerateOptionsProps {
   category: ProductCategory;
@@ -174,7 +175,7 @@ export function GenerateOptions({
           <div className="relative">
             <input
               type="color"
-              value={brandColor}
+              value={normalizeHex(brandColor)}
               onChange={(e) => setBrandColor(e.target.value)}
               className="h-10 w-14 cursor-pointer rounded-md border border-border"
             />

@@ -2,11 +2,15 @@
 
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
-import Image from "next/image";
-import { fitText, PROMO_LABELS } from "../fit-text";
+import { fitText } from "../fit-text";
+import { getBoldAccents } from "./parts";
+import { readableTextColor } from "@/lib/color";
+import { PROMO_LABELS } from "../copy";
+import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+    const accent = getBoldAccents(brandColor);
     const mode = data.mode ?? "value";
     return (
       <div
@@ -14,17 +18,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         lang="id"
         className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white p-8"
       >
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10 filter grayscale"
-            />
-            <div className="absolute inset-0 bg-white/90" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
         <div className="absolute inset-0 flex -rotate-12 translate-y-[-50%] transform flex-col gap-4 opacity-5">
            {Array.from({ length: 10 }).map((_, i) => (
              <div key={i} className="h-12 w-[150%] bg-black" />
@@ -44,8 +38,8 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              />
              {data.highlightBadge && (
                <span
-                 className="absolute -right-4 -top-5 rotate-6 border-2 border-black px-2 py-1 font-mono text-xs font-black uppercase text-white"
-                 style={{ backgroundColor: brandColor }}
+                 className="absolute -right-4 -top-5 rotate-6 border-2 border-black px-2 py-1 font-mono text-xs font-black uppercase"
+                 style={{ backgroundColor: brandColor, color: readableTextColor(brandColor) }}
                >
                  {data.highlightBadge}
                </span>
@@ -54,7 +48,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              <div className="text-center">
                <span 
                  className="mb-2 block font-mono text-sm font-bold uppercase tracking-widest"
-                 style={{ color: brandColor }}
+                 style={{ color: accent.onLight.text }}
                >
                  {PROMO_LABELS[mode].kicker}
                </span>
@@ -68,11 +62,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              </div>
            </div>
         </div>
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-             <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );
   }
