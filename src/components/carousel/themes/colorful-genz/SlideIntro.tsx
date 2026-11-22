@@ -4,9 +4,14 @@ import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { pickContrastingPop } from "./parts";
+import { readableTextColor } from "@/lib/color";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
+    const pop = pickContrastingPop(brandColor);
+    const popText = readableTextColor(pop);
+    const cardText = readableTextColor(brandColor);
     return (
       <div
         ref={ref}
@@ -52,7 +57,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         <div className="flex-1 px-4 pb-4 min-h-0">
             <div 
                 className="flex h-full w-full flex-row items-center justify-between rounded-3xl border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] gap-2"
-                style={{ backgroundColor: brandColor || '#FDE047' }}
+                style={{ backgroundColor: brandColor }}
             >
                 <div className="relative aspect-square w-[55%] shrink-0">
                     <div className="absolute inset-0 bg-transparent bg-gray-200 overflow-hidden border-none">
@@ -73,7 +78,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
 
                 <div className="flex flex-col justify-center items-end h-full w-[45%] gap-2">
                     <div className="text-right">
-                        <p className="text-xs font-black leading-tight uppercase">
+                        <p className="text-xs font-black leading-tight uppercase" style={{ color: cardText }}>
                             {productName || brandInfo?.storeName || data.subtitle}
                         </p>
                     </div>
@@ -98,7 +103,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
             </div>
         </div>
 
-        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-4">
+        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black px-4" style={{ backgroundColor: pop, color: popText }}>
              <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "PRODUK LOKAL"}</span>
              <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
         </div>

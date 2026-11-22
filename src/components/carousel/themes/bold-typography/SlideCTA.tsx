@@ -4,10 +4,12 @@ import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import { fitText, shouldSplitWords } from "../fit-text";
+import { getBoldAccents } from "./parts";
 import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getBoldAccents(brandColor);
     const splitWords = shouldSplitWords(data.title);
     return (
       <div
@@ -16,7 +18,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden bg-white p-8"
       >
         <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
-        <div className="flex w-full justify-between border-b-4 border-black pb-4">
+        <div className="relative z-10 flex w-full justify-between border-b-4 border-black pb-4">
            <span className="max-w-[70%] truncate font-mono text-sm font-bold uppercase">{brandInfo?.storeName || productName || ""}</span>
            <div className="flex gap-2">
              {[1,2,3].map(i => (
@@ -31,7 +33,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
                    <span 
                      key={i} 
                      className="block"
-                     style={{ color: i % 2 === 0 ? 'black' : brandColor }}
+                     style={{ color: i % 2 === 0 ? 'black' : accent.onLight.shape }}
                    >
                      {word}
                    </span>
@@ -49,7 +51,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
               <ArrowRight className="h-6 w-6 stroke-[3px]" />
            </div>
         </div>
-        <div className="flex w-full items-center justify-center border-t-4 border-black pt-4">
+        <div className="relative z-10 flex w-full items-center justify-center border-t-4 border-black pt-4">
           <span className="max-w-[80%] truncate font-mono font-bold uppercase">{brandInfo?.contactInfo || "LINK DI BIO"}</span>
         </div>
 

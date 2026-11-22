@@ -3,10 +3,12 @@
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import { fitText } from "../fit-text";
+import { getBoldAccents } from "./parts";
 import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getBoldAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -14,7 +16,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         className="relative flex h-full w-full flex-col overflow-hidden bg-white p-8 text-black"
       >
         <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
-        <div className="mb-8 border-b-4 border-black pb-4">
+        <div className="relative z-10 mb-8 border-b-4 border-black pb-4">
           <h2 className={`break-words font-black uppercase tracking-tighter ${fitText(data.title, [[14, "text-4xl"]], "text-3xl")}`}>
             {data.title}
           </h2>
@@ -24,7 +26,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
             <div 
               key={index} 
               className="relative border-l-8 bg-gray-50 p-4"
-              style={{ borderLeftColor: brandColor }}
+              style={{ borderLeftColor: accent.onLight.shape }}
             >
               <div className="absolute -top-3 -right-2 bg-black px-2 py-0.5 text-xs font-bold text-white">
                 0{index + 1}

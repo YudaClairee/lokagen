@@ -4,9 +4,11 @@ import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getDarkAccents } from "./parts";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
   function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
+    const accent = getDarkAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -61,11 +63,11 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
              >
                <div
                  className="absolute left-0 top-0 h-full w-[2px]"
-                 style={{ backgroundColor: brandColor }}
+                 style={{ backgroundColor: accent.shape }}
                />
 
                <div className="flex items-start gap-4">
-                 <div className="mt-1 font-mono text-xs text-gray-500">
+                 <div className="mt-1 font-mono text-xs text-gray-400">
                    0{index + 1}
                  </div>
                  <p className="line-clamp-2 font-mono text-sm leading-relaxed text-gray-300 break-words">

@@ -4,19 +4,23 @@ import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { pickContrastingPop } from "./parts";
+import { readableTextColor } from "@/lib/color";
 import { PROMO_LABELS } from "../copy";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const pop = pickContrastingPop(brandColor);
+    const popText = readableTextColor(pop);
     const mode = data.mode ?? "value";
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative isolate flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
         {productImage && (
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 -z-10">
             <Image
               src={productImage}
               alt="Background"
@@ -62,10 +66,10 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
         <div className="flex-1 px-6 pb-6 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-center justify-center rounded-[2rem] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative"
-                style={{ backgroundColor: brandColor || '#F4F269' }}
+                style={{ backgroundColor: brandColor }}
             >
-                <div className="absolute -top-5 -right-5 bg-[#FF69B4] border-4 border-black p-3 rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-20 rotate-12">
-                    <span className="text-sm font-black text-white">{data.highlightBadge || (mode === "promo" ? brandInfo?.promoBadge : undefined) || PROMO_LABELS[mode].badge}</span>
+                <div style={{ backgroundColor: pop }} className="absolute -top-5 -right-5 border-4 border-black p-3 rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] z-20 rotate-12">
+                    <span className="text-sm font-black" style={{ color: popText }}>{data.highlightBadge || (mode === "promo" ? brandInfo?.promoBadge : undefined) || PROMO_LABELS[mode].badge}</span>
                 </div>
 
                 <div className="w-full bg-white border-4 border-black p-8 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center transform -rotate-2">
@@ -75,7 +79,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 </div>
             </div>
         </div>
-        <div className="flex h-14 shrink-0 w-full items-center justify-between border-t-4 border-black bg-[#FF69B4] px-6">
+        <div className="flex h-14 shrink-0 w-full items-center justify-between border-t-4 border-black px-6" style={{ backgroundColor: pop, color: popText }}>
              <span className="max-w-[45%] truncate text-xs font-black uppercase leading-tight">{brandInfo?.storeName || productName || ""}</span>
              <span className="text-xs font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.location || brandInfo?.contactInfo || brandInfo?.storeName || ""}</span>
         </div>

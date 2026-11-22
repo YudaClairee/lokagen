@@ -3,10 +3,12 @@
 import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import { fitText } from "../fit-text";
+import { getBoldAccents } from "./parts";
 import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
+    const accent = getBoldAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -34,7 +36,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
               >
                 <div 
                   className="h-3 w-3 rotate-45" 
-                  style={{ backgroundColor: brandColor }}
+                  style={{ backgroundColor: accent.onDark }}
                 />
                 <p className="break-words text-xl font-bold uppercase tracking-wide">
                   {bullet}

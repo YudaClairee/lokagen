@@ -4,9 +4,11 @@ import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getDarkAccents } from "./parts";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+    const accent = getDarkAccents(brandColor);
     return (
       <div
         ref={ref}
@@ -67,7 +69,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
               <div className="flex w-[55%] flex-col justify-center">
                  <div 
                    className="mb-4 inline-flex items-center gap-2 border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white"
-                   style={{ borderColor: brandColor }}
+                   style={{ borderColor: accent.shape }}
                  >
                    <div className="h-1.5 w-1.5 animate-pulse bg-white" />
                    {productName || "NEW_DROP"}
