@@ -5,6 +5,7 @@ import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import { fitText, shouldSplitWords } from "../fit-text";
 import { getBoldAccents } from "./parts";
+import { CTA_LABEL } from "../copy";
 import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
@@ -47,7 +48,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
            <div 
              className="group mt-8 flex cursor-default items-center gap-3 border-4 border-black bg-white px-6 py-3 shadow-[6px_6px_0px_0px_#000]"
            >
-              <span className="font-black uppercase">ORDER SEKARANG</span>
+              <span className="font-black uppercase">{CTA_LABEL.toUpperCase()}</span>
               <ArrowRight className="h-6 w-6 stroke-[3px]" />
            </div>
         </div>

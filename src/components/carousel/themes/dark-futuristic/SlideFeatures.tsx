@@ -4,11 +4,15 @@ import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { SECTION_LABELS } from "../copy";
+import { getBrandLine } from "../shared";
 import { getDarkAccents } from "./parts";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
-  function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = brandInfo?.contactInfo?.trim() ?? "";
     return (
       <div
         ref={ref}
@@ -43,7 +47,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         
         <div className="relative z-10 mb-8 border-b border-white/10 pb-4">
            <div className="mb-2 flex items-center gap-2 font-mono text-[10px] text-gray-400">
-              <span>{"/// FEATURES_LIST"}</span>
+              <span>{`/// ${SECTION_LABELS.features.toUpperCase()}`}</span>
               <span className="flex-1 border-t border-dashed border-gray-700" />
            </div>
            <h2 
@@ -55,7 +59,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         </div>
 
         
-        <div className="relative z-10 flex flex-col gap-4">
+        <div className="relative z-10 flex flex-1 flex-col gap-4">
            {data.bullets.map((bullet, index) => (
              <div
                key={index}
@@ -78,6 +82,15 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
              </div>
            ))}
         </div>
+
+        {(identity || contact) && (
+          <div className="relative z-10 mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-3 font-mono text-[10px] text-gray-400">
+            {identity && <span className="min-w-0 truncate">{identity}</span>}
+            {contact && contact !== identity && (
+              <span className="min-w-0 truncate text-right">{contact}</span>
+            )}
+          </div>
+        )}
         <div 
            className="absolute bottom-10 right-10 h-24 w-24 rounded-full border border-dashed border-white/10"
            style={{ borderColor: `${brandColor}30` }}

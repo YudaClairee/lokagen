@@ -5,11 +5,15 @@ import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { CTA_LABEL } from "../copy";
+import { getBrandLine } from "../shared";
 import { getDarkAccents } from "./parts";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
+  function SlideCTA({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
+    const contact = getBrandLine(brandInfo, productName, "contact");
+    const ctaText = CTA_LABEL.replace(/\s+/g, "_");
     return (
       <div
         ref={ref}
@@ -62,16 +66,14 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
                className="relative flex items-center gap-3 border border-white/20 bg-black px-8 py-3 font-mono font-bold uppercase transition-transform"
                style={{ borderColor: accent.shape, color: accent.text }}
              >
-               <span>Pesan_Sekarang</span>
+               <span>{ctaText}</span>
                <ArrowRight className="h-4 w-4" />
              </div>
            </div>
 
-           {brandInfo?.contactInfo && (
-             <p className="mt-10 font-mono text-xs uppercase tracking-wider text-white/60">
-               {brandInfo.contactInfo}
-             </p>
-           )}
+           <p className="mt-10 truncate font-mono text-xs uppercase tracking-wider text-white/60">
+             {contact}
+           </p>
 
         </div>
 

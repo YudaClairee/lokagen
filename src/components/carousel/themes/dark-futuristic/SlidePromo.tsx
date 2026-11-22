@@ -4,12 +4,15 @@ import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getBrandLine } from "../shared";
 import { getDarkAccents } from "./parts";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
     const mode = data.mode ?? "value";
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = brandInfo?.contactInfo?.trim() ?? "";
     return (
       <div
         ref={ref}
@@ -49,7 +52,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               className="mb-4 inline-block border px-2 py-0.5 font-mono text-[10px] uppercase text-white"
               style={{ borderColor: accent.shape, color: accent.text }}
             >
-              {mode === "promo" ? data.highlightBadge || "Special_Offer" : "Why_This"}
+              {mode === "promo" ? data.highlightBadge || "PROMO_SPESIAL" : "KENAPA_INI"}
             </span>
 
             <h2
@@ -68,6 +71,15 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             <p className={`break-words font-mono text-gray-300 ${fitText(data.promoText, [[35, "text-lg"]], "text-base")}`}>{data.promoText}</p>
           </div>
         </div>
+
+        {(identity || contact) && (
+          <div className="absolute bottom-6 left-8 right-8 z-10 flex items-center justify-between gap-4 border-t border-white/10 pt-3 font-mono text-[10px] text-gray-400">
+            {identity && <span className="min-w-0 truncate">{identity}</span>}
+            {contact && contact !== identity && (
+              <span className="min-w-0 truncate text-right">{contact}</span>
+            )}
+          </div>
+        )}
         {isPlaceholder && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80">
             <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">

@@ -5,12 +5,13 @@ import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText, shouldSplitWords } from "../fit-text";
 import { getBoldAccents } from "./parts";
-import { PreviewOverlay } from "../shared";
+import { PreviewOverlay, getBrandLine } from "../shared";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
-  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     const accent = getBoldAccents(brandColor);
     const splitWords = shouldSplitWords(data.title);
+    const identity = getBrandLine(brandInfo, productName, "identity");
     return (
       <div
         ref={ref}
@@ -27,8 +28,15 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         />
 
         <div className="relative z-10 flex h-full flex-col p-10">
-          
-          <div className="mt-12">
+          <div className="flex h-4 items-center justify-end">
+            {identity && (
+              <span className="max-w-[60%] truncate font-mono text-xs font-bold uppercase tracking-widest text-black">
+                {identity}
+              </span>
+            )}
+          </div>
+
+          <div className="mt-8">
             <h1 className={`max-w-[65%] break-words font-black tracking-tighter mix-blend-multiply ${fitText(data.title, [[10, "text-[60px] leading-[0.9]"], [16, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
               {/* Pecah per kata hanya jika judul pendek dan kata-katanya tidak panjang */}
               {splitWords

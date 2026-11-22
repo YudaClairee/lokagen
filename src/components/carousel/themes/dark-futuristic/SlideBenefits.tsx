@@ -4,11 +4,14 @@ import { forwardRef } from "react";
 import type { SlideBenefitsProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getBrandLine } from "../shared";
 import { getDarkAccents } from "./parts";
 
 export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
   function SlideBenefits({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = getBrandLine(brandInfo, productName, "contact");
     return (
       <div
         ref={ref}
@@ -49,7 +52,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
         </div>
 
         
-        <div className="relative z-10 flex flex-col gap-3 font-mono text-sm">
+        <div className="relative z-10 flex flex-1 flex-col gap-3 font-mono text-sm">
            {data.bullets.map((bullet, index) => (
              <div 
                key={index} 
@@ -62,18 +65,9 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
            ))}
         </div>
 
-        
-        <div className="absolute bottom-8 left-8 right-8">
-           <div className="mb-2 flex justify-between text-[10px] text-gray-400 font-mono">
-              <span className="truncate">{productName || brandInfo?.storeName || "LOKAL_PRODUCT"}</span>
-              <span>100%</span>
-           </div>
-           <div className="h-1 w-full bg-white/10">
-              <div 
-                className="h-full w-full" 
-                style={{ backgroundColor: accent.shape }}
-              />
-           </div>
+        <div className="relative z-10 mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-3 font-mono text-[10px] text-gray-400">
+          {identity && <span className="min-w-0 truncate">{identity}</span>}
+          <span className="min-w-0 truncate text-right">{contact}</span>
         </div>
 
         {isPlaceholder && (

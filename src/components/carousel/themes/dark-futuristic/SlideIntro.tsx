@@ -4,11 +4,13 @@ import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText } from "../fit-text";
+import { getBrandLine } from "../shared";
 import { getDarkAccents } from "./parts";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
-  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
+    const identity = getBrandLine(brandInfo, productName, "identity");
     return (
       <div
         ref={ref}
@@ -33,7 +35,11 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
             <div className="h-2 w-2 rounded-full bg-yellow-500" />
             <div className="h-2 w-2 rounded-full bg-green-500" />
           </div>
-          <div className="font-mono text-[10px] text-white/50 tracking-widest">{productName}</div>
+          {identity && (
+            <div className="max-w-[70%] truncate font-mono text-[10px] tracking-widest text-white/60">
+              {identity}
+            </div>
+          )}
         </div>
         <div className="relative z-10 flex flex-1 flex-col p-8">
            <div className="flex h-full gap-6">
