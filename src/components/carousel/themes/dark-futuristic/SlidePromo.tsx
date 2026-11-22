@@ -2,35 +2,25 @@
 
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { getDarkAccents } from "./parts";
+import { BackgroundImage, PreviewOverlay, getBrandLine } from "../shared";
+import { SCANLINE_CLASS, getDarkAccents } from "./parts";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
     const mode = data.mode ?? "value";
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = brandInfo?.contactInfo?.trim() ?? "";
     return (
       <div
         ref={ref}
         lang="id"
         className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] p-8"
       >
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <div
-              className="absolute inset-0 z-10 mix-blend-overlay opacity-50"
-              style={{ backgroundColor: brandColor }}
-            />
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-20"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.2} tint={brandColor}>
+          <div className={SCANLINE_CLASS} />
+        </BackgroundImage>
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -49,7 +39,7 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
               className="mb-4 inline-block border px-2 py-0.5 font-mono text-[10px] uppercase text-white"
               style={{ borderColor: accent.shape, color: accent.text }}
             >
-              {mode === "promo" ? data.highlightBadge || "Special_Offer" : "Why_This"}
+              {mode === "promo" ? data.highlightBadge || "PROMO_SPESIAL" : "KENAPA_INI"}
             </span>
 
             <h2
@@ -68,13 +58,16 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
             <p className={`break-words font-mono text-gray-300 ${fitText(data.promoText, [[35, "text-lg"]], "text-base")}`}>{data.promoText}</p>
           </div>
         </div>
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">
-              PREVIEW_MODE
-            </span>
+
+        {(identity || contact) && (
+          <div className="absolute bottom-6 left-8 right-8 z-10 flex items-center justify-between gap-4 border-t border-white/10 pt-3 font-mono text-[10px] text-gray-400">
+            {identity && <span className="min-w-0 truncate">{identity}</span>}
+            {contact && contact !== identity && (
+              <span className="min-w-0 truncate text-right">{contact}</span>
+            )}
           </div>
         )}
+        <PreviewOverlay active={isPlaceholder} variant="dark" />
       </div>
     );
   }

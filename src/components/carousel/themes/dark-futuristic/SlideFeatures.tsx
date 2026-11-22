@@ -2,13 +2,16 @@
 
 import { forwardRef } from "react";
 import type { SlideFeaturesProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { getDarkAccents } from "./parts";
+import { SECTION_LABELS } from "../copy";
+import { BackgroundImage, PreviewOverlay, getBrandLine } from "../shared";
+import { SCANLINE_CLASS, getDarkAccents } from "./parts";
 
 export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
-  function SlideFeatures({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlideFeatures({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getDarkAccents(brandColor);
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = brandInfo?.contactInfo?.trim() ?? "";
     return (
       <div
         ref={ref}
@@ -16,21 +19,9 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         className="relative flex h-full w-full flex-col overflow-hidden bg-[#0a0a0f] p-8"
       >
         
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-             <div 
-               className="absolute inset-0 z-10 mix-blend-overlay opacity-50"
-               style={{ backgroundColor: brandColor }}
-             />
-             <Image
-               src={productImage}
-               alt="Background"
-               fill
-               className="object-cover opacity-20"
-             />
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-20 bg-[length:100%_4px,3px_100%]" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.2} tint={brandColor}>
+          <div className={SCANLINE_CLASS} />
+        </BackgroundImage>
         
         <div 
            className="absolute inset-0 opacity-10"
@@ -43,7 +34,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         
         <div className="relative z-10 mb-8 border-b border-white/10 pb-4">
            <div className="mb-2 flex items-center gap-2 font-mono text-[10px] text-gray-400">
-              <span>{"/// FEATURES_LIST"}</span>
+              <span>{`/// ${SECTION_LABELS.features.toUpperCase()}`}</span>
               <span className="flex-1 border-t border-dashed border-gray-700" />
            </div>
            <h2 
@@ -55,7 +46,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
         </div>
 
         
-        <div className="relative z-10 flex flex-col gap-4">
+        <div className="relative z-10 flex flex-1 flex-col gap-4">
            {data.bullets.map((bullet, index) => (
              <div
                key={index}
@@ -78,16 +69,21 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
              </div>
            ))}
         </div>
+
+        {(identity || contact) && (
+          <div className="relative z-10 mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-3 font-mono text-[10px] text-gray-400">
+            {identity && <span className="min-w-0 truncate">{identity}</span>}
+            {contact && contact !== identity && (
+              <span className="min-w-0 truncate text-right">{contact}</span>
+            )}
+          </div>
+        )}
         <div 
            className="absolute bottom-10 right-10 h-24 w-24 rounded-full border border-dashed border-white/10"
            style={{ borderColor: `${brandColor}30` }}
         />
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <span className="border border-white/50 bg-black/50 px-3 py-1 font-mono text-xs text-white backdrop-blur-md">PREVIEW_MODE</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="dark" />
       </div>
     );
   }

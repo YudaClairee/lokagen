@@ -2,15 +2,14 @@
 
 import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { pickContrastingPop } from "./parts";
+import { PreviewOverlay, ProductPhoto } from "../shared";
+import { GenZFooter, GenZHeader, pickContrastingPop } from "./parts";
 import { readableTextColor } from "@/lib/color";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
     const pop = pickContrastingPop(brandColor);
-    const popText = readableTextColor(pop);
     const cardText = readableTextColor(brandColor);
     return (
       <div
@@ -18,63 +17,24 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         lang="id"
         className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        <div className="relative z-10 flex flex-col items-center justify-center pt-6 pb-2">
-            <div className="absolute left-4 top-6 grid grid-cols-2 gap-1">
-                <div className="h-3 w-3 bg-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-black"></div>
-            </div>
-            <div className="absolute right-4 top-6 grid grid-cols-2 gap-1">
-                <div className="h-3 w-3 bg-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-white border border-black"></div>
-                <div className="h-3 w-3 bg-black"></div>
-            </div>
+        <GenZHeader
+          title={data.title}
+          subtitle={data.subtitle}
+          color="#00FF94"
+          titleClassName={`line-clamp-2 ${fitText(data.title, [[12, "text-5xl"], [18, "text-4xl"]], "text-3xl")}`}
+        />
 
-            <h1 
-                className={`text-center font-black uppercase leading-none tracking-tighter px-12 break-words line-clamp-2 ${fitText(data.title, [[12, "text-5xl"], [18, "text-4xl"]], "text-3xl")}`}
-                style={{ 
-                    color: '#00FF94', 
-                    WebkitTextStroke: '2px black',
-                    textShadow: '4px 4px 0px #000'
-                }}
-            >
-                {data.title}
-            </h1>
-            
-            <h2 
-                className="mt-1 text-center text-lg font-black uppercase tracking-widest text-[#FFD700]"
-                style={{ 
-                    WebkitTextStroke: '1px black',
-                    textShadow: '2px 2px 0px #000'
-                }}
-            >
-                {data.subtitle}
-            </h2>
-        </div>
-
-        <div className="flex-1 px-4 pb-4 min-h-0">
+        <div className="relative z-10 flex-1 px-4 pb-4 min-h-0">
             <div 
                 className="flex h-full w-full flex-row items-center justify-between rounded-3xl border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] gap-2"
                 style={{ backgroundColor: brandColor }}
             >
-                <div className="relative aspect-square w-[55%] shrink-0">
-                    <div className="absolute inset-0 bg-transparent bg-gray-200 overflow-hidden border-none">
-                         {productImage ? (
-                            <Image
-                                src={productImage}
-                                alt="Product"
-                                fill
-                                className="object-cover"
-                            />
-                        ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gray-300 text-gray-500 font-bold text-xs">
-                                PRODUCT
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <ProductPhoto
+                  src={productImage}
+                  brandColor={pop}
+                  name={brandInfo?.storeName || productName}
+                  className="aspect-square w-[55%] shrink-0 rounded-2xl border-4 border-black shadow-[4px_4px_0_0_#000]"
+                />
 
                 <div className="flex flex-col justify-center items-end h-full w-[45%] gap-2">
                     <div className="text-right">
@@ -103,16 +63,13 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
             </div>
         </div>
 
-        <div className="flex h-12 shrink-0 w-full items-center justify-between border-t-4 border-black px-4" style={{ backgroundColor: pop, color: popText }}>
-             <span className="text-[10px] font-black uppercase leading-tight max-w-[50%] break-words">{brandInfo?.storeName || productName || "PRODUK LOKAL"}</span>
-             <span className="text-[10px] font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.contactInfo || brandInfo?.location || ""}</span>
-        </div>
+        <GenZFooter
+          left={brandInfo?.storeName || productName || "PRODUK LOKAL"}
+          right={brandInfo?.contactInfo || brandInfo?.location || ""}
+          bg={pop}
+        />
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
-            <span className="rounded-full bg-black px-4 py-2 text-sm font-bold text-white">PREVIEW</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="genz" />
       </div>
     );
   }

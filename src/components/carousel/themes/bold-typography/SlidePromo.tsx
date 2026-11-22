@@ -6,12 +6,14 @@ import { fitText } from "../fit-text";
 import { getBoldAccents } from "./parts";
 import { readableTextColor } from "@/lib/color";
 import { PROMO_LABELS } from "../copy";
-import { BackgroundImage, PreviewOverlay } from "../shared";
+import { BackgroundImage, PreviewOverlay, getBrandLine } from "../shared";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
-  function SlidePromo({ data, brandColor, productImage, isPlaceholder }, ref) {
+  function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
     const accent = getBoldAccents(brandColor);
     const mode = data.mode ?? "value";
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = brandInfo?.contactInfo?.trim() ?? "";
     return (
       <div
         ref={ref}
@@ -62,6 +64,14 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
              </div>
            </div>
         </div>
+        {(identity || contact) && (
+          <div className="absolute bottom-6 left-8 right-8 z-10 flex items-center justify-between gap-4 border-t-2 border-black pt-2 font-mono text-xs font-bold uppercase text-black">
+            {identity && <span className="min-w-0 truncate">{identity}</span>}
+            {contact && contact !== identity && (
+              <span className="min-w-0 truncate text-right">{contact}</span>
+            )}
+          </div>
+        )}
         <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );

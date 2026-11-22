@@ -2,9 +2,9 @@
 
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
-import Image from "next/image";
 import { fitText } from "../fit-text";
-import { pickContrastingPop } from "./parts";
+import { BackgroundImage, PreviewOverlay } from "../shared";
+import { GenZFooter, GenZHeader, pickContrastingPop } from "./parts";
 import { readableTextColor } from "@/lib/color";
 import { PROMO_LABELS } from "../copy";
 
@@ -17,53 +17,17 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
       <div
         ref={ref}
         lang="id"
-        className="relative isolate flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
+        className="relative flex h-full w-full flex-col bg-[#E5E5E5] font-sans text-black overflow-hidden"
       >
-        {productImage && (
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10 mix-blend-multiply"
-            />
-          </div>
-        )}
-        <div className="relative z-10 flex flex-col items-center justify-center pt-8 pb-4">
-            <div className="absolute left-6 top-8 grid grid-cols-2 gap-1">
-                <div className="h-4 w-4 bg-black"></div>
-                <div className="h-4 w-4 bg-white border-2 border-black"></div>
-                <div className="h-4 w-4 bg-white border-2 border-black"></div>
-                <div className="h-4 w-4 bg-black"></div>
-            </div>
-            <div className="absolute right-6 top-8 grid grid-cols-2 gap-1">
-                <div className="h-4 w-4 bg-black"></div>
-                <div className="h-4 w-4 bg-white border-2 border-black"></div>
-                <div className="h-4 w-4 bg-white border-2 border-black"></div>
-                <div className="h-4 w-4 bg-black"></div>
-            </div>
-
-            <h1 
-                className={`text-center font-black uppercase leading-none tracking-tighter px-12 ${mode === "value" ? "text-5xl" : "text-6xl"}`}
-                style={{ 
-                    color: '#00FF94', 
-                    WebkitTextStroke: '2.5px black',
-                    textShadow: '4px 4px 0px #000'
-                }}
-            >
-                {PROMO_LABELS[mode].header}
-            </h1>
-             <h2 
-                className="mt-2 text-center text-xl font-black uppercase tracking-widest text-[#FFD700]"
-                style={{ 
-                    WebkitTextStroke: '1.5px black',
-                    textShadow: '2px 2px 0px #000'
-                }}
-            >
-                {data.title}
-            </h2>
-        </div>
-        <div className="flex-1 px-6 pb-6 min-h-0">
+        <BackgroundImage src={productImage} opacity={0.1} multiply />
+        <GenZHeader
+          title={PROMO_LABELS[mode].header}
+          subtitle={data.title}
+          color="#00FF94"
+          titleClassName={mode === "value" ? "text-5xl" : "text-6xl"}
+          subtitleClassName="text-xl"
+        />
+        <div className="relative z-10 flex-1 px-6 pb-6 min-h-0">
             <div 
                 className="flex h-full w-full flex-col items-center justify-center rounded-[2rem] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative"
                 style={{ backgroundColor: brandColor }}
@@ -79,16 +43,13 @@ export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
                 </div>
             </div>
         </div>
-        <div className="flex h-14 shrink-0 w-full items-center justify-between border-t-4 border-black px-6" style={{ backgroundColor: pop, color: popText }}>
-             <span className="max-w-[45%] truncate text-xs font-black uppercase leading-tight">{brandInfo?.storeName || productName || ""}</span>
-             <span className="text-xs font-black uppercase text-right leading-tight max-w-[50%] break-words">{brandInfo?.location || brandInfo?.contactInfo || brandInfo?.storeName || ""}</span>
-        </div>
+        <GenZFooter
+          left={brandInfo?.storeName || productName || ""}
+          right={brandInfo?.location || brandInfo?.contactInfo || brandInfo?.storeName || ""}
+          bg={pop}
+        />
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-50">
-            <span className="rounded-full bg-black px-4 py-2 text-sm font-bold text-white">PREVIEW</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="genz" />
       </div>
     );
   }
