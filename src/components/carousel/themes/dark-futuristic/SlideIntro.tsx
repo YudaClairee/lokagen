@@ -71,14 +71,14 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
 
               <div className="flex w-[55%] flex-col justify-center">
                  <div 
-                   className="mb-4 inline-flex items-center gap-2 border px-2 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white"
+                   className="mb-4 inline-flex items-center gap-2 border px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white"
                    style={{ borderColor: accent.shape }}
                  >
                    <div className="h-1.5 w-1.5" style={{ backgroundColor: accent.shape }} />
                    {productName || "NEW_DROP"}
                  </div>
                  
-                 <h1 className={`mb-6 break-words font-mono font-bold leading-[0.9] text-white ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
+                 <h1 className={`mb-6 break-words font-dark-display font-bold leading-[0.95] tracking-tight text-white ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
                      {data.title}
                    </span>

@@ -33,7 +33,7 @@ export const SlideBenefits = forwardRef<HTMLDivElement, SlideBenefitsProps>(
              className="mb-2 h-1 w-10"
              style={{ backgroundColor: accent.shape }}
            />
-           <h2 className={`break-words font-mono font-bold uppercase tracking-wider text-white ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}>
+           <h2 className={`break-words font-dark-display font-bold uppercase tracking-wider text-white ${fitText(data.title, [[14, "text-3xl"]], "text-2xl")}`}>
              {data.title}
            </h2>
         </div>

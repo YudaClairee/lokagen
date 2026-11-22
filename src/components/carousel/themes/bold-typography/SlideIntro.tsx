@@ -17,7 +17,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
         lang="id"
         className="relative flex h-full w-full flex-col overflow-hidden bg-white text-black"
       >
-        <div className="absolute -left-10 top-0 text-[180px] font-black leading-none opacity-[0.03] select-none">
+        <div className="absolute -left-10 top-0 font-bold-display text-[180px] leading-none opacity-[0.03] select-none">
           {productName ? productName.trim().slice(0, 8).toUpperCase() : "BARU"}
         </div>
 
@@ -36,7 +36,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           </div>
 
           <div className="mt-8">
-            <h1 className={`max-w-[65%] break-words font-black tracking-tighter ${fitText(data.title, [[10, "text-[60px] leading-[0.9]"], [16, "text-5xl leading-[0.9]"], [22, "text-4xl leading-[0.95]"]], "text-3xl leading-tight")}`}>
+            <h1 className={`max-w-[65%] break-words font-bold-display font-normal uppercase tracking-normal ${fitText(data.title, [[10, "text-[72px] leading-[0.92]"], [16, "text-[60px] leading-[0.92]"], [24, "text-5xl leading-[0.95]"]], "text-4xl leading-none")}`}>
               {/* Pecah per kata hanya jika judul pendek dan kata-katanya tidak panjang */}
               {splitWords
                 ? data.title.trim().split(/\s+/).map((word, i) => (

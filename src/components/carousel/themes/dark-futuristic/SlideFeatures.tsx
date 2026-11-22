@@ -38,7 +38,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
               <span className="flex-1 border-t border-dashed border-gray-700" />
            </div>
            <h2 
-             className={`break-words font-bold tracking-tight text-white mb-1 ${fitText(data.title, [[16, "text-3xl"]], "text-2xl")}`}
+             className={`break-words font-dark-display font-bold tracking-tight text-white mb-1 ${fitText(data.title, [[16, "text-3xl"]], "text-2xl")}`}
              style={{ textShadow: `0 0 20px ${brandColor}40` }}
            >
              {data.title}

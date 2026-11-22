@@ -17,7 +17,7 @@ export const SlideFeatures = forwardRef<HTMLDivElement, SlideFeaturesProps>(
       >
         <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
         <div className="relative z-10 mb-8 border-b-4 border-black pb-4">
-          <h2 className={`break-words font-black uppercase tracking-tighter ${fitText(data.title, [[14, "text-4xl"]], "text-3xl")}`}>
+          <h2 className={`break-words font-bold-display font-normal uppercase leading-none tracking-normal ${fitText(data.title, [[16, "text-5xl"], [26, "text-4xl"]], "text-3xl")}`}>
             {data.title}
           </h2>
         </div>
