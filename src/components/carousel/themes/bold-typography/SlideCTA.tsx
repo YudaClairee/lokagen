@@ -3,8 +3,8 @@
 import { forwardRef } from "react";
 import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { fitText, shouldSplitWords } from "../fit-text";
+import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
   function SlideCTA({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
@@ -15,17 +15,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
         lang="id"
         className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden bg-white p-8"
       >
-        {productImage && (
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={productImage}
-              alt="Background"
-              fill
-              className="object-cover opacity-10 filter grayscale"
-            />
-            <div className="absolute inset-0 bg-white/90" />
-          </div>
-        )}
+        <BackgroundImage src={productImage} opacity={0.1} grayscale overlayClassName="bg-white/90" />
         <div className="flex w-full justify-between border-b-4 border-black pb-4">
            <span className="max-w-[70%] truncate font-mono text-sm font-bold uppercase">{brandInfo?.storeName || productName || ""}</span>
            <div className="flex gap-2">
@@ -63,11 +53,7 @@ export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
           <span className="max-w-[80%] truncate font-mono font-bold uppercase">{brandInfo?.contactInfo || "LINK DI BIO"}</span>
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-             <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );
   }

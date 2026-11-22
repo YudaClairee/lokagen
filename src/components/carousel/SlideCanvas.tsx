@@ -3,21 +3,9 @@
 import { forwardRef, type ReactNode } from "react";
 import type { BrandInfo, SlideFormat } from "@/lib/types";
 import { SLIDE_FORMATS } from "@/lib/constants";
+import { normalizeHex, readableTextColor } from "@/lib/color";
 
 const BAND_FALLBACK = "#111111";
-const HEX_COLOR = /^#([0-9a-f]{6})$/i;
-
-// Teks hitam di atas warna terang, putih di atas warna gelap.
-export function readableTextColor(hex: string): string {
-  const match = HEX_COLOR.exec(hex);
-  if (!match) return "#ffffff";
-  const n = parseInt(match[1], 16);
-  const r = (n >> 16) & 255;
-  const g = (n >> 8) & 255;
-  const b = n & 255;
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.6 ? "#111111" : "#ffffff";
-}
 
 interface SlideCanvasProps {
   format: SlideFormat;
@@ -45,7 +33,7 @@ export const SlideCanvas = forwardRef<HTMLDivElement, SlideCanvasProps>(function
     );
   }
 
-  const band = HEX_COLOR.test(brandColor) ? brandColor : BAND_FALLBACK;
+  const band = normalizeHex(brandColor, BAND_FALLBACK);
   const bandHeight = (height - width) / 2;
   const bandTextColor = readableTextColor(band);
 

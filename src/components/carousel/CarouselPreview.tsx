@@ -7,6 +7,7 @@ import { getThemeComponents } from "./themes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { normalizeHex } from "@/lib/color";
 import { ScaledSlide } from "./ScaledSlide";
 import { SlideCanvas } from "./SlideCanvas";
 
@@ -28,7 +29,7 @@ type ViewMode = "single" | "grid";
 export function CarouselPreview({
   content,
   theme,
-  brandColor,
+  brandColor: rawBrandColor,
   productName,
   productImage,
   brandInfo,
@@ -37,6 +38,9 @@ export function CarouselPreview({
   currentSlide,
   onSlideChange,
 }: CarouselPreviewProps) {
+  // Input warna dari user bisa berupa "#abc" atau teks setengah jadi. Normalisasi sekali di sini,
+  // sehingga tema dan canvas selalu menerima "#rrggbb" yang valid.
+  const brandColor = normalizeHex(rawBrandColor);
   const [viewMode, setViewMode] = useState<ViewMode>("single");
   const [format, setFormat] = useState<SlideFormat>("square");
   // Bungkus slide dengan kanvas sesuai format (termasuk pita info toko untuk story)

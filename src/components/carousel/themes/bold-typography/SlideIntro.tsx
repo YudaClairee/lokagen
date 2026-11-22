@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import type { SlideIntroProps } from "../types";
 import Image from "next/image";
 import { fitText, shouldSplitWords } from "../fit-text";
+import { PreviewOverlay } from "../shared";
 
 export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
   function SlideIntro({ data, productName, brandColor, productImage, isPlaceholder }, ref) {
@@ -59,11 +60,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
           )}
         </div>
 
-        {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-            <span className="bg-black px-2 py-1 font-mono text-xs text-white">PREVIEW ONLY</span>
-          </div>
-        )}
+        <PreviewOverlay active={isPlaceholder} variant="bold" />
       </div>
     );
   }

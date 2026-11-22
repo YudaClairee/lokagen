@@ -27,9 +27,11 @@ export function DownloadButton({ slideRefs, productName, currentSlide }: Downloa
 
   const slug = makeSlug(productName);
 
-  const renderSlide = (index: number) => {
+  const renderSlide = async (index: number) => {
     const node = slideRefs.current[index];
     if (!node) throw new Error(`Slide ${index + 1} belum siap`);
+    // Pastikan font tema sudah termuat; kalau belum, PNG bisa memakai font cadangan.
+    await document.fonts.ready;
     return toPng(node, {
       quality: 1,
       pixelRatio: 2, // ukuran logis x 2: 1080x1080 (feed) atau 1080x1920 (story)
