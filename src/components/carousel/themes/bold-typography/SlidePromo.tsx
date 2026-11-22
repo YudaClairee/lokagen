@@ -2,7 +2,8 @@
 
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
-import { fitText, PROMO_LABELS } from "../fit-text";
+import { fitText } from "../fit-text";
+import { PROMO_LABELS } from "../copy";
 import { BackgroundImage, PreviewOverlay } from "../shared";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(

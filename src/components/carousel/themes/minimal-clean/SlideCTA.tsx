@@ -1,64 +1,58 @@
 "use client";
 
 import { forwardRef } from "react";
-import type { SlideCTAProps } from "../types";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
+import type { SlideCTAProps } from "../types";
 import { fitText } from "../fit-text";
+import { PreviewOverlay, getBrandLine } from "../shared";
+import { CTA_LABEL } from "../copy";
+import { readableTextColor } from "@/lib/color";
 
+// Satu-satunya slide Minimal Clean yang berlatar warna brand penuh: penutup visual carousel.
 export const SlideCTA = forwardRef<HTMLDivElement, SlideCTAProps>(
-  function SlideCTA({ data, brandColor, productImage, isPlaceholder, brandInfo }, ref) {
-    
+  function SlideCTA({ data, brandColor, productName, brandInfo, isPlaceholder }, ref) {
+    const fg = readableTextColor(brandColor);
+    const identity = getBrandLine(brandInfo, productName, "identity");
+    const contact = getBrandLine(brandInfo, productName, "contact");
+
     return (
       <div
         ref={ref}
         lang="id"
-        className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden p-12 text-white"
-        style={{ backgroundColor: brandColor }}
+        className="relative flex h-full w-full flex-col overflow-hidden p-10"
+        style={{ backgroundColor: brandColor, color: fg }}
       >
-   
-        <div 
-          className="absolute inset-0 pointer-events-none z-10 opacity-20"
-          style={{
-            background: 'linear-gradient(135deg, transparent 40%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, transparent 60%)',
-            filter: 'blur(40px)'
-          }}
-        />
-         <div className="relative z-20 flex flex-col items-center text-center">
-            
-           
-            <div className="mb-8 h-16 w-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
-                <ArrowRight className="h-6 w-6 text-white" />
-            </div>
+        <p className="truncate text-[10px] font-semibold uppercase tracking-[0.25em]">{identity}</p>
 
-            <h2 className={`mb-6 break-words font-black uppercase tracking-tight text-white ${fitText(data.title, [[12, "text-4xl"], [20, "text-3xl"]], "text-2xl")}`}>
-              {data.title}
-            </h2>
-            
-            <p className="mb-10 text-sm font-medium text-white/80 max-w-[200px] leading-relaxed">
-              {data.ctaText}
-            </p>
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center text-center">
+          <h2
+            className={`line-clamp-3 max-w-full break-words font-minimal-display font-medium leading-[1.05] tracking-tight ${fitText(
+              data.title,
+              [[10, "text-6xl"], [16, "text-5xl"]],
+              "text-4xl"
+            )}`}
+          >
+            {data.title}
+          </h2>
+          <p className="mt-5 line-clamp-3 max-w-[360px] break-words text-base leading-relaxed">
+            {data.ctaText}
+          </p>
 
-            <div className="rounded-full bg-white px-8 py-4 shadow-lg">
-                <span 
-                    className="text-sm font-bold uppercase tracking-widest"
-                    style={{ color: brandColor }} 
-                >
-                    Pesan Sekarang
-                </span>
-            </div>
-
-            
-            <div className="absolute -bottom-24 max-w-[260px] truncate text-[10px] font-bold text-white/60 uppercase tracking-[0.3em]">
-               {brandInfo?.contactInfo || "Link di Bio"}
-            </div>
-         </div>
-
-         {isPlaceholder && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <span className="border border-gray-200 bg-white px-3 py-1 text-xs text-gray-500 shadow-sm rounded-full">Preview Mode</span>
+          {/* Tombol dibalik: latar = warna teks, teks = warna brand, sehingga kontrasnya sama dengan teks di atas. */}
+          <div
+            className="mt-8 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.15em]"
+            style={{ backgroundColor: fg, color: brandColor }}
+          >
+            {CTA_LABEL}
+            <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
           </div>
-        )}
+        </div>
+
+        <p className="line-clamp-2 break-words text-center text-xs font-semibold uppercase tracking-[0.2em]">
+          {contact}
+        </p>
+
+        <PreviewOverlay active={isPlaceholder} variant="minimal" />
       </div>
     );
   }

@@ -3,7 +3,8 @@
 import { forwardRef } from "react";
 import type { SlidePromoProps } from "../types";
 import Image from "next/image";
-import { fitText, PROMO_LABELS } from "../fit-text";
+import { fitText } from "../fit-text";
+import { PROMO_LABELS } from "../copy";
 
 export const SlidePromo = forwardRef<HTMLDivElement, SlidePromoProps>(
   function SlidePromo({ data, brandColor, productImage, isPlaceholder, productName, brandInfo }, ref) {
