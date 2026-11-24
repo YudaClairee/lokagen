@@ -1,0 +1,5 @@
+# AI_MODEL is a public model identifier (e.g. "deepseek/deepseek-v4.1-flash-1017")
+# that also appears as the default fallback in source code, not a secret.
+# Keep secrets scanning enabled for OPENROUTER_API_KEY and AUTH_PASSWORD.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "AI_MODEL"
