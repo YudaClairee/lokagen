@@ -43,8 +43,15 @@ function LoginForm() {
       if (res.ok) {
         router.push(redirect);
         router.refresh();
-      } else {
+      } else if (res.status === 401) {
         setError("Password salah. Silakan coba lagi.");
+      } else {
+        const data = await res.json().catch(() => null);
+        setError(
+          typeof data?.error === "string" && data.error
+            ? data.error
+            : "Terjadi kesalahan pada server. Silakan coba lagi."
+        );
       }
     } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");
