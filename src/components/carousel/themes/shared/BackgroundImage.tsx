@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BackgroundImageProps {
@@ -18,7 +17,7 @@ interface BackgroundImageProps {
 }
 
 // Foto produk sebagai latar slide. Tidak merender apa pun jika foto belum ada.
-// Posisinya z-0 absolute inset-0, jadi konten slide harus memakai `relative z-10` ke atas.
+// Memakai <img> eager agar container ekspor off-screen (html-to-image) selalu merender latar di Safari/mobile.
 export function BackgroundImage({
   src,
   opacity = 0.1,
@@ -32,11 +31,13 @@ export function BackgroundImage({
   return (
     <div className="absolute inset-0 z-0">
       {tint && <div className="absolute inset-0 z-10 opacity-50 mix-blend-overlay" style={{ backgroundColor: tint }} />}
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={src}
         alt=""
-        fill
-        className={cn("object-cover", grayscale && "grayscale", multiply && "mix-blend-multiply")}
+        loading="eager"
+        decoding="sync"
+        className={cn("absolute inset-0 h-full w-full object-cover", grayscale && "grayscale", multiply && "mix-blend-multiply")}
         style={{ opacity }}
       />
       {overlayClassName && <div className={cn("absolute inset-0", overlayClassName)} />}

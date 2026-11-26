@@ -5,10 +5,11 @@ import { HowItWorks } from "@/components/landing/HowItWorks";
 import { SocialProof } from "@/components/landing/SocialProof";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
+import { themeFontVariables } from "@/lib/fonts";
 
 export default function Home() {
   return (
-    <main className="min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground">
+    <main className={`${themeFontVariables} min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground`}>
       <div className="min-h-screen w-full bg-background relative">
         {/* Dark Sphere Grid Background */}
         <div

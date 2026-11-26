@@ -8,6 +8,7 @@ export const AI_MODEL =
 export const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
+  timeout: 45_000,
 });
 
 export const SYSTEM_PROMPT = `Kamu adalah social media copywriter senior untuk UMKM Indonesia. Tugasmu menulis isi 5 slide carousel Instagram + caption, yang akan dimasukkan ke template desain dengan ruang teks TERBATAS.

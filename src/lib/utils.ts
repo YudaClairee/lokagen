@@ -27,6 +27,9 @@ export async function compressImageFile(
         canvas.height = height;
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject(new Error("Canvas context unavailable"));
+        // Isi latar putih agar PNG transparan (cutout produk) tidak berubah hitam saat dikonversi ke JPEG
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
         resolve(canvas.toDataURL("image/jpeg", quality));
       };

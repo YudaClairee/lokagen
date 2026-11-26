@@ -144,6 +144,8 @@ export const ERROR_MESSAGES = {
   PARSE_ERROR: "Gagal parsing response AI. Silakan coba lagi.",
   INVALID_API_KEY: "API key tidak valid. Hubungi admin.",
   RATE_LIMIT: "Terlalu banyak request. Coba lagi dalam beberapa saat.",
+  TIMEOUT: "Proses AI terlalu lama (timeout). Coba klik Generate lagi ya!",
+  NETWORK_ERROR: "Gagal terhubung ke server. Cek koneksi internet atau coba lagi ya!",
   GENERIC_ERROR: "Terjadi kesalahan. Silakan coba lagi.",
   PRODUCT_NAME_TOO_LONG: "Nama produk terlalu panjang (max 100 karakter)",
   DESCRIPTION_TOO_LONG: "Deskripsi terlalu panjang (max 500 karakter)",

@@ -22,6 +22,8 @@ interface CarouselPreviewProps {
   isLoading: boolean;
   currentSlide: number;
   onSlideChange: (index: number) => void;
+  format: SlideFormat;
+  onFormatChange: (format: SlideFormat) => void;
 }
 
 type ViewMode = "single" | "grid";
@@ -37,12 +39,13 @@ export function CarouselPreview({
   isLoading,
   currentSlide,
   onSlideChange,
+  format,
+  onFormatChange,
 }: CarouselPreviewProps) {
   // Input warna dari user bisa berupa "#abc" atau teks setengah jadi. Normalisasi sekali di sini,
   // sehingga tema dan canvas selalu menerima "#rrggbb" yang valid.
   const brandColor = normalizeHex(rawBrandColor);
   const [viewMode, setViewMode] = useState<ViewMode>("single");
-  const [format, setFormat] = useState<SlideFormat>("square");
   // Bungkus slide dengan kanvas sesuai format (termasuk pita info toko untuk story)
   const framed = (slide: ReactNode, ref?: (el: HTMLDivElement | null) => void) => (
     <SlideCanvas
@@ -179,7 +182,7 @@ export function CarouselPreview({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
           {(Object.keys(SLIDE_FORMATS) as SlideFormat[]).map((key) => (
-            <button key={key} type="button" className={tabClass(format === key)} onClick={() => setFormat(key)}>
+            <button key={key} type="button" className={tabClass(format === key)} onClick={() => onFormatChange(key)}>
               {SLIDE_FORMATS[key].label}
             </button>
           ))}

@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { openai, AI_MODEL, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
 import type {
   GenerateContentInput,
@@ -11,9 +11,34 @@ import { AUTH_COOKIE, getAuthPassword, isValidAuthToken } from "@/lib/auth";
 import { resolvePromoMode, extractPromoFacts } from "@/lib/promo";
 import { normalizeContent } from "@/lib/normalize-content";
 
+// Rate limit ringan per IP (in-memory per instance) untuk mencegah spam saat beta testing.
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 menit
+const RATE_LIMIT_MAX_REQUESTS = 10;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(clientKey: string): boolean {
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const recent = (requestLog.get(clientKey) ?? []).filter((ts) => ts > cutoff);
+  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(clientKey, recent);
+    return true;
+  }
+  recent.push(now);
+  requestLog.set(clientKey, recent);
+  // Bersihkan key lama bila map terlalu besar
+  if (requestLog.size > 500) {
+    for (const [k, timestamps] of requestLog.entries()) {
+      if (timestamps.every((ts) => ts <= cutoff)) requestLog.delete(k);
+    }
+  }
+  return false;
+}
+
 export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
+  const startedAt = Date.now();
   try {
     // Lapis proteksi kedua (Edge middleware sudah memeriksa halaman /generate).
     if (!getAuthPassword()) {
@@ -22,6 +47,13 @@ export async function generateContent(
     const cookieStore = await cookies();
     if (!(await isValidAuthToken(cookieStore.get(AUTH_COOKIE)?.value))) {
       return { success: false, error: ERROR_MESSAGES.UNAUTHORIZED };
+    }
+
+    const headerStore = await headers();
+    const forwarded = headerStore.get("x-forwarded-for")?.split(",")[0]?.trim();
+    const clientIp = forwarded || headerStore.get("x-real-ip") || "unknown";
+    if (isRateLimited(clientIp)) {
+      return { success: false, error: ERROR_MESSAGES.RATE_LIMIT };
     }
 
     const { productName, productImage, description, brandInfo } = input;
@@ -86,6 +118,7 @@ export async function generateContent(
       model: AI_MODEL,
       messages,
       temperature: 0.7,
+      max_tokens: 2048,
       response_format: { type: "json_object" },
     });
 
@@ -122,12 +155,22 @@ export async function generateContent(
       console.warn("[generate] normalize:", normalized.warnings);
     }
 
+    console.info("[generate] ok", {
+      ms: Date.now() - startedAt,
+      category: input.category,
+      campaignType: input.campaignType,
+      theme: input.theme,
+      tone: input.tone,
+      hasImage,
+      warnings: normalized.warnings.length,
+    });
+
     return {
       success: true,
       data: normalized.content,
     };
   } catch (error) {
-    console.error("Error generating content:", error);
+    console.error("[generate] error:", { ms: Date.now() - startedAt, error });
 
     if (error instanceof SyntaxError) {
       return {
@@ -137,14 +180,22 @@ export async function generateContent(
     }
 
     if (error instanceof Error) {
-      if (error.message.includes("API key")) {
+      const msg = error.message.toLowerCase();
+      if (error.name === "APIConnectionTimeoutError" || msg.includes("timeout") || msg.includes("timed out") || msg.includes("aborted")) {
+        return {
+          success: false,
+          error: ERROR_MESSAGES.TIMEOUT,
+        };
+      }
+
+      if (msg.includes("api key")) {
         return {
           success: false,
           error: ERROR_MESSAGES.INVALID_API_KEY,
         };
       }
 
-      if (error.message.includes("rate limit")) {
+      if (msg.includes("rate limit") || msg.includes("429")) {
         return {
           success: false,
           error: ERROR_MESSAGES.RATE_LIMIT,

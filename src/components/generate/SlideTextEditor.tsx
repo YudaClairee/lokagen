@@ -3,6 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { COPY_LIMITS } from "@/lib/constants";
 import type { SlideContent } from "@/lib/types";
 
 interface SlideTextEditorProps {
@@ -19,31 +20,40 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
     label: string,
     value: string,
     onValue: (v: string) => void,
+    maxRecommended: number,
     multiline = false
-  ) => (
-    <div key={id}>
-      <Label htmlFor={id} className="mb-1 block text-xs text-foreground/80">
-        {label}
-      </Label>
-      {multiline ? (
-        <Textarea
-          id={id}
-          rows={2}
-          value={value}
-          onChange={(e) => onValue(e.target.value)}
-          className={`resize-none ${inputClass}`}
-        />
-      ) : (
-        <Input
-          id={id}
-          type="text"
-          value={value}
-          onChange={(e) => onValue(e.target.value)}
-          className={inputClass}
-        />
-      )}
-    </div>
-  );
+  ) => {
+    const isOver = value.length > maxRecommended;
+    return (
+      <div key={id}>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <Label htmlFor={id} className="block text-xs text-foreground/80">
+            {label}
+          </Label>
+          <span className={`text-[11px] ${isOver ? "font-medium text-amber-700" : "text-muted-foreground"}`}>
+            {value.length}/{maxRecommended}{isOver ? " (agak panjang)" : ""}
+          </span>
+        </div>
+        {multiline ? (
+          <Textarea
+            id={id}
+            rows={2}
+            value={value}
+            onChange={(e) => onValue(e.target.value)}
+            className={`resize-none ${inputClass}`}
+          />
+        ) : (
+          <Input
+            id={id}
+            type="text"
+            value={value}
+            onChange={(e) => onValue(e.target.value)}
+            className={inputClass}
+          />
+        )}
+      </div>
+    );
+  };
 
   let fields: React.ReactNode;
 
@@ -52,8 +62,8 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
       const s = slide;
       fields = (
         <>
-          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }))}
-          {textField("subtitle", "Subjudul", s.subtitle, (v) => onChange({ ...s, subtitle: v }), true)}
+          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }), COPY_LIMITS.title.maxChars)}
+          {textField("subtitle", "Subjudul", s.subtitle, (v) => onChange({ ...s, subtitle: v }), COPY_LIMITS.subtitle.maxChars, true)}
         </>
       );
       break;
@@ -63,13 +73,19 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
       const s = slide;
       fields = (
         <>
-          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }))}
+          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }), COPY_LIMITS.title.maxChars)}
           {s.bullets.map((bullet, i) =>
-            textField(`bullet-${i}`, `Poin ${i + 1}`, bullet, (v) => {
-              const bullets = [...s.bullets];
-              bullets[i] = v;
-              onChange({ ...s, bullets });
-            })
+            textField(
+              `bullet-${i}`,
+              `Poin ${i + 1}`,
+              bullet,
+              (v) => {
+                const bullets = [...s.bullets];
+                bullets[i] = v;
+                onChange({ ...s, bullets });
+              },
+              COPY_LIMITS.bullet.maxChars
+            )
           )}
         </>
       );
@@ -79,10 +95,14 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
       const s = slide;
       fields = (
         <>
-          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }))}
-          {textField("promoText", "Teks Promo", s.promoText, (v) => onChange({ ...s, promoText: v }), true)}
-          {textField("highlightBadge", "Label Stiker", s.highlightBadge ?? "", (v) =>
-            onChange({ ...s, highlightBadge: v })
+          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }), COPY_LIMITS.title.maxChars)}
+          {textField("promoText", "Teks Promo", s.promoText, (v) => onChange({ ...s, promoText: v }), COPY_LIMITS.promoText.maxChars, true)}
+          {textField(
+            "highlightBadge",
+            "Label Stiker",
+            s.highlightBadge ?? "",
+            (v) => onChange({ ...s, highlightBadge: v }),
+            COPY_LIMITS.highlightBadge.maxChars
           )}
         </>
       );
@@ -92,8 +112,8 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
       const s = slide;
       fields = (
         <>
-          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }))}
-          {textField("ctaText", "Teks CTA", s.ctaText, (v) => onChange({ ...s, ctaText: v }), true)}
+          {textField("title", "Judul", s.title, (v) => onChange({ ...s, title: v }), COPY_LIMITS.title.maxChars)}
+          {textField("ctaText", "Teks CTA", s.ctaText, (v) => onChange({ ...s, ctaText: v }), COPY_LIMITS.ctaText.maxChars, true)}
         </>
       );
       break;

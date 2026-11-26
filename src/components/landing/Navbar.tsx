@@ -31,7 +31,7 @@ export function Navbar() {
         )}
       >
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/lokagen-logo.png" alt="LokaGen" width={2084} height={756} priority className="h-9 w-auto" />
+          <Image src="/lokagen-logo.png" alt="LokaGen" width={520} height={189} priority className="h-9 w-auto" />
         </Link>
 
         {/* <div className="hidden md:flex items-center gap-6">

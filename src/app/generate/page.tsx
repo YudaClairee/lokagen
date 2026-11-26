@@ -13,6 +13,7 @@ import type {
   GenerateContentInput,
   SampleProduct,
   SlideContent,
+  SlideFormat,
 } from "@/lib/types";
 import {
   CATEGORY_OPTIONS,
@@ -43,8 +44,10 @@ import { HistoryPanel } from "@/components/generate/HistoryPanel";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Sparkles, Loader2, ArrowLeft } from "lucide-react";
+import { Sparkles, Loader2, ArrowLeft, MessageSquare } from "lucide-react";
 import Link from "next/link";
+
+const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL;
 
 export default function GeneratePage() {
   const router = useRouter();
@@ -68,6 +71,7 @@ export default function GeneratePage() {
   const [hydrated, setHydrated] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [format, setFormat] = useState<SlideFormat>("square");
   const [isLoadingSample, setIsLoadingSample] = useState<boolean>(false);
 
   const brandInfo: BrandInfo = {
@@ -79,6 +83,7 @@ export default function GeneratePage() {
 
   const [isPending, startTransition] = useTransition();
 
+  const previewRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const registerSlide = (index: number, el: HTMLDivElement | null) => {
     slideRefs.current[index] = el;
@@ -106,8 +111,10 @@ export default function GeneratePage() {
       // Isi form sesuai hasil terakhir agar slide, pita story, dan kontak konsisten.
       // Hanya menimpa nilai profil bila riwayat punya nilainya.
       if (latest.productName) setProductName(latest.productName);
+      if (latest.description) setDescription(latest.description);
       setTone(latest.tone);
       setCategory(latest.category ?? DEFAULT_CATEGORY);
+      if (latest.campaignType) setCampaignType(latest.campaignType);
       setTheme(latest.theme);
       if (latest.brandColor) setBrandColor(latest.brandColor);
       if (latest.brandInfo?.storeName) setStoreName(latest.brandInfo.storeName);
@@ -190,32 +197,45 @@ export default function GeneratePage() {
     };
 
     startTransition(async () => {
-      const response = await generateContent(input);
+      try {
+        const response = await generateContent(input);
 
-      if (response.success && response.data) {
-        const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
-        const item: HistoryItem = {
-          id,
-          timestamp: Date.now(),
-          productName: productName || undefined,
-          tone,
-          category,
-          theme,
-          brandColor,
-          brandInfo,
-          result: response.data,
-        };
-        setHistory((prev) => [item, ...prev].slice(0, HISTORY_LIMIT));
-        setCurrentId(id);
-        setResult(response.data);
-        setCurrentSlide(0);
-      } else {
-        if (response.error === ERROR_MESSAGES.UNAUTHORIZED) {
-          setError(response.error);
-          router.replace("/login?redirect=/generate&reason=expired");
-          return;
+        if (response.success && response.data) {
+          const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+          const item: HistoryItem = {
+            id,
+            timestamp: Date.now(),
+            productName: productName || undefined,
+            description: description || undefined,
+            tone,
+            category,
+            campaignType,
+            theme,
+            brandColor,
+            brandInfo,
+            result: response.data,
+          };
+          setHistory((prev) => [item, ...prev].slice(0, HISTORY_LIMIT));
+          setCurrentId(id);
+          setResult(response.data);
+          setCurrentSlide(0);
+          // Di layar HP/tablet (1 kolom), scroll otomatis ke preview agar tester langsung melihat hasilnya.
+          if (typeof window !== "undefined" && window.innerWidth < 1024) {
+            requestAnimationFrame(() => {
+              previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }
+        } else {
+          if (response.error === ERROR_MESSAGES.UNAUTHORIZED) {
+            setError(response.error);
+            router.replace("/login?redirect=/generate&reason=expired");
+            return;
+          }
+          setError(response.error || ERROR_MESSAGES.GENERIC_ERROR);
         }
-        setError(response.error || "Terjadi kesalahan");
+      } catch (err) {
+        console.error("Failed to call generateContent:", err);
+        setError(ERROR_MESSAGES.NETWORK_ERROR);
       }
     });
   };
@@ -227,8 +247,10 @@ export default function GeneratePage() {
     setCurrentId(item.id);
     setCurrentSlide(0);
     setProductName(item.productName ?? "");
+    setDescription(item.description ?? "");
     setTone(item.tone);
     setCategory(item.category ?? DEFAULT_CATEGORY);
+    setCampaignType(item.campaignType ?? "launch");
     setTheme(item.theme);
     setBrandColor(item.brandColor ?? DEFAULT_BRAND_COLOR);
     setStoreName(item.brandInfo?.storeName ?? "");
@@ -303,7 +325,20 @@ export default function GeneratePage() {
             <span>Kembali</span>
           </Link>
           <h1 className="text-lg font-semibold text-foreground">Generate Konten</h1>
-          <HistoryPanel items={history} onLoad={handleLoadHistory} />
+          <div className="flex items-center gap-2">
+            {FEEDBACK_URL && (
+              <a
+                href={FEEDBACK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-3 text-xs font-medium text-foreground transition-colors hover:bg-muted"
+              >
+                <MessageSquare className="h-3.5 w-3.5 text-primary" />
+                <span className="hidden sm:inline">Kirim Masukan</span>
+              </a>
+            )}
+            <HistoryPanel items={history} onLoad={handleLoadHistory} />
+          </div>
         </div>
       </header>
 
@@ -433,15 +468,16 @@ export default function GeneratePage() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div ref={previewRef} className="scroll-mt-20 space-y-6">
             <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-              <div className="mb-4 flex items-center justify-between gap-2">
+              <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
                 <h2 className="text-xl font-semibold text-foreground">Preview Carousel</h2>
                 {result && (
                   <DownloadButton
                     slideRefs={slideRefs}
                     productName={productName}
                     currentSlide={currentSlide}
+                    format={format}
                   />
                 )}
               </div>
@@ -457,6 +493,8 @@ export default function GeneratePage() {
                 isLoading={isPending}
                 currentSlide={currentSlide}
                 onSlideChange={setCurrentSlide}
+                format={format}
+                onFormatChange={setFormat}
               />
             </div>
 

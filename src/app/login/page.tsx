@@ -89,9 +89,9 @@ function LoginForm() {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <Lock className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Akses Terbatas</h1>
+            <h1 className="text-2xl font-bold text-foreground">Akses Beta Testing</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Masukkan password untuk melanjutkan ke halaman generate.
+              LokaGen sedang dalam tahap uji coba terbatas. Masukkan kode akses dari tim kami untuk mulai membuat konten.
             </p>
           </div>
 
@@ -104,12 +104,12 @@ function LoginForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password" className="text-foreground/80">
-                Password
+                Kode Akses
               </Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Masukkan password..."
+                placeholder="Masukkan kode akses..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-card border-border text-foreground placeholder:text-muted-foreground"

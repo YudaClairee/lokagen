@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -26,20 +26,25 @@ export function ProductForm({
   description,
   setDescription,
 }: ProductFormProps) {
+  const [uploadError, setUploadError] = useState("");
+
   const handleImageUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
+      e.target.value = "";
       if (!file) return;
+
+      setUploadError("");
 
       // Validate file type
       if (!file.type.startsWith("image/")) {
-        alert("File harus berupa gambar!");
+        setUploadError("File harus berupa gambar (JPG, PNG, atau WebP).");
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("Ukuran gambar maksimal 5MB!");
+        setUploadError("Ukuran gambar maksimal 5MB ya.");
         return;
       }
 
@@ -49,13 +54,14 @@ export function ProductForm({
         setProductImage(compressed);
       } catch (error) {
         console.error("Gagal memproses gambar:", error);
-        alert("Gambar tidak bisa diproses. Coba gambar lain ya!");
+        setUploadError("Gambar tidak bisa diproses (misal format HEIC belum didukung browser ini). Coba gunakan JPG/PNG ya.");
       }
     },
     [setProductImage]
   );
 
   const handleRemoveImage = useCallback(() => {
+    setUploadError("");
     setProductImage("");
   }, [setProductImage]);
 
@@ -80,7 +86,10 @@ export function ProductForm({
 
       {/* Image Upload */}
       <div>
-        <Label className="mb-2 block text-foreground/80">Foto Produk</Label>
+        <Label className="mb-2 block text-foreground/80">
+          Foto Produk{" "}
+          <span className="text-muted-foreground">(isi foto atau deskripsi di bawah)</span>
+        </Label>
         <div className="relative">
           {productImage ? (
             <div className="group relative aspect-square w-full max-w-[200px] overflow-hidden rounded-lg border border-border">
@@ -88,11 +97,14 @@ export function ProductForm({
                 src={productImage}
                 alt="Product preview"
                 fill
+                unoptimized
                 className="object-cover"
               />
               <button
                 onClick={handleRemoveImage}
-                className="absolute right-2 top-2 rounded-full bg-black/50 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                aria-label="Hapus foto produk"
+                title="Hapus foto produk"
+                className="absolute right-2 top-2 rounded-full bg-black/70 p-1.5 text-white opacity-100 transition-opacity hover:bg-black/90 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100"
                 type="button"
               >
                 <X className="h-4 w-4" />
@@ -114,6 +126,11 @@ export function ProductForm({
             </label>
           )}
         </div>
+        {uploadError && (
+          <p role="alert" className="mt-2 text-xs text-red-700">
+            {uploadError}
+          </p>
+        )}
       </div>
 
       {/* Description */}

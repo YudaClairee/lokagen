@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { readableTextColor } from "@/lib/color";
 
@@ -15,13 +14,21 @@ interface ProductPhotoProps {
 }
 
 // Foto produk, atau blok warna brand berisi inisial jika user tidak mengunggah foto.
-// Sengaja tanpa teks seperti "PRODUCT"/"IMG" supaya hasil export tidak terlihat seperti template kosong.
+// Memakai <img> dengan loading="eager" agar container ekspor off-screen (html-to-image)
+// selalu merender foto di Safari/mobile tanpa tertahan lazy-loading next/image.
 export function ProductPhoto({ src, brandColor, name, className, imageClassName, initialClassName }: ProductPhotoProps) {
   const initial = name?.trim().match(/[\p{L}\p{N}]/u)?.[0]?.toUpperCase() ?? "★";
   return (
     <div className={cn("relative overflow-hidden", className)}>
       {src ? (
-        <Image src={src} alt="" fill className={cn("object-cover", imageClassName)} />
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          loading="eager"
+          decoding="sync"
+          className={cn("absolute inset-0 h-full w-full object-cover", imageClassName)}
+        />
       ) : (
         <div
           className="flex h-full w-full items-center justify-center"

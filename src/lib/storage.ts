@@ -1,6 +1,6 @@
 // Penyimpanan per-browser (localStorage). Semua akses dibungkus try/catch karena
 // bisa gagal di private window, saat kuota penuh, atau site data diblokir.
-import type { BrandInfo, GeneratedContent, ProductCategory, Theme, Tone } from "./types";
+import type { BrandInfo, CampaignType, GeneratedContent, ProductCategory, Theme, Tone } from "./types";
 
 export const PROFILE_KEY = "lokagen_brand_profile";
 export const HISTORY_KEY = "lokagen_history";
@@ -20,8 +20,10 @@ export interface HistoryItem {
   id: string;
   timestamp: number;
   productName?: string;
+  description?: string;
   tone: Tone;
   category?: ProductCategory; // opsional: riwayat lama belum punya kategori
+  campaignType?: CampaignType;
   theme: Theme;
   brandColor?: string;
   brandInfo?: BrandInfo;
