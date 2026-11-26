@@ -82,10 +82,14 @@ export function CaptionDisplay({
   const [tab, setTab] = useState<CaptionTab>("caption");
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-foreground">Copywriting</h2>
-        <div role="tablist" aria-label="Jenis copywriting" className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
+    <div className="rounded-xl border border-border bg-card p-4 backdrop-blur-sm sm:p-6">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold text-foreground sm:text-xl">Copywriting</h2>
+        <div
+          role="tablist"
+          aria-label="Jenis copywriting"
+          className="grid w-full grid-cols-3 gap-1 rounded-lg border border-border bg-card p-1 sm:inline-flex sm:w-auto"
+        >
           {TABS.map((t) => (
             <button
               key={t.value}
@@ -94,7 +98,7 @@ export function CaptionDisplay({
               aria-selected={tab === t.value}
               onClick={() => setTab(t.value)}
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-md px-2 py-1.5 text-center text-xs font-medium transition-colors sm:px-3",
                 tab === t.value ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
               )}
             >

@@ -9,7 +9,7 @@ import { themeFontVariables } from "@/lib/fonts";
 
 export default function Home() {
   return (
-    <main className={`${themeFontVariables} min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground`}>
+    <main className={`${themeFontVariables} min-h-screen overflow-x-clip text-foreground selection:bg-primary selection:text-primary-foreground`}>
       <div className="min-h-screen w-full bg-background relative">
         {/* Dark Sphere Grid Background */}
         <div

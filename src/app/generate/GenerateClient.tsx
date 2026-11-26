@@ -349,7 +349,7 @@ export function GenerateClient({
         : "border-primary/25 bg-primary/10 text-primary";
 
   return (
-    <main className="relative min-h-screen text-foreground">
+    <main className="relative min-h-screen overflow-x-clip text-foreground">
       <div
         className="fixed inset-0 z-0"
         style={{
@@ -363,29 +363,41 @@ export function GenerateClient({
         }}
       />
 
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto flex flex-wrap items-center justify-between gap-2 px-4 py-3">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Kembali</span>
-          </Link>
+      <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
+        <div className="container mx-auto flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <Link
+              href="/"
+              aria-label="Kembali ke beranda"
+              className="-ml-1.5 inline-flex shrink-0 items-center gap-1.5 rounded-md p-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:ml-0 sm:p-0 sm:hover:bg-transparent"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Kembali</span>
+            </Link>
 
-          <h1 className="text-base font-semibold text-foreground sm:text-lg">Generate Konten</h1>
+            <h1 className="truncate text-sm font-semibold text-foreground sm:text-lg">
+              Generate Konten
+            </h1>
+          </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <div
               title={userEmail ? `Masuk sebagai ${userEmail}` : "Sisa kuota generate"}
-              className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold ${quotaBadgeClass}`}
+              className={`inline-flex h-8 items-center gap-1 rounded-full border px-2 text-xs font-semibold sm:gap-1.5 sm:px-3 ${quotaBadgeClass}`}
             >
-              <Coins className="h-3.5 w-3.5" />
-              <span>
-                {isUnlimited
-                  ? "Unlimited"
-                  : `Kuota: ${creditsRemaining}/${FREE_TRIAL_CREDITS}`}
-              </span>
+              <Coins className="h-3.5 w-3.5 shrink-0" />
+              {isUnlimited ? (
+                <span>Unlimited</span>
+              ) : (
+                <>
+                  <span className="sm:hidden">
+                    {creditsRemaining}/{FREE_TRIAL_CREDITS}
+                  </span>
+                  <span className="hidden sm:inline">
+                    Kuota: {creditsRemaining}/{FREE_TRIAL_CREDITS}
+                  </span>
+                </>
+              )}
             </div>
 
             {FEEDBACK_URL && (
@@ -393,7 +405,8 @@ export function GenerateClient({
                 href={FEEDBACK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-2.5 text-xs font-medium text-foreground transition-colors hover:bg-muted"
+                aria-label="Kirim masukan uji coba"
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-card px-2 text-xs font-medium text-foreground transition-colors hover:bg-muted sm:px-2.5"
                 title="Kirim masukan uji coba"
               >
                 <MessageSquare className="h-3.5 w-3.5 text-primary" />
@@ -409,8 +422,9 @@ export function GenerateClient({
               size="sm"
               onClick={handleLogout}
               disabled={isLoggingOut}
+              aria-label="Keluar"
               title={userEmail ? `Keluar (${userEmail})` : "Keluar"}
-              className="h-8 gap-1.5 border-border bg-card px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="h-8 gap-1.5 border-border bg-card px-2 text-xs text-muted-foreground hover:bg-muted hover:text-foreground sm:px-2.5"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden md:inline">Keluar</span>
@@ -419,18 +433,18 @@ export function GenerateClient({
         </div>
       </header>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-3 py-5 sm:px-4 sm:py-8">
         {creditsUnavailable && (
-          <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-900">
+          <div className="mb-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-900 sm:mb-6">
             Database kuota belum tersambung sepenuhnya. Pastikan SQL di <code>supabase/schema.sql</code> sudah dijalankan dan{" "}
             <code>SUPABASE_SECRET_KEY</code> sudah diisi.
           </div>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="space-y-6">
-            <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-              <h2 className="mb-6 text-xl font-semibold text-foreground">Detail Produk</h2>
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+          <div className="min-w-0 space-y-5 sm:space-y-6">
+            <div className="rounded-xl border border-border bg-card p-4 backdrop-blur-sm sm:p-6">
+              <h2 className="mb-4 text-lg font-semibold text-foreground sm:mb-6 sm:text-xl">Detail Produk</h2>
 
               <SampleProductButtons
                 samples={SAMPLE_PRODUCTS}
@@ -461,11 +475,11 @@ export function GenerateClient({
                 setCampaignType={setCampaignType}
               />
 
-              <div className="mt-6 space-y-4 rounded-lg border border-border bg-card p-4">
+              <div className="mt-6 space-y-3.5 rounded-lg border border-border bg-card p-3.5 sm:space-y-4 sm:p-4">
                 <p className="text-sm font-semibold text-foreground/80">
                   Info Toko <span className="font-normal text-muted-foreground">(opsional, tampil di slide)</span>
                 </p>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
                   <div>
                     <Label htmlFor="storeName" className="mb-2 block text-foreground/80">Nama Toko</Label>
                     <Input
@@ -592,10 +606,10 @@ export function GenerateClient({
             </div>
           </div>
 
-          <div ref={previewRef} className="scroll-mt-20 space-y-6">
-            <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
-              <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
-                <h2 className="text-xl font-semibold text-foreground">Preview Carousel</h2>
+          <div ref={previewRef} className="min-w-0 scroll-mt-16 space-y-5 sm:scroll-mt-20 sm:space-y-6">
+            <div className="rounded-xl border border-border bg-card p-4 backdrop-blur-sm sm:p-6">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                <h2 className="text-lg font-semibold text-foreground sm:text-xl">Preview Carousel</h2>
                 {result && (
                   <DownloadButton
                     slideRefs={slideRefs}

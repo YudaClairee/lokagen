@@ -148,9 +148,9 @@ export function ProductForm({
           maxLength={VALIDATION.MAX_DESCRIPTION_LENGTH}
           className="resize-none border-border bg-card text-foreground placeholder:text-muted-foreground"
         />
-        <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+        <div className="mt-1 flex items-start justify-between gap-2 text-xs text-muted-foreground">
           <span>Jelaskan produkmu: nama, jenis, keunggulan, atau info lainnya</span>
-          <span>{description.length}/{VALIDATION.MAX_DESCRIPTION_LENGTH}</span>
+          <span className="shrink-0">{description.length}/{VALIDATION.MAX_DESCRIPTION_LENGTH}</span>
         </div>
       </div>
     </div>

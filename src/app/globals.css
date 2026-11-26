@@ -92,8 +92,8 @@ body {
   }
 }
 
-/* Teks slide berbahasa Indonesia: aktifkan pemenggalan kata panjang (Tahap 5.5) */
-[lang="id"] {
+/* Teks slide berbahasa Indonesia: aktifkan pemenggalan kata panjang hanya pada elemen slide (bukan <html>) */
+:not(html)[lang="id"] {
   hyphens: auto;
   -webkit-hyphens: auto;
 }

@@ -26,11 +26,11 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
     const isOver = value.length > maxRecommended;
     return (
       <div key={id}>
-        <div className="mb-1 flex items-center justify-between gap-2">
+        <div className="mb-1 flex flex-wrap items-center justify-between gap-1">
           <Label htmlFor={id} className="block text-xs text-foreground/80">
             {label}
           </Label>
-          <span className={`text-[11px] ${isOver ? "font-medium text-amber-700" : "text-muted-foreground"}`}>
+          <span className={`shrink-0 text-[11px] ${isOver ? "font-medium text-amber-700" : "text-muted-foreground"}`}>
             {value.length}/{maxRecommended}{isOver ? " (agak panjang)" : ""}
           </span>
         </div>
@@ -121,7 +121,7 @@ export function SlideTextEditor({ index, slide, onChange }: SlideTextEditorProps
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 backdrop-blur-sm">
+    <div className="rounded-xl border border-border bg-card p-4 backdrop-blur-sm sm:p-6">
       <h3 className="mb-4 text-base font-semibold text-foreground">Edit Teks Slide #{index + 1}</h3>
       <div className="space-y-3">{fields}</div>
       <p className="mt-3 text-xs text-muted-foreground">Perubahan langsung tampil di preview dan ikut terunduh.</p>

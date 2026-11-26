@@ -172,22 +172,22 @@ export function CarouselPreview({
 
   const tabClass = (active: boolean) =>
     cn(
-      "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+      "rounded-md px-2.5 py-1.5 text-center text-xs font-medium transition-colors sm:px-3",
       active ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground"
     );
 
   return (
     <div className="space-y-4">
       {/* Format & mode tampilan */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="grid w-full grid-cols-2 gap-1 rounded-lg border border-border bg-card p-1 sm:inline-flex sm:w-auto">
           {(Object.keys(SLIDE_FORMATS) as SlideFormat[]).map((key) => (
             <button key={key} type="button" className={tabClass(format === key)} onClick={() => onFormatChange(key)}>
               {SLIDE_FORMATS[key].label}
             </button>
           ))}
         </div>
-        <div className="inline-flex gap-1 rounded-lg border border-border bg-card p-1">
+        <div className="grid w-full grid-cols-2 gap-1 rounded-lg border border-border bg-card p-1 sm:inline-flex sm:w-auto">
           <button type="button" className={tabClass(viewMode === "single")} onClick={() => setViewMode("single")}>
             📱 Tampilan Slide
           </button>
@@ -256,15 +256,21 @@ export function CarouselPreview({
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               {Array.from({ length: TOTAL_SLIDES }, (_, index) => (
                 <button
                   key={index}
+                  type="button"
+                  aria-label={`Slide ${index + 1}`}
                   onClick={() => onSlideChange(index)}
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    currentSlide === index ? "bg-primary" : "bg-muted-foreground/40"
-                  }`}
-                />
+                  className="p-1.5"
+                >
+                  <span
+                    className={`block h-2.5 w-2.5 rounded-full transition-colors ${
+                      currentSlide === index ? "bg-primary" : "bg-muted-foreground/40"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 

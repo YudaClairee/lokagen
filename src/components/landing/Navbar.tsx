@@ -19,19 +19,19 @@ export function Navbar() {
   });
 
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+    <div className="fixed top-3 left-0 right-0 z-50 flex justify-center px-3 sm:top-6 sm:px-4">
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className={cn(
-          "flex h-14 w-full max-w-4xl items-center justify-between rounded-full px-6 transition-all duration-300",
+          "flex h-12 w-full max-w-4xl items-center justify-between rounded-full px-4 transition-all duration-300 sm:h-14 sm:px-6",
           isScrolled
-            ? "bg-card backdrop-blur-md border border-border shadow-lg"
+            ? "bg-card/95 backdrop-blur-md border border-border shadow-lg"
             : "bg-transparent border border-transparent"
         )}
       >
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/lokagen-logo.png" alt="LokaGen" width={520} height={189} priority className="h-9 w-auto" />
+          <Image src="/lokagen-logo.png" alt="LokaGen" width={520} height={189} priority className="h-7 w-auto sm:h-9" />
         </Link>
 
         {/* <div className="hidden md:flex items-center gap-6">

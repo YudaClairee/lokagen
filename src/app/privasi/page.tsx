@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-background px-4 py-12 text-foreground">
-      <div className="mx-auto max-w-2xl space-y-8">
+    <main className="min-h-screen overflow-x-clip bg-background px-4 py-8 text-foreground sm:py-12">
+      <div className="mx-auto max-w-2xl space-y-6 sm:space-y-8">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -19,9 +19,9 @@ export default function PrivacyPage() {
           Kembali ke Beranda
         </Link>
 
-        <article className="space-y-8 rounded-2xl border border-border bg-card p-8">
+        <article className="space-y-6 rounded-2xl border border-border bg-card p-5 sm:space-y-8 sm:p-8">
           <section className="space-y-3">
-            <h1 className="text-2xl font-bold text-foreground">Kebijakan Privasi</h1>
+            <h1 className="text-xl font-bold text-foreground sm:text-2xl">Kebijakan Privasi</h1>
             <p className="text-sm leading-relaxed text-muted-foreground">
               LokaGen menghargai privasi data usaha dan produk Anda. Berikut cara data diproses di aplikasi ini:
             </p>

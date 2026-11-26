@@ -181,24 +181,24 @@ export function DownloadButton({ slideRefs, productName, currentSlide, format }:
   const busy = downloading !== null;
 
   return (
-    <div className="flex flex-col items-end gap-1.5">
-      <div className="flex flex-wrap justify-end gap-2">
+    <div className="flex w-full flex-col items-stretch gap-1.5 sm:w-auto sm:items-end">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-end">
         <Button
           variant="outline"
           size="sm"
           onClick={handleDownloadOne}
           disabled={busy}
-          className="gap-2 border-border bg-card text-foreground hover:bg-muted"
+          className="w-full gap-1.5 border-border bg-card px-2.5 text-xs text-foreground hover:bg-muted sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"
         >
           {downloading === "one" ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Mengunduh...
+              <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin sm:h-4 sm:w-4" />
+              <span className="truncate">Mengunduh...</span>
             </>
           ) : (
             <>
-              <Download className="h-4 w-4" />
-              Download Slide Ini
+              <Download className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+              <span className="truncate">Download Slide Ini</span>
             </>
           )}
         </Button>
@@ -206,10 +206,10 @@ export function DownloadButton({ slideRefs, productName, currentSlide, format }:
           <Button
             size="sm"
             onClick={handleShareReadyFiles}
-            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+            className="w-full gap-1.5 bg-primary px-2.5 text-xs text-primary-foreground hover:bg-primary/90 sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"
           >
-            <Share2 className="h-4 w-4" />
-            Simpan / Bagikan ({TOTAL_SLIDES})
+            <Share2 className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+            <span className="truncate">Simpan / Bagikan ({TOTAL_SLIDES})</span>
           </Button>
         ) : (
           <Button
@@ -217,29 +217,29 @@ export function DownloadButton({ slideRefs, productName, currentSlide, format }:
             size="sm"
             onClick={handleDownloadAll}
             disabled={busy}
-            className="gap-2 border-border bg-card text-foreground hover:bg-muted"
+            className="w-full gap-1.5 border-border bg-card px-2.5 text-xs text-foreground hover:bg-muted sm:w-auto sm:gap-2 sm:px-3 sm:text-sm"
           >
             {downloading === "all" ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Menyiapkan {progress}/{TOTAL_SLIDES}...
+                <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin sm:h-4 sm:w-4" />
+                <span className="truncate">Menyiapkan {progress}/{TOTAL_SLIDES}...</span>
               </>
             ) : (
               <>
-                <Download className="h-4 w-4" />
-                Download Semua ({TOTAL_SLIDES})
+                <Download className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" />
+                <span className="truncate">Download Semua ({TOTAL_SLIDES})</span>
               </>
             )}
           </Button>
         )}
       </div>
       {readyShareFiles && (
-        <p className="text-right text-xs text-muted-foreground">
+        <p className="text-left text-xs text-muted-foreground sm:text-right">
           5 slide siap! Tap tombol di atas untuk simpan ke Galeri atau kirim ke IG/WA.
         </p>
       )}
       {downloadError && (
-        <p role="alert" className="text-right text-xs text-red-700">
+        <p role="alert" className="text-left text-xs text-red-700 sm:text-right">
           {downloadError}
         </p>
       )}

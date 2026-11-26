@@ -31,14 +31,17 @@ export function HistoryPanel({ items, onLoad }: HistoryPanelProps) {
         size="sm"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="gap-2 border-border bg-card text-foreground hover:bg-muted"
+        aria-label={`Riwayat (${items.length})`}
+        title={`Riwayat (${items.length})`}
+        className="h-8 gap-1.5 border-border bg-card px-2 text-xs text-foreground hover:bg-muted sm:px-2.5"
       >
-        <History className="h-4 w-4" />
-        Riwayat ({items.length})
+        <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        <span className="hidden sm:inline">Riwayat</span>
+        <span>({items.length})</span>
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-border bg-card p-2 shadow-xl">
+        <div className="fixed inset-x-3 top-14 z-50 rounded-xl border border-border bg-card p-2 shadow-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-72">
           {items.length === 0 ? (
             <p className="p-3 text-sm text-muted-foreground">Belum ada riwayat. Generate konten dulu ya.</p>
           ) : (

@@ -77,15 +77,15 @@ export function GenerateOptions({
       <div>
         <Label className="mb-2 block text-foreground/80">Jenis Usaha</Label>
         <Select value={category} onValueChange={(val) => setCategory(val as ProductCategory)}>
-          <SelectTrigger className="w-full border-border bg-card text-foreground">
+          <SelectTrigger className="w-full border-border bg-card text-foreground [&_.select-item-desc]:hidden">
             <SelectValue placeholder="Pilih jenis usaha" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card">
             {CATEGORY_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value} className="text-foreground focus:bg-muted focus:text-foreground">
-                <div className="flex flex-row items-center gap-4 justify-between">
-                  <span>{option.label}</span>
-                  <span className="text-xs text-muted-foreground">{option.description}</span>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <span className="font-medium sm:font-normal">{option.label}</span>
+                  <span className="select-item-desc whitespace-normal text-xs text-muted-foreground">{option.description}</span>
                 </div>
               </SelectItem>
             ))}
@@ -97,15 +97,15 @@ export function GenerateOptions({
       <div>
         <Label className="mb-2 block text-foreground/80">Tujuan Konten</Label>
         <Select value={campaignType} onValueChange={(val) => setCampaignType(val as CampaignType)}>
-          <SelectTrigger className="w-full border-border bg-card text-foreground">
+          <SelectTrigger className="w-full border-border bg-card text-foreground [&_.select-item-desc]:hidden">
             <SelectValue placeholder="Pilih tujuan" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card">
             {CAMPAIGN_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value} className="text-foreground focus:bg-muted focus:text-foreground">
-                <div className="flex flex-row items-center gap-4 justify-between">
-                  <span>{option.label}</span>
-                  <span className="text-xs text-muted-foreground">{option.description}</span>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <span className="font-medium sm:font-normal">{option.label}</span>
+                  <span className="select-item-desc whitespace-normal text-xs text-muted-foreground">{option.description}</span>
                 </div>
               </SelectItem>
             ))}
@@ -122,15 +122,15 @@ export function GenerateOptions({
       <div>
         <Label className="mb-2 block text-foreground/80">Tone Konten</Label>
         <Select value={tone} onValueChange={(val) => setTone(val as Tone)}>
-          <SelectTrigger className="w-full border-border bg-card text-foreground">
+          <SelectTrigger className="w-full border-border bg-card text-foreground [&_.select-item-desc]:hidden">
             <SelectValue placeholder="Pilih tone" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card">
             {toneOptions.map((option) => (
               <SelectItem key={option.value} value={option.value} className="text-foreground focus:bg-muted focus:text-foreground">
-                <div className="flex flex-row items-center gap-4 justify-between">
-                  <span>{option.label}</span>
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <span className="font-medium sm:font-normal">{option.label}</span>
+                  <span className="select-item-desc whitespace-normal text-xs text-muted-foreground">
                     {option.description}
                   </span>
                 </div>
@@ -147,15 +147,15 @@ export function GenerateOptions({
           Otomatis mengikuti jenis usaha. Bisa kamu ubah sendiri.
         </p>
         <Select value={theme} onValueChange={(val) => setTheme(val as Theme)}>
-          <SelectTrigger className="w-full border-border bg-card text-foreground">
+          <SelectTrigger className="w-full border-border bg-card text-foreground [&_.select-item-desc]:hidden">
             <SelectValue placeholder="Pilih tema" />
           </SelectTrigger>
           <SelectContent className="border-border bg-card">
             {themeOptions.map((option) => (
               <SelectItem key={option.value} value={option.value} className="text-foreground focus:bg-muted focus:text-foreground">
-                <div className="flex flex-row items-center gap-4 justify-between">
-                  <span>{option.label}</span>
-                  <span className="text-xs text-muted-foreground">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <span className="font-medium sm:font-normal">{option.label}</span>
+                  <span className="select-item-desc whitespace-normal text-xs text-muted-foreground">
                     {option.description}
                   </span>
                 </div>
@@ -171,8 +171,8 @@ export function GenerateOptions({
           Warna Brand{" "}
           <span className="text-muted-foreground">(opsional)</span>
         </Label>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative shrink-0">
             <input
               type="color"
               value={normalizeHex(brandColor)}
@@ -188,7 +188,7 @@ export function GenerateOptions({
             className="w-28 font-mono text-sm border-border bg-card text-foreground"
             maxLength={7}
           />
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs sm:text-sm text-muted-foreground">
             Warna aksen untuk carousel
           </span>
         </div>

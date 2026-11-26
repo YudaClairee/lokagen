@@ -41,19 +41,19 @@ export function SocialProof() {
   }, []);
 
   return (
-    <section id="showcase" className="relative py-24">
+    <section id="showcase" className="relative py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
+        <div className="mb-8 text-center md:mb-12">
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:mb-4 sm:text-3xl md:text-5xl">
             Dari <span className="text-primary">1 foto</span>, jadi 4 gaya
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
             Teks dan warna mengikuti tema yang kamu pilih. Foto produkmu tetap jadi pusat perhatian.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-          <figure className="space-y-2">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+          <figure className="col-span-2 mx-auto w-full max-w-[200px] space-y-2 sm:max-w-[240px] lg:col-span-1 lg:max-w-none">
             <div className="overflow-hidden rounded-2xl border border-border bg-card">
               {photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -62,7 +62,7 @@ export function SocialProof() {
                 <div className="aspect-square w-full bg-muted" />
               )}
             </div>
-            <figcaption className="text-center text-sm font-semibold text-foreground/80">Foto asli</figcaption>
+            <figcaption className="text-center text-xs font-semibold text-foreground/80 sm:text-sm">Foto asli</figcaption>
           </figure>
 
           {THEMES.map((theme) => {
@@ -81,7 +81,7 @@ export function SocialProof() {
                     />
                   </ScaledSlide>
                 </div>
-                <figcaption className="text-center text-sm font-semibold text-foreground/80">{theme}</figcaption>
+                <figcaption className="text-center text-xs font-semibold text-foreground/80 sm:text-sm">{theme}</figcaption>
               </figure>
             );
           })}

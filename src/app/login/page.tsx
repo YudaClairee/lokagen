@@ -90,7 +90,7 @@ function LoginCard() {
   };
 
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center px-4">
+    <main className="flex min-h-screen items-center justify-center overflow-x-clip bg-background px-4 py-8">
       <div
         className="fixed inset-0 z-0"
         style={{
@@ -107,19 +107,19 @@ function LoginCard() {
       <div className="relative z-10 w-full max-w-md">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground sm:mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
           Kembali ke Beranda
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm backdrop-blur-sm">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm backdrop-blur-sm sm:p-8">
           <div className="mb-6 text-center">
             <div className="mx-auto mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3.5 w-3.5" />
               Gratis {FREE_TRIAL_CREDITS}× Generate Konten
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Masuk ke LokaGen</h1>
+            <h1 className="text-xl font-bold text-foreground sm:text-2xl">Masuk ke LokaGen</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Daftar otomatis dalam 1 klik dengan akun Google kamu untuk langsung mencoba bikin konten IG &amp; Story gratis.
             </p>
