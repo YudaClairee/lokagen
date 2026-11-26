@@ -53,12 +53,11 @@ function LoginCard() {
 
   const configured = isSupabaseClientConfigured();
 
-  const initialError =
-    queryError === "not_configured" || !configured
-      ? "Autentikasi belum dikonfigurasi oleh admin. Coba lagi nanti ya."
-      : queryError === "auth_failed"
-        ? "Login dengan Google dibatalkan atau gagal. Silakan coba lagi."
-        : "";
+  const initialError = !configured
+    ? "Autentikasi belum dikonfigurasi oleh admin. Coba lagi nanti ya."
+    : queryError === "auth_failed"
+      ? "Login dengan Google dibatalkan atau gagal. Silakan coba lagi."
+      : "";
 
   const displayError = error || initialError;
 
