@@ -150,8 +150,9 @@ export const ERROR_MESSAGES = {
   PRODUCT_NAME_TOO_LONG: "Nama produk terlalu panjang (max 100 karakter)",
   DESCRIPTION_TOO_LONG: "Deskripsi terlalu panjang (max 500 karakter)",
   DESCRIPTION_TOO_SHORT: "Deskripsi terlalu pendek (min 10 karakter)",
-  UNAUTHORIZED: "Sesi login habis. Silakan login ulang.",
-  NOT_CONFIGURED: "Server belum dikonfigurasi (AUTH_PASSWORD kosong). Hubungi admin.",
+  UNAUTHORIZED: "Sesi login habis. Silakan masuk ulang.",
+  QUOTA_EXHAUSTED: "Kuota uji coba gratis 3× kamu sudah habis.",
+  NOT_CONFIGURED: "Server belum dikonfigurasi (Supabase env kosong). Hubungi admin.",
 } as const;
 
 // Loading messages

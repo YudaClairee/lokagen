@@ -4,12 +4,13 @@
   "private": true,
   "description": "Motion graphic video project for LokaGen using Remotion",
   "scripts": {
-    "dev": "remotion studio --ipv4",
-    "studio": "remotion studio --ipv4",
+    "dev": "remotion studio --ipv4 --port 3333",
+    "studio": "remotion studio --ipv4 --port 3333",
     "build": "remotion bundle",
     "render": "remotion render src/index.ts LokaGenLandscape out/lokagen-landscape.mp4",
     "render:vertical": "remotion render src/index.ts LokaGenVertical out/lokagen-vertical.mp4",
     "render:rabu": "remotion render src/index.ts ReelsRabuAlurUMKM out/reels-rabu-alur-umkm.mp4",
+    "render:selasa": "remotion still src/index.ts SelasaSlide1 out/carousel-selasa/slide-1.png && remotion still src/index.ts SelasaSlide2 out/carousel-selasa/slide-2.png && remotion still src/index.ts SelasaSlide3 out/carousel-selasa/slide-3.png && remotion still src/index.ts SelasaSlide4 out/carousel-selasa/slide-4.png && remotion still src/index.ts SelasaSlide5 out/carousel-selasa/slide-5.png",
     "upgrade": "remotion upgrade",
     "typecheck": "tsc --noEmit"
   },

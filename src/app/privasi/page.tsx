@@ -36,7 +36,9 @@ export default function PrivacyPage() {
                 membersihkan data situs di browser.
               </li>
               <li>
-                <strong>Cookie akses:</strong> digunakan semata-mata untuk menjaga sesi login selama tahap uji coba.
+                <strong>Akun Google &amp; kuota uji coba:</strong> saat Anda masuk menggunakan Google, kami menyimpan
+                nama, alamat email, dan sisa kuota uji coba gratis Anda di database (Supabase) untuk mencegah
+                penyalahgunaan kuota dan menjaga sesi login Anda.
               </li>
             </ul>
           </section>

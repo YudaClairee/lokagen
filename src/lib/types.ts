@@ -78,6 +78,9 @@ export interface GenerateContentResponse {
   success: boolean;
   data?: GeneratedContent;
   error?: string;
+  creditsRemaining?: number;
+  isUnlimited?: boolean;
+  quotaExhausted?: boolean;
 }
 
 // Form input for generate content

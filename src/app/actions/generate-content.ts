@@ -1,17 +1,18 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
 import { openai, AI_MODEL, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
 import type {
   GenerateContentInput,
   GenerateContentResponse,
 } from "@/lib/types";
 import { VALIDATION, ERROR_MESSAGES } from "@/lib/constants";
-import { AUTH_COOKIE, getAuthPassword, isValidAuthToken } from "@/lib/auth";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isSupabaseServerConfigured } from "@/lib/supabase/config";
+import { consumeGenerationCredit, refundGenerationCredit } from "@/lib/credits";
 import { resolvePromoMode, extractPromoFacts } from "@/lib/promo";
 import { normalizeContent } from "@/lib/normalize-content";
 
-// Rate limit ringan per IP (in-memory per instance) untuk mencegah spam saat beta testing.
+// Rate limit ringan per akun (in-memory per instance) untuk mencegah spam/double-click.
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 menit
 const RATE_LIMIT_MAX_REQUESTS = 10;
 const requestLog = new Map<string, number[]>();
@@ -26,7 +27,6 @@ function isRateLimited(clientKey: string): boolean {
   }
   recent.push(now);
   requestLog.set(clientKey, recent);
-  // Bersihkan key lama bila map terlalu besar
   if (requestLog.size > 500) {
     for (const [k, timestamps] of requestLog.entries()) {
       if (timestamps.every((ts) => ts <= cutoff)) requestLog.delete(k);
@@ -39,21 +39,67 @@ export async function generateContent(
   input: GenerateContentInput
 ): Promise<GenerateContentResponse> {
   const startedAt = Date.now();
+  let consumedForUserId: string | null = null;
+
+  const refundIfConsumed = async (): Promise<number | undefined> => {
+    if (!consumedForUserId) return undefined;
+    const uid = consumedForUserId;
+    consumedForUserId = null;
+    const refunded = await refundGenerationCredit(uid);
+    return refunded ?? undefined;
+  };
+
   try {
-    // Lapis proteksi kedua (Edge middleware sudah memeriksa halaman /generate).
-    if (!getAuthPassword()) {
+    if (!isSupabaseServerConfigured()) {
       return { success: false, error: ERROR_MESSAGES.NOT_CONFIGURED };
     }
-    const cookieStore = await cookies();
-    if (!(await isValidAuthToken(cookieStore.get(AUTH_COOKIE)?.value))) {
+
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) {
+      return { success: false, error: ERROR_MESSAGES.NOT_CONFIGURED };
+    }
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
       return { success: false, error: ERROR_MESSAGES.UNAUTHORIZED };
     }
 
-    const headerStore = await headers();
-    const forwarded = headerStore.get("x-forwarded-for")?.split(",")[0]?.trim();
-    const clientIp = forwarded || headerStore.get("x-real-ip") || "unknown";
-    if (isRateLimited(clientIp)) {
+    if (isRateLimited(user.id)) {
       return { success: false, error: ERROR_MESSAGES.RATE_LIMIT };
+    }
+
+    // Potong 1 kuota secara atomik sebelum memanggil AI (aman dari multi-tab/double-click).
+    const fullName =
+      (typeof user.user_metadata?.full_name === "string" && user.user_metadata.full_name) ||
+      (typeof user.user_metadata?.name === "string" && user.user_metadata.name) ||
+      null;
+
+    const creditResult = await consumeGenerationCredit({
+      id: user.id,
+      email: user.email,
+      fullName,
+    });
+
+    if (!creditResult) {
+      return { success: false, error: ERROR_MESSAGES.GENERIC_ERROR };
+    }
+
+    if (!creditResult.allowed) {
+      return {
+        success: false,
+        error: ERROR_MESSAGES.QUOTA_EXHAUSTED,
+        creditsRemaining: creditResult.creditsRemaining,
+        isUnlimited: creditResult.isUnlimited,
+        quotaExhausted: true,
+      };
+    }
+
+    if (!creditResult.isUnlimited) {
+      consumedForUserId = user.id;
     }
 
     const { productName, productImage, description, brandInfo } = input;
@@ -125,9 +171,11 @@ export async function generateContent(
     const content = completion.choices[0]?.message?.content;
 
     if (!content) {
+      const creditsRemaining = await refundIfConsumed();
       return {
         success: false,
         error: ERROR_MESSAGES.NO_RESPONSE,
+        creditsRemaining,
       };
     }
 
@@ -145,11 +193,16 @@ export async function generateContent(
     const normalized = normalizeContent(parsed, promoMode, userText);
 
     if (!normalized) {
+      const creditsRemaining = await refundIfConsumed();
       return {
         success: false,
         error: ERROR_MESSAGES.INVALID_FORMAT,
+        creditsRemaining,
       };
     }
+
+    // Konten valid — kuota resmi terpakai.
+    consumedForUserId = null;
 
     if (normalized.warnings.length) {
       console.warn("[generate] normalize:", normalized.warnings);
@@ -157,6 +210,9 @@ export async function generateContent(
 
     console.info("[generate] ok", {
       ms: Date.now() - startedAt,
+      userId: user.id,
+      creditsRemaining: creditResult.creditsRemaining,
+      isUnlimited: creditResult.isUnlimited,
       category: input.category,
       campaignType: input.campaignType,
       theme: input.theme,
@@ -168,14 +224,18 @@ export async function generateContent(
     return {
       success: true,
       data: normalized.content,
+      creditsRemaining: creditResult.creditsRemaining,
+      isUnlimited: creditResult.isUnlimited,
     };
   } catch (error) {
+    const creditsRemaining = await refundIfConsumed();
     console.error("[generate] error:", { ms: Date.now() - startedAt, error });
 
     if (error instanceof SyntaxError) {
       return {
         success: false,
         error: ERROR_MESSAGES.PARSE_ERROR,
+        creditsRemaining,
       };
     }
 
@@ -185,6 +245,7 @@ export async function generateContent(
         return {
           success: false,
           error: ERROR_MESSAGES.TIMEOUT,
+          creditsRemaining,
         };
       }
 
@@ -192,6 +253,7 @@ export async function generateContent(
         return {
           success: false,
           error: ERROR_MESSAGES.INVALID_API_KEY,
+          creditsRemaining,
         };
       }
 
@@ -199,6 +261,7 @@ export async function generateContent(
         return {
           success: false,
           error: ERROR_MESSAGES.RATE_LIMIT,
+          creditsRemaining,
         };
       }
     }
@@ -206,6 +269,7 @@ export async function generateContent(
     return {
       success: false,
       error: ERROR_MESSAGES.GENERIC_ERROR,
+      creditsRemaining,
     };
   }
 }
