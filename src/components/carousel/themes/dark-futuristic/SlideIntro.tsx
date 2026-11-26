@@ -79,9 +79,7 @@ export const SlideIntro = forwardRef<HTMLDivElement, SlideIntroProps>(
                  </div>
                  
                  <h1 className={`mb-6 break-words font-dark-display font-bold leading-[0.95] tracking-tight text-white ${fitText(data.title, [[12, "text-4xl"], [18, "text-3xl"]], "text-2xl")}`}>
-                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
-                     {data.title}
-                   </span>
+                   {data.title}
                  </h1>
                  
                  <p className="border-l-2 border-white/20 pl-4 text-xs leading-relaxed text-gray-400 font-mono break-words">
