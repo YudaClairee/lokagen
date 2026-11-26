@@ -1,5 +1,6 @@
 "use server";
 
+import type OpenAI from "openai";
 import { openai, AI_MODEL, SYSTEM_PROMPT, generateUserPrompt } from "@/lib/openai";
 import type {
   GenerateContentInput,
@@ -11,6 +12,15 @@ import { isSupabaseServerConfigured } from "@/lib/supabase/config";
 import { consumeGenerationCredit, refundGenerationCredit } from "@/lib/credits";
 import { resolvePromoMode, extractPromoFacts } from "@/lib/promo";
 import { normalizeContent } from "@/lib/normalize-content";
+import { parseAIJsonResponse } from "@/lib/parse-ai-json";
+
+// OpenRouter mendukung parameter `reasoning` di Chat Completions API untuk menonaktifkan
+// chain-of-thought pada model reasoning (mis. deepseek-v4.1-flash) agar budget max_tokens
+// tidak habis untuk thinking dan JSON tidak terpotong di tengah jalan.
+type OpenRouterCompletionParams =
+  OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming & {
+    reasoning?: { enabled?: boolean };
+  };
 
 // Rate limit ringan per akun (in-memory per instance) untuk mencegah spam/double-click.
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 menit
@@ -160,17 +170,28 @@ export async function generateContent(
       });
     }
 
-    const completion = await openai.chat.completions.create({
+    const requestParams: OpenRouterCompletionParams = {
       model: AI_MODEL,
       messages,
       temperature: 0.7,
-      max_tokens: 2048,
+      max_tokens: 4096,
       response_format: { type: "json_object" },
-    });
+      reasoning: { enabled: false },
+    };
 
-    const content = completion.choices[0]?.message?.content;
+    const completion = await openai.chat.completions.create(requestParams);
+
+    const choice = completion.choices[0];
+    const finishReason = choice?.finish_reason ?? null;
+    const content = choice?.message?.content;
 
     if (!content) {
+      console.error("[generate] empty AI content:", {
+        ms: Date.now() - startedAt,
+        model: AI_MODEL,
+        finishReason,
+        usage: completion.usage,
+      });
       const creditsRemaining = await refundIfConsumed();
       return {
         success: false,
@@ -179,17 +200,23 @@ export async function generateContent(
       };
     }
 
-    let cleanedContent = content.trim();
-    if (cleanedContent.startsWith("```json")) {
-      cleanedContent = cleanedContent.replace(/^```json\s*/, "");
-    } else if (cleanedContent.startsWith("```")) {
-      cleanedContent = cleanedContent.replace(/^```\s*/, "");
-    }
-    if (cleanedContent.endsWith("```")) {
-      cleanedContent = cleanedContent.replace(/\s*```$/, "");
+    let parsed: unknown;
+    try {
+      parsed = parseAIJsonResponse(content);
+    } catch (parseError) {
+      console.error("[generate] JSON parse failed:", {
+        ms: Date.now() - startedAt,
+        model: AI_MODEL,
+        finishReason,
+        usage: completion.usage,
+        contentLength: content.length,
+        contentHead: content.slice(0, 160),
+        contentTail: content.slice(-160),
+        parseError,
+      });
+      throw parseError;
     }
 
-    const parsed: unknown = JSON.parse(cleanedContent.trim());
     const normalized = normalizeContent(parsed, promoMode, userText);
 
     if (!normalized) {
